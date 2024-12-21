@@ -6,3 +6,48 @@ server:
 spring:
   application:
     name: safety_signature_back
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ENC(j5u3O8qDJlFBy5+lnH1LSFZYg26UMcMoOOaOtKO/2bz1Y9rWQxPfp4JkoKLOpONczOUoIhO6qYM=)
+    username: ENC(J1ub9wjNqELFNx9wQTuW9NI0WQ1orwMB)
+    password: ENC(RsASFvqSB5ZBFJUZmg9CLOufiyacW1lz) # ?? ???? ??? ??
+
+  jpa:
+    #    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    database: postgresql
+    hibernate:
+      ddl-auto: create        # DB 초기화 전략 (none, create, create-drop, update, validate)
+    open-in-view: false
+    properties:
+      hibernate:
+        #        dialect: org.hibernate.dialect.H2Dialect
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true      #
+        show_sql: true        #
+    show-sql: true
+
+  config:
+    import:
+      classpath:/private/application-security.yml
+  sql:
+    init:
+      platform: postgres
+logging:
+  level:
+    root: info # debug info
+    jdbc:
+      audit: OFF
+      resultset: OFF
+      resultsettable: INFO
+      sqlonly: OFF
+
+springdoc:
+  swagger-ui:
+    path: /swagger/docs
+
+jasypt:
+  encryptor:
+    bean: jasyptStringEncryptor
+
