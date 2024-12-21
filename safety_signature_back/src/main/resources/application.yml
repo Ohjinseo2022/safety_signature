@@ -1,0 +1,8 @@
+server:
+  port: 8080
+  servlet:
+    context-path: /services/backend
+
+spring:
+  application:
+    name: safety_signature_back

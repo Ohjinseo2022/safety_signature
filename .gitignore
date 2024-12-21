@@ -1,0 +1,96 @@
+
+# Miscellaneous
+/safety_signature_app/*.class
+/safety_signature_app/*.log
+/safety_signature_app/*.pyc
+/safety_signature_app/*.swp
+/safety_signature_app/DS_Store
+/safety_signature_app/atom/
+/safety_signature_app/buildlog/
+/safety_signature_app/history
+/safety_signature_app/svn/
+/safety_signature_app/migrate_working_dir/
+
+# IntelliJ related
+/safety_signature_app/*.iml
+/safety_signature_app/*.ipr
+/safety_signature_app/*.iws
+/safety_signature_app/.idea/
+
+# The .vscode folder contains launch configuration and tasks you configure in
+# VS Code which you may wish to be included in version control, so this line
+# is commented out by default.
+#.vscode/
+/safety_signature_app/.vscode/
+# Flutter/Dart/Pub related
+/safety_signature_app/**/doc/api/
+/safety_signature_app/**/ios/Flutter/.last_build_id
+/safety_signature_app/.dart_tool/
+/safety_signature_app/.flutter-plugins
+/safety_signature_app/flutter-plugins-dependencies
+/safety_signature_app/.pub-cache/
+/safety_signature_app/.pub/
+/safety_signature_app/build/
+
+# Symbolication related
+/safety_signature_app/app.*.symbols
+
+# Obfuscation related
+/safety_signature_app/app.*.map.json
+
+# Android Studio will place build artifacts here
+/safety_signature_app/android/app/debug
+/safety_signature_app/android/app/profile
+/safety_signature_app/android/app/release
+
+/safety_signature_app/.env
+/safety_signature_app/.metadata
+/safety_signature_back/safety_signature_back/.gitattributes
+/safety_signature_app/android/.gitignore
+/safety_signature_app/ios/.gitignore
+/safety_signature_back/safety_signature_back/.gitignore
+
+
+
+/safety_signature_app/.gitignore
+/safety_signature_back/.gitignore
+/safety_signature_back/.gitattributes
+
+
+/safety_signature_back/HELP.md
+/safety_signature_back/.gradle
+/safety_signature_back/build/
+/safety_signature_back/!gradle/wrapper/gradle-wrapper.jar
+/safety_signature_back/!**/src/main/**/build/
+/safety_signature_back/!**/src/test/**/build/
+
+### STS ###
+/safety_signature_back/.apt_generated
+/safety_signature_back/.classpath
+/safety_signature_back/.factorypath
+/safety_signature_back/.project
+/safety_signature_back/.settings
+/safety_signature_back/.springBeans
+/safety_signature_back/.sts4-cache
+/safety_signature_back/bin/
+/safety_signature_back/!**/src/main/**/bin/
+/safety_signature_back/!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+/safety_signature_back/.idea
+/safety_signature_back/*.iws
+/safety_signature_back/*.iml
+/safety_signature_back/*.ipr
+/safety_signature_back/out/
+/safety_signature_back/!**/src/main/**/out/
+/safety_signature_back/!**/src/test/**/out/
+
+### NetBeans ###
+/safety_signature_back/nbproject/private/
+/safety_signature_back/nbbuild/
+/safety_signature_back/dist/
+/safety_signature_back/nbdist/
+/safety_signature_back/.nb-gradle/
+
+### VS Code ###
+/safety_signature_back/.vscode/
