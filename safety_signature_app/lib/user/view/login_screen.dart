@@ -35,7 +35,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          Text("AMATTA",
+          Text("안전싸인",
               style: defaultTextStyle.copyWith(
                   fontWeight: FontWeight.w800,
                   fontSize: 30,

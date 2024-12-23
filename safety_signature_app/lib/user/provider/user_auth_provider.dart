@@ -101,11 +101,14 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
 
   Future<bool> _onKakaoLogin() async {
     try {
-      OAuthToken token = await isKakaoTalkInstalled()
-          // 카카오톡 실행가능 여부 확인해서 웹으로 실행할지 카카오톡 앱을 실행할지 지정
-          ? await UserApi.instance.loginWithKakaoTalk()
-          : await UserApi.instance
-              .loginWithKakaoAccount(); //loginWithKakaoTalk   loginWithKakaoAccount
+      // User user = await UserApi.instance.me();
+      // print(user);
+      OAuthToken token =
+          await isKakaoTalkInstalled() //true 카카오톡 실행가능 false 면 실행불가능
+              // 카카오톡 실행가능 여부 확인해서 웹으로 실행할지 카카오톡 앱을 실행할지 지정
+              ? await UserApi.instance.loginWithKakaoTalk()
+              : await UserApi.instance
+                  .loginWithKakaoAccount(); //loginWithKakaoTalk   loginWithKakaoAccount
       print('카카오계정으로 로그인 성공 ${token.accessToken}');
       print('카카오계정 ${token}');
       String accessToken = token.accessToken;

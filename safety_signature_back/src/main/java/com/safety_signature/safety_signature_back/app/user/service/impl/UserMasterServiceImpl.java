@@ -39,6 +39,9 @@ public class UserMasterServiceImpl implements UserMasterService {
         String socialTypeCode = SocialTypeCode.from(loginReqDTO.getSocialType());
         newUserDTO.setEmail(profileResponse.email());
         newUserDTO.setName(profileResponse.name());
+        if(profileResponse.phoneNumber()!=null){
+            newUserDTO.setMobile(profileResponse.phoneNumber());
+        }
         newUserDTO.setProfileImageUri(profileResponse.profileImageUri());
         if(!socialTypeCode.isEmpty()){
             if (SocialTypeCode.GOOGLE.getValue().equals(socialTypeCode))   newUserDTO.setGoogleSignIn(true);

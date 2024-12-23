@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
+import 'package:safety_signature_app/user/view/join_screen.dart';
 
 final authProvider = ChangeNotifierProvider<AuthProvider>((ref) {
   return AuthProvider(ref: ref);
@@ -26,6 +27,10 @@ class AuthProvider extends ChangeNotifier {
             name: RootTab.routeName,
             builder: (_, state) => RootTab(),
             routes: [
+              GoRoute(
+                  path: 'join',
+                  name: JoinScreen.routeName,
+                  builder: (_, state) => JoinScreen())
               // GoRoute(
               //   path: "chat-room/:id",
               //   name: ChatRoomDetail.routeName,

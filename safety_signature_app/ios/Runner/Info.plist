@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>safety_signature_app</string>
+	<string>안전싸인</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -56,7 +56,7 @@
         			    <!-- TODO Replace this value: -->
         			    <!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
         				<string>com.googleusercontent.apps.746005876439-pad4988544il6dbb91togrclkivpl8r6</string>
-        			    <string>kakaofde41eed149ce2459878bd388792bba1</string>
+        			    <string>kakao9a18205e226d257f0787cae4b91b3a04</string>
                         <!-- TODO Replace this value: -->
         			    <string>naverlogin</string>
         			</array>
@@ -69,7 +69,7 @@
             <key>naverConsumerSecret</key>
             <string>4ButqPs_gl</string>
             <key>naverServiceAppName</key>
-            <string>AMATTA</string>
+            <string>안전싸인</string>
             <!-- TODO Replace this value: -->
             <key>naverServiceAppUrlScheme</key>
             <string>naverlogin</string>

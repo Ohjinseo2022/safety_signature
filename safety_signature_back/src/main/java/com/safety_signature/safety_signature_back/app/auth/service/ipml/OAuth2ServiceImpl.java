@@ -49,17 +49,17 @@ public class OAuth2ServiceImpl implements OAuth2Service {
             KakaoOauthDTO profileResponse= oAuthWebClient.requestKakaoOauthUserProfile(accessToken);
             if(!ObjectUtils.isEmpty(profileResponse)) {
                 KakaoAccount kakaoAccount = profileResponse.getKakao_account();
-                UserMasterDTO userMasterDTO =  userMasterService.createOrPartialUpdateUserMaster(new OauthUserProfileResponse(kakaoAccount.getProfile().getNickname(), kakaoAccount.getEmail(), kakaoAccount.getProfile().getProfile_image_url()) ,loginReqDTO);
+                UserMasterDTO userMasterDTO =  userMasterService.createOrPartialUpdateUserMaster(new OauthUserProfileResponse(kakaoAccount.getName(), kakaoAccount.getEmail(), kakaoAccount.getPhone_number(), kakaoAccount.getProfile().getProfile_image_url()) ,loginReqDTO);
                 TokenManagementMaterDTO tokenManagementMaterDTO = tokenManagementMasterService.createOrUpdateTokenManagementMaster(userMasterDTO);
                 log.info("userMasterDTO : {}", userMasterDTO);
                 return new LoginResDTO(tokenManagementMaterDTO.getAccessToken(),tokenManagementMaterDTO.getRefreshToken());
             }
         }
-        if (SocialTypeCode.NAVER.getValue().equals(socialTypeCode)){
-            UserMasterDTO userMasterDTO =  userMasterService.createOrPartialUpdateUserMaster(new OauthUserProfileResponse(loginReqDTO.getName(), loginReqDTO.getEmail(), null) ,loginReqDTO);
-            TokenManagementMaterDTO tokenManagementMaterDTO = tokenManagementMasterService.createOrUpdateTokenManagementMaster(userMasterDTO);
-            return new LoginResDTO(tokenManagementMaterDTO.getAccessToken(),tokenManagementMaterDTO.getRefreshToken());
-        }
+//        if (SocialTypeCode.NAVER.getValue().equals(socialTypeCode)){
+//            UserMasterDTO userMasterDTO =  userMasterService.createOrPartialUpdateUserMaster(new OauthUserProfileResponse(loginReqDTO.getName(), loginReqDTO.getEmail(), null) ,loginReqDTO);
+//            TokenManagementMaterDTO tokenManagementMaterDTO = tokenManagementMasterService.createOrUpdateTokenManagementMaster(userMasterDTO);
+//            return new LoginResDTO(tokenManagementMaterDTO.getAccessToken(),tokenManagementMaterDTO.getRefreshToken());
+//        }
 
 
         /* TODO: 데이터 베이스에 있는 유저정보 확인. 유저 정보가 존재하면 그대로 엑세스 토큰과 리프레시 토큰 발행

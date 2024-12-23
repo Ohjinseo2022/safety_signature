@@ -107,7 +107,7 @@ the internet.
 
                 <!-- "kakao${KAKAO_NATIVE_APP_KEY}://oauth" 형식의 앱 실행 스킴 설정 -->
                 <!-- 카카오 로그인 Redirect URI -->
-                <data android:scheme="kakaofde41eed149ce2459878bd388792bba1" android:host="oauth"/>
+                <data android:scheme="kakao9a18205e226d257f0787cae4b91b3a04" android:host="oauth"/>
             </intent-filter>
         </activity>
         <activity
