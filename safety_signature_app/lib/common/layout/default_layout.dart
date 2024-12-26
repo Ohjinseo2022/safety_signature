@@ -60,7 +60,7 @@ class DefaultLayout extends StatelessWidget {
                 IconButton(
                     onPressed: () {},
                     icon: Icon(
-                      Icons.person,
+                      Icons.notifications_none,
                       color: SELECT_TEXT_COLOR,
                     )),
                 IconButton(

@@ -53,7 +53,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   Container(
                     height: 80,
                     child: Text(
-                      "AMATTA",
+                      "안전싸인",
                       style: TextStyle(
                         color: SELECT_TEXT_COLOR,
                         fontWeight: FontWeight.bold,

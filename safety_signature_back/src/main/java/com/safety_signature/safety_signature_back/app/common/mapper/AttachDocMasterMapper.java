@@ -5,13 +5,15 @@ import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMaster
 import org.mapstruct.Mapper;
 import org.mapstruct.ReportingPolicy;
 
-@Mapper(componentModel = "spring",unmappedSourcePolicy = ReportingPolicy.IGNORE)
-public interface AttachDocMasterMapper extends EntityMapper<AttachDocMasterDTO, AttachDocMaster> {
+/**
+ * Mapper for the entity {@link AttachDocMaster} and its DTO {@link AttachDocMasterDTO}.
+ */
+@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+public interface AttachDocMasterMapper extends EntityMapper<AttachDocMasterDTO, AttachDocMaster>{
 
     @Override
     AttachDocMasterDTO toDto(AttachDocMaster entity);
 
     @Override
     AttachDocMaster toEntity(AttachDocMasterDTO dto);
-
 }

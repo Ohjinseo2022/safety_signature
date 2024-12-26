@@ -67,12 +67,8 @@ class _RootTabState extends ConsumerState<RootTab>
 
   Widget _rootTab({required UserModelBase? state}) {
     List<dynamic> tabList = [
-      // {"title": "AMATTA", "child": MainListScreen()},
       {"title": "테스트중", "child": MyPageScreen()},
-
-      // {"title": "카테고리", "child": CategoryScreen()},
       {"title": "테스트중", "child": MyPageScreen()},
-      // {"title": "메세지", "child": ChatRoomList()},
       {
         "title": state is UserMinModel ? "메이페이지" : null,
         "child": MyPageScreen()

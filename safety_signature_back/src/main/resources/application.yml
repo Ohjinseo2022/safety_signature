@@ -18,7 +18,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
     hibernate:
-      ddl-auto: create        # DB 초기화 전략 (none, create, create-drop, update, validate)
+      ddl-auto: update        # DB 초기화 전략 (none, create, create-drop, update, validate)
     open-in-view: false
     properties:
       hibernate:
@@ -34,6 +34,11 @@ spring:
   sql:
     init:
       platform: postgres
+
+  servlet:
+    multipart:
+      max-file-size: 1GB
+      max-request-size: 1GB
 logging:
   level:
     root: info # debug info
@@ -51,3 +56,10 @@ jasypt:
   encryptor:
     bean: jasyptStringEncryptor
 
+client:
+  minio:
+    endpoint: ENC(6cnW1pkH/MvlIlkxOmcl7pwslbWgoPCBLTQ3fcovvP/kZd7bjTv1Ow==)
+    accessKey: ENC(yoMcN5drulN6HICqepLBMenc79uE2UIPDPWG1sECGKQ=)
+    secretKey: ENC(qMEbzUHC1CJfVs/7YI9S5Dg5friNBL/eQLsW+xyLHRWDzaSljNlXHq/xFAfprNp3jYvvCLd8kfE=)
+    bucket: ENC(PsWwjTKdkxsrXBMC3rafHBfjyAKpQIMc)
+    bucketImage: ENC(45PYxGPA09gS4BRi02R9HlRRAmz+umZ+OHcqjPWx3W8=)

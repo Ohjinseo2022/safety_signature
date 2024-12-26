@@ -1,6 +1,7 @@
 package com.safety_signature.safety_signature_back.app.common.domain;
 
 
+import com.safety_signature.safety_signature_back.app.common.enumeration.AttachDocOwnerClassCode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -11,13 +12,14 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @Setter
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true,of="id")
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @AllArgsConstructor
 @Entity
 @Table(name="tb_attach_doc_master")
@@ -25,46 +27,88 @@ import java.math.BigDecimal;
 @EntityListeners(AuditingEntityListener.class)
 @org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class AttachDocMaster extends AbstractAuditingEntity<String> implements Serializable {
+    private static final long serialVersionUID = 1L;
 
     @Comment("첨부 문서 관리 고유 ID")
     @Size(max=36)
     @NotNull
     @Id
-    @Column(name = "id",nullable = false ,unique = true)
+    @Column(name = "id", length = 36,nullable = false ,unique = true)
     private String id;
 
-    @Comment("첨부 문서 소유 ID")
-    @Size(max=36)
+    @Comment("첨부문서명")
+    @Size(max = 600)
+    @Column(name = "attach_doc_name", length = 600)
+    private String attachDocName;
+
+    /**
+     * 첨부문서설명
+     */
+    @Comment("첨부문서설명")
+    @Size(max = 4000)
+    @Column(name = "attach_doc_explain", length = 4000)
+    private String attachDocExplain;
+
+    /**
+     * 첨부문서ID
+     */
+    @Comment("첨부문서ID")
+    @Size(max = 100)
+    @Column(name = "attach_doc_id", length = 100)
+    private String attachDocId;
+
+    /**
+     * 첨부문서위치
+     */
+    @Comment("첨부문서위치")
+    @Size(max = 1000)
+    @Column(name = "attach_doc_position", length = 1000)
+    private String attachDocPosition;
+
+    /**
+     * 첨부문서소유자유형코드
+     */
+    @Comment("첨부문서소유자유형코드")
     @NotNull
-    @Column(name = "owner_id",length = 36,nullable = false)
-    private String ownerId;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "attach_doc_owner_class_code", length = 30, nullable = false)
+    private AttachDocOwnerClassCode attachDocOwnerClassCode;
 
-    @Comment("첨부문서 이름")
-    @Size(max=1000)
+    /**
+     * 첨부문서소유자ID
+     */
+    @Comment("첨부문서소유자ID")
     @NotNull
-    @Column(name = "attach_name",length = 1000,nullable = false)
-    private String attachName;
+    @Size(max = 36)
+    @Column(name = "attach_doc_owner_id", length = 36, nullable = false)
+    private String attachDocOwnerId;
 
-    @Comment("첨부문서 확장자")
-    @Size(max=20)
-    @NotNull
-    @Column(name = "attach_file_type",length = 20,nullable = false)
-    private String attachFileType;
+    /**
+     * 첨부문서크기
+     */
+    @Comment("첨부문서크기")
+    @Column(name = "attach_doc_size", precision = 18, scale = 5)
+    private BigDecimal attachDocSize;
 
+    /**
+     * 첨부문서다운로드제한일시
+     */
+    @Comment("첨부문서다운로드제한일시")
+    @Column(name = "attach_download_limit_dtime")
+    private LocalDateTime attachDownloadLimitDtime;
 
-    @Comment("minio 경로정보")
-    @Size(max=5000)
-    @NotNull
-    @Column(name = "attach_minio_path",length = 5000,nullable = false)
-    private String attachMinioPath;
+    /**
+     * 첨부문서보관제한일시
+     */
+    @Comment("첨부문서보관제한일시")
+    @Column(name = "attach_storage_limit_dtime")
+    private LocalDateTime attachStorageLimitDtime;
 
-    @Comment("다운로드 가능 여부")
-    @Column(name = "attach_download_yn")
-    private Boolean attachDownloadYn = true; // 별도로 지정하지 않으면 true 상태
-
-    @Comment("첨부 문서 용량 KB 단위")
-    @NotNull
-    @Column(name = "attach_size",nullable = false)
-    private BigDecimal attachSize;
+    /**
+     * MinIO삭제여부
+     */
+    @Comment("MinIO삭제여부")
+    @Column(name = "minio_delete_yn")
+    private Boolean minioDeleteYn;
 
 }

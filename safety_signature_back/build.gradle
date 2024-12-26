@@ -53,7 +53,7 @@ dependencies {
     runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
 
     // https://mvnrepository.com/artifact/com.google.collections/google-collections
-    implementation group: 'com.google.collections', name: 'google-collections', version: '1.0'
+//    implementation group: 'com.google.collections', name: 'google-collections', version: '1.0'
 
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -65,7 +65,19 @@ dependencies {
     implementation 'com.github.f4b6a3:tsid-creator:5.2.4'
     //웹소켓을 위한 의존성 주입
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    //minio 사용을 위한 의존성 start
+    // guava
+//    implementation 'com.google.guava:guava:32.0.1-jre' // 최신 버전
+    // minio client
+    // https://mvnrepository.com/artifact/io.minio/minio
+    implementation group: 'io.minio', name: 'minio', version: '8.5.14'
 
+    implementation 'org.apache.poi:poi:4.1.0'
+    implementation 'org.apache.poi:poi-ooxml:4.1.0'
+
+    //pdf to image 관련 사용
+    implementation group: 'org.apache.pdfbox', name: 'pdfbox', version: '3.0.0-beta1'
+    //minio 사용을 위한 의존성 end
     // json 객체 처리를 위한 의존성추가
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
     //Querydsl 추가

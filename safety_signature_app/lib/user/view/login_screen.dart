@@ -167,7 +167,7 @@ Future<T?> loginBottomSheet<T>(
       //   content: LoginScreen(),
       // );
       return Container(
-          height: MediaQuery.of(context).size.height / 2,
+          height: MediaQuery.of(context).size.height,
           // padding: EdgeInsets.only(bottom: 50),
           margin: const EdgeInsets.only(
             left: 25,
