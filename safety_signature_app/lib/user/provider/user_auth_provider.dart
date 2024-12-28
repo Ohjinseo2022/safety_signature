@@ -88,6 +88,7 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
     final response = await userMasterRepository.userProfile();
     if (response == null) {
       state = UserModelGuest();
+      return;
     }
     state = response;
   }
@@ -127,6 +128,7 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
       await _googleSignIn.signIn();
       final GoogleSignInAuthentication googleSignInAuthentication =
           await _googleSignIn.currentUser!.authentication;
+
       final String? accessToken = googleSignInAuthentication.accessToken;
       await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
       return true;

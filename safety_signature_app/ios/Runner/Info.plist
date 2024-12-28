@@ -55,7 +55,7 @@
         			<array>
         			    <!-- TODO Replace this value: -->
         			    <!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
-        				<string>com.googleusercontent.apps.746005876439-pad4988544il6dbb91togrclkivpl8r6</string>
+        				<string>com.googleusercontent.apps.624461692565-esr6r0ll4d1o78e3nthnn6ieigd1nrtf</string>
         			    <string>kakao9a18205e226d257f0787cae4b91b3a04</string>
                         <!-- TODO Replace this value: -->
         			    <string>naverlogin</string>
@@ -82,7 +82,7 @@
         <key>GIDClientID</key>
         <!-- TODO Replace this value: -->
         <!-- Copied from GoogleService-Info.plist key CLIENT_ID -->
-        <string>746005876439-pad4988544il6dbb91togrclkivpl8r6.apps.googleusercontent.com</string>
+        <string>624461692565-esr6r0ll4d1o78e3nthnn6ieigd1nrtf.apps.googleusercontent.com</string>
         <!-- Permission options for the `location` 위치 권한 group -->
         <!-- <key>NSLocationWhenInUseUsageDescription</key>
         <string>Need location when in use</string>

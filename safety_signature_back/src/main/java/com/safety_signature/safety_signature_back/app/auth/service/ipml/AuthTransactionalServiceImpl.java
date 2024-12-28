@@ -23,7 +23,6 @@ public class AuthTransactionalServiceImpl implements AuthTransactionalService {
     public String extractTokenFromRequest(HttpServletRequest request) {
         String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
         validationAuthorizationHeader(authorizationHeader);
-
         return extractToken(authorizationHeader);
     }
     private void validationAuthorizationHeader(String header) {

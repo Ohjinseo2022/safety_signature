@@ -87,4 +87,7 @@ public class UserMaster extends AbstractAuditingEntity<String> implements Serial
     @Column(name="naver_sign_in")
     private boolean naverSignIn;
 
+    @Comment("회원 서명 ID")
+    @Column(name="signature_doc_id")
+    private String signatureDocId;
 }

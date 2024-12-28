@@ -46,7 +46,7 @@ class DefaultLayout extends StatelessWidget {
       return null;
     } else {
       return AppBar(
-        backgroundColor: BACK_GROUND_COLOR,
+        backgroundColor: backgroundColor,
         //튀어나옴 효과
         elevation: 0,
         actions: topAppBarBtn == true
@@ -55,19 +55,19 @@ class DefaultLayout extends StatelessWidget {
                     onPressed: () {},
                     icon: Icon(
                       Icons.search,
-                      color: SELECT_TEXT_COLOR,
+                      color: TEXT_COLOR,
                     )),
                 IconButton(
                     onPressed: () {},
                     icon: Icon(
                       Icons.notifications_none,
-                      color: SELECT_TEXT_COLOR,
+                      color: TEXT_COLOR,
                     )),
                 IconButton(
                     onPressed: () {},
                     icon: Icon(
                       Icons.menu,
-                      color: SELECT_TEXT_COLOR,
+                      color: TEXT_COLOR,
                     )),
               ]
             : [],

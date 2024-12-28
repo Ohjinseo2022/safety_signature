@@ -22,13 +22,14 @@ class UserMinModel extends UserModelBase {
   // )
   final String? profileImageUri;
   final String email;
+  final String? signatureDocId;
 
-  UserMinModel({
-    required this.id,
-    required this.name,
-    this.profileImageUri,
-    required this.email,
-  });
+  UserMinModel(
+      {required this.id,
+      required this.name,
+      this.profileImageUri,
+      required this.email,
+      this.signatureDocId});
   factory UserMinModel.fromJson(Map<String, dynamic> json) =>
       _$UserMinModelFromJson(json);
 }
@@ -41,6 +42,7 @@ class UserSummaryModel extends UserMinModel {
       required super.name,
       required super.email,
       super.profileImageUri,
+      super.signatureDocId,
       this.mobile});
   factory UserSummaryModel.fromJson(Map<String, dynamic> json) =>
       _$UserSummaryModelFromJson(json);
@@ -58,6 +60,7 @@ class UserDetailModel extends UserSummaryModel {
     required super.email,
     super.profileImageUri,
     super.mobile,
+    super.signatureDocId,
     this.googleSignIn = false,
     this.kakaoSignIn = false,
     this.naverSignIn = false,
@@ -74,6 +77,7 @@ class UserHiddenModel extends UserDetailModel {
     required super.name,
     required super.email,
     super.profileImageUri,
+    super.signatureDocId,
     super.mobile,
     super.googleSignIn,
     super.kakaoSignIn,

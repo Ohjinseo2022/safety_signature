@@ -110,9 +110,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   Widget _emailLoginButton({required VoidCallback? onPressed}) {
     return LoginButton(
       onPressed: onPressed,
-      svgPath: 'asset/svg/btn_kakao.svg',
+      svgPath: 'asset/svg/btn_email.svg',
       label: "Email로 로그인",
-      backgroundColor: PRIMARY_COLOR6,
+      iconHeight: 30,
+      backgroundColor: GOOGLE_PRIMARY_COLOR,
       labelColor: KAKAO_LABEL_COLOR,
     );
   }
@@ -130,7 +131,7 @@ Widget _emailJoin({required VoidCallback? onPressed}) {
     onPressed: onPressed,
     style: TextButton.styleFrom(
       padding: EdgeInsets.all(5.0),
-      foregroundColor: ICON_DEFAULT_COLOR,
+      foregroundColor: TEXT_COLOR,
     ),
     child: Column(
       children: [
@@ -138,7 +139,7 @@ Widget _emailJoin({required VoidCallback? onPressed}) {
           "이메일로 회원가입",
           style: defaultTextStyle.copyWith(
             fontSize: 12,
-            color: GOOGLE_PRIMARY_COLOR,
+            color: SECONDARY_COLOR,
           ),
         ),
         SizedBox(
@@ -147,7 +148,7 @@ Widget _emailJoin({required VoidCallback? onPressed}) {
         Container(
           height: 1.0,
           width: 100.0,
-          color: Colors.white,
+          color: SECONDARY_COLOR,
         ),
       ],
     ),
@@ -177,10 +178,10 @@ Future<T?> loginBottomSheet<T>(
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(50),
             border: Border.all(
-              color: UNSELECT_TEXT_COLOR.withOpacity(0.3),
+              color: SECONDARY_COLOR.withOpacity(0.3),
               width: 1,
             ),
-            color: ICON_DEFAULT_COLOR, // BACK_GROUND_COLOR.withOpacity(0.8),
+            color: TEXT_COLOR, // BACK_GROUND_COLOR.withOpacity(0.8),
           ),
           child:
               LoginScreen(animationController: transitionAnimationController));

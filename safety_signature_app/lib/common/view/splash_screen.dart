@@ -55,7 +55,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                     child: Text(
                       "안전싸인",
                       style: TextStyle(
-                        color: SELECT_TEXT_COLOR,
+                        color: TEXT_COLOR,
                         fontWeight: FontWeight.bold,
                         fontSize: 32,
                       ),
@@ -68,7 +68,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               Container(
                 width: double.infinity,
                 height: double.infinity,
-                color: UNSELECT_TEXT_COLOR.withOpacity(0.5),
+                color: SECONDARY_COLOR.withOpacity(0.5),
                 child: Center(
                   child: Container(
                     width: MediaQuery.of(context).size.width / 1.5,
@@ -78,13 +78,13 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                         borderRadius: BorderRadius.circular(10),
                         boxShadow: [
                           BoxShadow(
-                            color: UNSELECT_TEXT_COLOR.withOpacity(0.7),
+                            color: SECONDARY_COLOR.withOpacity(0.7),
                             blurRadius: 5.0,
                             spreadRadius: 5.0,
                             offset: const Offset(0, 4),
                           )
                         ]
-                        // border: Border.all(color: SELECT_TEXT_COLOR),
+                        // border: Border.all(color: TEXT_PRIMARY_COLOR),
                         ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,8 +112,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                           },
                           child: Text("확인"),
                           style: ElevatedButton.styleFrom(
-                              foregroundColor: SELECT_TEXT_COLOR,
-                              backgroundColor: BACK_GROUND_COLOR_LIGHT),
+                              foregroundColor: TEXT_COLOR,
+                              backgroundColor: BACK_GROUND_COLOR),
                         )
                       ],
                     ),

@@ -11,6 +11,7 @@ UserMinModel _$UserMinModelFromJson(Map<String, dynamic> json) => UserMinModel(
       name: json['name'] as String,
       profileImageUri: json['profileImageUri'] as String?,
       email: json['email'] as String,
+      signatureDocId: json['signatureDocId'] as String?,
     );
 
 Map<String, dynamic> _$UserMinModelToJson(UserMinModel instance) =>
@@ -19,6 +20,7 @@ Map<String, dynamic> _$UserMinModelToJson(UserMinModel instance) =>
       'name': instance.name,
       'profileImageUri': instance.profileImageUri,
       'email': instance.email,
+      'signatureDocId': instance.signatureDocId,
     };
 
 UserSummaryModel _$UserSummaryModelFromJson(Map<String, dynamic> json) =>
@@ -27,6 +29,7 @@ UserSummaryModel _$UserSummaryModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       email: json['email'] as String,
       profileImageUri: json['profileImageUri'] as String?,
+      signatureDocId: json['signatureDocId'] as String?,
       mobile: json['mobile'] as String?,
     );
 
@@ -36,6 +39,7 @@ Map<String, dynamic> _$UserSummaryModelToJson(UserSummaryModel instance) =>
       'name': instance.name,
       'profileImageUri': instance.profileImageUri,
       'email': instance.email,
+      'signatureDocId': instance.signatureDocId,
       'mobile': instance.mobile,
     };
 
@@ -46,6 +50,7 @@ UserDetailModel _$UserDetailModelFromJson(Map<String, dynamic> json) =>
       email: json['email'] as String,
       profileImageUri: json['profileImageUri'] as String?,
       mobile: json['mobile'] as String?,
+      signatureDocId: json['signatureDocId'] as String?,
       googleSignIn: json['googleSignIn'] as bool? ?? false,
       kakaoSignIn: json['kakaoSignIn'] as bool? ?? false,
       naverSignIn: json['naverSignIn'] as bool? ?? false,
@@ -57,6 +62,7 @@ Map<String, dynamic> _$UserDetailModelToJson(UserDetailModel instance) =>
       'name': instance.name,
       'profileImageUri': instance.profileImageUri,
       'email': instance.email,
+      'signatureDocId': instance.signatureDocId,
       'mobile': instance.mobile,
       'googleSignIn': instance.googleSignIn,
       'kakaoSignIn': instance.kakaoSignIn,
@@ -69,6 +75,7 @@ UserHiddenModel _$UserHiddenModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       email: json['email'] as String,
       profileImageUri: json['profileImageUri'] as String?,
+      signatureDocId: json['signatureDocId'] as String?,
       mobile: json['mobile'] as String?,
       googleSignIn: json['googleSignIn'] as bool? ?? false,
       kakaoSignIn: json['kakaoSignIn'] as bool? ?? false,
@@ -82,6 +89,7 @@ Map<String, dynamic> _$UserHiddenModelToJson(UserHiddenModel instance) =>
       'name': instance.name,
       'profileImageUri': instance.profileImageUri,
       'email': instance.email,
+      'signatureDocId': instance.signatureDocId,
       'mobile': instance.mobile,
       'googleSignIn': instance.googleSignIn,
       'kakaoSignIn': instance.kakaoSignIn,

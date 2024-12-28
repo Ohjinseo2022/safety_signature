@@ -80,14 +80,14 @@ class _CustomFloatingActionButtonState extends State<CustomFloatingActionButton>
       child: GestureDetector(
         onTap: toggle,
         child: Container(
-          // color: UNSELECT_TEXT_COLOR.withOpacity(0.5),
+          // color: UNTEXT_PRIMARY_COLOR.withOpacity(0.5),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-                SELECT_TEXT_COLOR.withOpacity(1.0),
-                SELECT_TEXT_COLOR.withOpacity(0.0),
+                TEXT_COLOR.withOpacity(1.0),
+                TEXT_COLOR.withOpacity(0.0),
               ],
             ),
           ),
@@ -108,7 +108,7 @@ class _CustomFloatingActionButtonState extends State<CustomFloatingActionButton>
         heroTag: "tabToClose",
         backgroundColor: BACK_GROUND_COLOR,
         onPressed: toggle,
-        child: Icon(Icons.close, color: UNSELECT_TEXT_COLOR),
+        child: Icon(Icons.close, color: SECONDARY_COLOR),
         shape: CircleBorder(),
       ),
     );
@@ -125,12 +125,12 @@ class _CustomFloatingActionButtonState extends State<CustomFloatingActionButton>
         opacity: _open ? 0.0 : 1.0,
         child: FloatingActionButton(
           heroTag: "tabToOpen",
-          // backgroundColor: UNSELECT_TEXT_COLOR,
+          // backgroundColor: UNTEXT_PRIMARY_COLOR,
           backgroundColor: BACK_GROUND_COLOR,
           onPressed: toggle,
           child: Icon(
             Icons.close,
-            color: SELECT_TEXT_COLOR,
+            color: TEXT_COLOR,
           ),
           shape: CircleBorder(),
         ),

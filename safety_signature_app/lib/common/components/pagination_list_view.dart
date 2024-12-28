@@ -74,7 +74,7 @@ class _PaginationListViewState<T extends IModelWithId>
                       EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
                   child: Center(
                       child: CircularProgressIndicator(
-                    color: SELECT_TEXT_COLOR,
+                    color: TEXT_COLOR,
                   )),
                 );
               }
@@ -91,7 +91,7 @@ class _PaginationListViewState<T extends IModelWithId>
       }
       return const Center(
         child: CircularProgressIndicator(
-          color: SELECT_TEXT_COLOR,
+          color: TEXT_COLOR,
         ),
       );
     }

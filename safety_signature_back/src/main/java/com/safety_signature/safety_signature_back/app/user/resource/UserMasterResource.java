@@ -48,7 +48,7 @@ public class UserMasterResource {
         if(ObjectUtils.isEmpty(result)){
             UserResponseMessageDTO messageDTO = new UserResponseMessageDTO();
             messageDTO.setMassage("Status requiring login or sign");
-            messageDTO.setStatus(HttpStatus.NO_CONTENT);
+            messageDTO.setStatus(HttpStatus.UNAUTHORIZED);
             return ResponseEntity.status(messageDTO.getStatus()).build();
         }else{
             return ResponseEntity.ok().headers(HttpHeaders.EMPTY).body(Partial.with(

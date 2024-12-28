@@ -24,7 +24,7 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
         children: [
           ElevatedButton(
               onPressed: () {
-                ref.read(userAuthProvider.notifier).userLogout();
+                // ref.read(userAuthProvider.notifier).userLogout();
               },
               child: Text(
                 "로그인 후 이용 해주세요",
@@ -40,6 +40,14 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           _profile(model: state),
+          ElevatedButton(
+              onPressed: () {
+                ref.read(userAuthProvider.notifier).userLogout();
+              },
+              child: Text(
+                "로그아웃",
+                style: defaultTextStyle,
+              )),
         ],
       ),
     );
@@ -104,12 +112,12 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
         borderRadius: BorderRadius.circular(50),
         color: BACK_GROUND_COLOR,
         border: Border.all(
-          color: UNSELECT_TEXT_COLOR.withOpacity(0.3),
+          color: SECONDARY_COLOR.withOpacity(0.3),
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: UNSELECT_TEXT_COLOR.withOpacity(0.5),
+            color: SECONDARY_COLOR.withOpacity(0.5),
             spreadRadius: 1,
             blurRadius: 1,
             offset: Offset(1, 2),
@@ -118,7 +126,7 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
       ),
       width: 70,
       height: 70,
-      child: Icon(Icons.person, size: 60, color: ICON_DEFAULT_COLOR),
+      child: Icon(Icons.person, size: 60, color: SECONDARY_COLOR),
     );
   }
 }

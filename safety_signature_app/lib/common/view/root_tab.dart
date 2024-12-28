@@ -57,6 +57,8 @@ class _RootTabState extends ConsumerState<RootTab>
   Widget build(BuildContext context) {
     final state = ref.watch(userAuthProvider);
     final permission = ref.watch(permissionProvider);
+    print("state : $state");
+
     return AnimatedSwitcher(
         duration: Duration(milliseconds: 500),
         child:
@@ -82,6 +84,12 @@ class _RootTabState extends ConsumerState<RootTab>
     if (state is UserModelError) {
       state = UserModelGuest();
     }
+    if (state is UserModelGuest) {
+      // Future.delayed(Duration(milliseconds: 1000));
+      return DefaultLayout(
+        child: LoginScreen(),
+      );
+    }
     return DefaultLayout(
       title: tabList[index]["title"],
       child: TabBarView(
@@ -90,14 +98,15 @@ class _RootTabState extends ConsumerState<RootTab>
         children: tabList.map((e) => e["child"] as Widget).toList(),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        selectedItemColor: SELECT_TEXT_COLOR,
-        unselectedItemColor: UNSELECT_TEXT_COLOR,
+        selectedItemColor: TEXT_COLOR,
+        unselectedItemColor: SECONDARY_COLOR,
         backgroundColor: BACK_GROUND_COLOR,
         elevation: 1,
         selectedFontSize: 10,
         unselectedFontSize: 10,
         type: BottomNavigationBarType.fixed,
         onTap: (int index) {
+          print(state);
           if (index == 2 && state is UserModelGuest) {
             loginBottomSheet(context, animationController);
             return;

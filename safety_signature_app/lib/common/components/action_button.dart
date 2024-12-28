@@ -29,7 +29,7 @@ class ActionButton extends StatelessWidget {
           ),
           style: ElevatedButton.styleFrom(
             backgroundColor: BACK_GROUND_COLOR,
-            foregroundColor: SELECT_TEXT_COLOR,
+            foregroundColor: TEXT_COLOR,
             elevation: 10,
             shape: CircleBorder(),
           ),

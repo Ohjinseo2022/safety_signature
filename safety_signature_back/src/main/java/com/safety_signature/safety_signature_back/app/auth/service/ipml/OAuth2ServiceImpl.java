@@ -49,7 +49,11 @@ public class OAuth2ServiceImpl implements OAuth2Service {
             KakaoOauthDTO profileResponse= oAuthWebClient.requestKakaoOauthUserProfile(accessToken);
             if(!ObjectUtils.isEmpty(profileResponse)) {
                 KakaoAccount kakaoAccount = profileResponse.getKakao_account();
-                UserMasterDTO userMasterDTO =  userMasterService.createOrPartialUpdateUserMaster(new OauthUserProfileResponse(kakaoAccount.getName(), kakaoAccount.getEmail(), kakaoAccount.getPhone_number(), kakaoAccount.getProfile().getProfile_image_url()) ,loginReqDTO);
+                UserMasterDTO userMasterDTO =  userMasterService.createOrPartialUpdateUserMaster(new OauthUserProfileResponse(kakaoAccount.getName(),
+                        kakaoAccount.getEmail(),
+                        kakaoAccount.getPhone_number(),
+                        kakaoAccount.getProfile().getProfile_image_url()) ,
+                        loginReqDTO);
                 TokenManagementMaterDTO tokenManagementMaterDTO = tokenManagementMasterService.createOrUpdateTokenManagementMaster(userMasterDTO);
                 log.info("userMasterDTO : {}", userMasterDTO);
                 return new LoginResDTO(tokenManagementMaterDTO.getAccessToken(),tokenManagementMaterDTO.getRefreshToken());

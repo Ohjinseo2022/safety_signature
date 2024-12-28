@@ -32,10 +32,11 @@ class _App extends ConsumerWidget {
     return MaterialApp.router(
       routerConfig: router,
       theme: ThemeData(
-        fontFamily: 'NotoSans',
-        primaryColor: SELECT_TEXT_COLOR,
-        shadowColor: SELECT_TEXT_COLOR,
-      ),
+          fontFamily: 'NotoSans',
+          primaryColor: PRIMARY_COLOR,
+          shadowColor: PRIMARY_COLOR,
+          buttonTheme: ButtonThemeData(
+              textTheme: ButtonTextTheme.accent, buttonColor: PRIMARY_COLOR)),
       // home: LoginScreen(),
       debugShowCheckedModeBanner: false,
     );

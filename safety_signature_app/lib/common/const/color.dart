@@ -1,24 +1,34 @@
 import 'package:flutter/material.dart';
 
-//주색상
-const PRIMARY_COLOR = Color(0xff9B7EBD);
-//글자 색상
-const BODY_TEXT_COLOR = Color(0xff3B1E54);
-// 텍스트 필드 배병 색상
-const INPUT_BG_COLOR = Color(0xffD4BEE4);
-// 텍스트 필드 테두리 색상
-const INPUT_BODER_COLOR = Color(0xfff3f2f2);
-
-const BACK_GROUND_COLOR_LIGHT = Color(0xffe0e0e0);
-const BACK_GROUND_COLOR_DARK = Color(0xff0d0d0d);
-
-const BACK_GROUND_COLOR = Color(0xffd4dbe2);
-const SELECT_TEXT_COLOR = Color(0xff3c4359);
-const UNSELECT_TEXT_COLOR = Color(0xff74706d);
-const PRIMARY_COLOR3 = Color(0xff586a8c);
-const PRIMARY_COLOR4 = Color(0xff778ba6);
-const ICON_DEFAULT_COLOR = Color(0xffa5b5c4);
-const PRIMARY_COLOR6 = Color(0xffd5d5d5);
+// (1) 클래식 테마 (차분하고 고급스러운 느낌)
+// Primary: #3C4359
+// Secondary: #6D758D (밝은 그레이-블루)
+// Accent: #F4B400 (따뜻한 골드)
+// Background: #F7F7F9 (밝은 오프 화이트)
+// Text: #FFFFFF (밝은 텍스트) 또는 #1A1A1A (어두운 텍스트)
+// (2) 모던 테마 (대비와 활기)
+// Primary: #3C4359
+// Secondary: #A1B3C9 (부드러운 하늘색)
+// Accent: #E63946 (대비되는 레드)
+// Background: #FFFFFF (순백)
+// Text: #2E2E2E (진한 그레이)
+// (3) 대비 테마 (강렬한 대비)
+// Primary: #3C4359
+// Secondary: #FF8C42 (따뜻한 오렌지)
+// Accent: #1FAB89 (생동감 있는 민트 그린)
+// Background: #F0F4F8 (밝은 블루 틴트 화이트)
+// Text: #101820 (짙은 블랙)
+// (4) 다크 모드 테마
+// Primary: #3C4359
+// Secondary: #585E73 (중간 톤 블루-그레이)
+// Accent: #FFD700 (밝은 골드)
+// Background: #1B1D26 (어두운 블루-블랙)
+// Text: #FFFFFF (밝은 화이트)
+const PRIMARY_COLOR = Color(0xff3C4359);
+const BACK_GROUND_COLOR = Color(0xffA1B3C9);
+const ACCENT_COLOR = Color(0xffE63946);
+const SECONDARY_COLOR = Color(0xffFFFFFF);
+const TEXT_COLOR = Color(0xff2E2E2E);
 
 const GOOGLE_PRIMARY_COLOR = Color(0xffF2F2F2);
 const NAVER_PRIMARY_COLOR = Color(0xff03c75a);
@@ -29,5 +39,5 @@ const KAKAO_LABEL_COLOR = Color(0xff191919);
 const defaultTextStyle = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w500,
-  color: SELECT_TEXT_COLOR,
+  color: TEXT_COLOR,
 );

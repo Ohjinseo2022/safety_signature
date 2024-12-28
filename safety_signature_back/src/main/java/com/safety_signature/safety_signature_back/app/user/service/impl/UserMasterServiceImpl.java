@@ -31,7 +31,7 @@ public class UserMasterServiceImpl implements UserMasterService {
     @Override
     @Transactional(rollbackFor = Exception.class)
     public UserMasterDTO createOrPartialUpdateUserMaster(OauthUserProfileResponse profileResponse , LoginReqDTO loginReqDTO) {
-        Optional<UserMaster> existingUserMAster = userMasterRepository.findByEmail(profileResponse.email());
+        Optional<UserMaster> existingUserMAster =profileResponse.phoneNumber().isEmpty() ? userMasterRepository.findByEmail(profileResponse.email()) :userMasterRepository.findByMobile(profileResponse.phoneNumber()); ;
     /**
      * TODO 해결 해야할 문제점.... 소셜로그인 진행시 구글계정, 카카오계정, 네이버 계정 이메일 정보가 다를 수 있음....
      * */

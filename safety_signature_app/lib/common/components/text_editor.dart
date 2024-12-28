@@ -52,7 +52,7 @@ class _EditorState extends State<TextEditor> {
         Container(
           height: 200,
           margin: const EdgeInsets.symmetric(horizontal: 16),
-          color: BACK_GROUND_COLOR_LIGHT,
+          color: BACK_GROUND_COLOR,
           child: QuillEditor.basic(
             controller: quillController,
             configurations: QuillEditorConfigurations(

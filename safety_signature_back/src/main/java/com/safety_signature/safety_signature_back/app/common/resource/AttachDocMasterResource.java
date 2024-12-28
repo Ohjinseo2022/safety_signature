@@ -40,39 +40,45 @@ public class AttachDocMasterResource {
     private final MinioUtils minioUtils;
     private final AttachDocMasterService attachDocMasterService;
     private final AttachDocHistService attachDocHistService;
-    @Operation(summary = "이미지 저장 공통")
-    @PutMapping(value ="/save-image" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public void saveImage(@RequestParam("file") MultipartFile file) throws Exception {
+    @Operation(summary = "전자서명 이미지 업로드")
+    @PutMapping(value ="/save-signature" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public void saveImage(HttpServletRequest request ,
+                          @RequestParam(value = "file") MultipartFile file,
+                          @RequestParam(value = "attachDocOwnerId",required = false) String attachDocOwnerId) throws Exception {
         //HttpServletRequest request
 //        UserMasterDTO userMasterDTO = userMasterService.isValidTokenCheckToGetUserMaster(request,tokenValues.secretKey());
+        /**
+         * 1. 회원 정보를 조회한다.
+         * 2. 히원 정보가 없는 상태에선 진행하지 않는다.
+         * 3. 첨부 문서 ID 정보가 있다면 덮어 씌우고 기존 minio 정보를 없앤다.
+         * 4. 첨부 문서 ID 정보가 없다면 업로드. 첨부문서 저장.첨부문서 이력 저장. 회원정보에 업데이트 해준다.
+         */
+        String extension = FileNameUtils.getExtension(file.getOriginalFilename());
+        //userMasterDTO.getId()
+        String directory = String.format("signature/%s/", "test");
+        if (Pattern.matches("(?i)(GIF|JPG|JPEG|PNG|PDF)$", extension)) {
+            String storedFileName = minioUtils.upload(file, directory);
 
-        if (file != null) {
-            String extension = FileNameUtils.getExtension(file.getOriginalFilename());
-            //userMasterDTO.getId()
-            String directory = String.format("signature/%s/", "test");
-            if (Pattern.matches("(?i)(GIF|JPG|JPEG|PNG|PDF)$", extension)) {
-                String storedFileName = minioUtils.upload(file, directory);
+            AttachDocMasterDTO attachDocMasterDTO = AttachDocMasterDTO.builder()
+                    .attachDocName(file.getOriginalFilename())
+                    .attachDocExplain("")
+                    .attachDocId("")
+                    .attachDocPosition(String.format("%s/%s", directory, storedFileName))
+                    .attachDocOwnerClassCode(AttachDocOwnerClassCode.USER_SIGNATURE)
+                    .attachDocOwnerId("testID")//userMasterDTO.getId()
+                    .attachDocSize(FileUtil.getFileSize(file.getSize()))
+                    .build();
+            attachDocMasterService.save(attachDocMasterDTO);
 
-                AttachDocMasterDTO attachDocMasterDTO = AttachDocMasterDTO.builder()
-                        .attachDocName(file.getOriginalFilename())
-                        .attachDocExplain("가격협의내역 첨부파일")
-                        .attachDocId("")
-                        .attachDocPosition(String.format("%s/%s", directory, storedFileName))
-                        .attachDocOwnerClassCode(AttachDocOwnerClassCode.CONTENTS_INQUIRY)
-                        .attachDocOwnerId("testID")//userMasterDTO.getId()
-                        .attachDocSize(FileUtil.getFileSize(file.getSize()))
-                        .build();
-                attachDocMasterService.save(attachDocMasterDTO);
-
-                AttachDocHistDTO attachDocHistDTO = AttachDocHistDTO.builder()
-                        .attachDocMaster(attachDocMasterDTO)
-                        .operationTypeCode(OperationTypeCode.UP_LOADING)
-                        .operationGoalExplain(attachDocMasterDTO.getAttachDocExplain())
-                        .operatorIpAddress("test중")
-                        .build();
-                attachDocHistService.save(attachDocHistDTO);
-            }
+            AttachDocHistDTO attachDocHistDTO = AttachDocHistDTO.builder()
+                    .attachDocMaster(attachDocMasterDTO)
+                    .operationTypeCode(OperationTypeCode.UP_LOADING)
+                    .operationGoalExplain(attachDocMasterDTO.getAttachDocExplain())
+                    .operatorIpAddress("test중")
+                    .build();
+            attachDocHistService.save(attachDocHistDTO);
         }
+
     }
 
 }
