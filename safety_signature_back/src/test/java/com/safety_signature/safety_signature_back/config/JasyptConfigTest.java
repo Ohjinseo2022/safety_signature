@@ -20,7 +20,7 @@ class JasyptConfigTest {
         String text = "changeIt";//변경할 값
 
         StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-        encryptor.setPassword("비밀키");
+        encryptor.setPassword("password");
         encryptor.setAlgorithm("PBEWithMD5AndDES");
 
 
@@ -32,7 +32,7 @@ class JasyptConfigTest {
 
         assertEquals(text, decryptedText);
 
-        List.of("")
+        List.of("changeIt")
             .stream()
             .forEach(s -> {
                 System.out.println(s + " -> ENC(" + encryptor.encrypt(s)+")");

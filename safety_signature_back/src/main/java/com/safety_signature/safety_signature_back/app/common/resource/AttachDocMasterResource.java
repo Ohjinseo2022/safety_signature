@@ -40,7 +40,7 @@ public class AttachDocMasterResource {
     private final MinioUtils minioUtils;
     private final AttachDocMasterService attachDocMasterService;
     private final AttachDocHistService attachDocHistService;
-    @Operation(summary = "전자서명 이미지 업로드")
+    @Operation(summary = "첨부 파일 업로드")
     @PutMapping(value ="/save-signature" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void saveImage(HttpServletRequest request ,
                           @RequestParam(value = "file") MultipartFile file,

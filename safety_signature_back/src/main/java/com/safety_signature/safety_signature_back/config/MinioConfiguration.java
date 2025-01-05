@@ -28,9 +28,6 @@ public class MinioConfiguration {
     @Value("${client.minio.secretKey}")
     private String secretKey;
 
-    /*
-     *  Keycloak 서버와 통신하기 위한 클라이언트 빌더
-     * */
     @Bean
     public MinioClient minioClient() {
         MinioClient minioClient = MinioClient.builder()

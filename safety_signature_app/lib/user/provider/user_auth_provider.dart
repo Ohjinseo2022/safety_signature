@@ -40,10 +40,6 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
     try {
       bool isToken =
           platform == 'google' ? await _onGoogleLogin() : await _onKakaoLogin();
-      // platform == 'kakao'
-      //         ? await _onKakaoLogin()
-      //         : await _onNaverLogin();
-
       if (isToken) {
         bool isProfile = state is UserMinModel;
         var pState = null;

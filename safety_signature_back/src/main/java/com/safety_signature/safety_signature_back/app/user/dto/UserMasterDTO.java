@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.safety_signature.safety_signature_back.app.common.dto.AbstractAuditingDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.View;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.Comment;
+
 
 import java.io.Serializable;
 @Setter
@@ -68,4 +67,12 @@ public class UserMasterDTO  extends AbstractAuditingDTO<String> implements Seria
     @JsonView(View.Min.class)
     @Schema(description="회원 서명 ID")
     private String signatureDocId;
+
+    @JsonView(View.Min.class)
+    @Schema(description="회원 타입")
+    private String userType;
+
+    @JsonView(View.Min.class)
+    @Schema(description="계정 상태")
+    private String userStatus;
 }

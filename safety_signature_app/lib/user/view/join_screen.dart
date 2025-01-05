@@ -15,8 +15,11 @@ class JoinScreen extends ConsumerStatefulWidget {
 
 class _JoinScreenState extends ConsumerState<JoinScreen> {
   String name = "";
+  String userId = "";
+  String password = "";
+  String passwordCheck = "";
   String middleNumber = "";
-  String endNumber = "";
+  String lastNumber = "";
   @override
   Widget build(BuildContext context) {
     return DefaultLayout(
@@ -27,14 +30,14 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
         child: ListView(
           children: [
             _inputField(
-              inputValue: name,
-              title: "이름",
-            ),
-            // _inputField(
-            //   inputValue: name,
-            //   title: "생년월일",
-            // ),
-
+                inputValue: name,
+                title: "이름",
+                placeholder: "이름을 입력해 주세요.",
+                onChangedValue: (value) {
+                  setState(() {
+                    name = value;
+                  });
+                }),
             Padding(
               padding:
                   const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -43,8 +46,10 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   _phoneNumber(
-                    inputValue: middleNumber,
-                  ),
+                      inputValue: "",
+                      onChangedValue: (value) {
+                        print(value);
+                      }),
                   SizedBox(
                     width: 20,
                     height: 80,
@@ -62,19 +67,22 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
                     width: 20,
                   ),
                   _phoneNumber(
-                    inputValue: middleNumber,
+                    inputValue: lastNumber,
                   ),
                 ],
               ),
             ),
-
             _inputField(
-              inputValue: name,
+              inputValue: userId,
               title: "아이디(이메일)",
             ),
             _inputField(
-              inputValue: name,
+              inputValue: password,
               title: "비밀번호",
+            ),
+            _inputField(
+              inputValue: passwordCheck,
+              title: "비밀번호 확인",
             ),
           ],
         ),
@@ -86,6 +94,8 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
       {required String inputValue,
       String? validation,
       String? title,
+      String? placeholder,
+      Function? onChangedValue,
       bool obscureText = false}) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
@@ -105,11 +115,12 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
             height: 80,
             child: CustomTextFormField(
               onChanged: (value) {
-                inputValue = value;
+                if (onChangedValue != null) onChangedValue(value);
               },
+              value: inputValue,
               obscureText: obscureText,
               errorText: validation,
-              hintText: title != null ? "$title을/를 입력해 주세요." : "입력해 주세요.",
+              hintText: placeholder ?? "입력해 주세요.",
             ),
           ),
         ],
@@ -121,14 +132,17 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
     required String inputValue,
     String? validation,
     String? title,
+    Function? onChangedValue,
   }) {
     return SizedBox(
       height: 80,
       width: 100,
       child: CustomTextFormField(
         onChanged: (value) {
+          if (onChangedValue != null) onChangedValue(value);
           inputValue = value;
         },
+        value: inputValue,
         errorText: validation,
         hintText: "0000",
         inputFormatters: [

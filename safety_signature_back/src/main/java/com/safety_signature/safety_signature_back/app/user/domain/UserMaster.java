@@ -90,4 +90,14 @@ public class UserMaster extends AbstractAuditingEntity<String> implements Serial
     @Comment("회원 서명 ID")
     @Column(name="signature_doc_id")
     private String signatureDocId;
+
+    @Comment("회원 타입")
+    @Column(name="user_type")
+    private String userType;
+
+    @Comment("계정 상태")
+    @Column(name="user_status")
+    private String userStatus;
+
+
 }
