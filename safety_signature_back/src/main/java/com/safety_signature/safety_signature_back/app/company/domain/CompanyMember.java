@@ -25,7 +25,8 @@ import java.io.Serializable;
 @Entity
 @Table(name="tb_company_member")
 @EntityListeners(AuditingEntityListener.class)
-@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)public class CompanyMember extends AbstractAuditingEntity<String> implements Serializable {
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
+public class CompanyMember extends AbstractAuditingEntity<String> implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Comment("회사 구성원 고유 ID")
