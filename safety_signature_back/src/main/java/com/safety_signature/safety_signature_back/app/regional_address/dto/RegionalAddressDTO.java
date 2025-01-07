@@ -1,13 +1,14 @@
 package com.safety_signature.safety_signature_back.app.regional_address.dto;
 
 import com.safety_signature.safety_signature_back.app.common.dto.AbstractAuditingDTO;
-import com.safety_signature.safety_signature_back.app.company.domain.CompanyMaster;
+
 import com.safety_signature.safety_signature_back.app.company.dto.CompanyMasterDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.persistence.Column;
+
 import jakarta.validation.constraints.Size;
 import lombok.*;
-import org.hibernate.annotations.Comment;
+
+
 
 import java.io.Serializable;
 
