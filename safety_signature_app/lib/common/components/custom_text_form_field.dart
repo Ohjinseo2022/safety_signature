@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 
-class CustomTextFormField extends StatelessWidget {
+class CustomTextFormField extends StatefulWidget {
   final String? value;
   final String? hintText;
   final String? errorText;
@@ -26,6 +26,30 @@ class CustomTextFormField extends StatelessWidget {
   });
 
   @override
+  State<CustomTextFormField> createState() => _CustomTextFormFieldState();
+}
+
+class _CustomTextFormFieldState extends State<CustomTextFormField> {
+  final TextEditingController _controller = TextEditingController();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    if (widget.value != null && widget.value != "") {
+      _controller.text = widget.value!;
+    }
+
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // 메모리 누수를 방지하기 위해 컨트롤러 해제
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // UnderlineInputBorder() -> 기본값임
     final baseBorder = UnderlineInputBorder();
@@ -38,20 +62,22 @@ class CustomTextFormField extends StatelessWidget {
     return Stack(
       children: [
         TextFormField(
+          controller: _controller,
+          // initialValue: widget.value,
           cursorColor: TEXT_COLOR,
           //비밀번호 입력할때 사용
-          obscureText: obscureText,
-          autofocus: autofocus,
-          onChanged: onChanged,
-          inputFormatters: inputFormatters,
+          obscureText: widget.obscureText,
+          autofocus: widget.autofocus,
+          onChanged: widget.onChanged,
+          inputFormatters: widget.inputFormatters,
           //입력 필드의 데코레이션
           decoration: InputDecoration(
-            labelText: labelText,
+            labelText: widget.labelText,
             contentPadding: EdgeInsets.symmetric(horizontal: 5),
             //placeholder
-            enabled: enabled, // 활성화 비활성화
-            hintText: hintText,
-            errorText: errorText,
+            enabled: widget.enabled, // 활성화 비활성화
+            hintText: widget.hintText,
+            errorText: widget.errorText,
 
             // errorStyle: const TextStyle(
             //   height: 0,
@@ -73,11 +99,16 @@ class CustomTextFormField extends StatelessWidget {
             ),
           ),
         ),
-        if (value != null && value != "")
+        if (widget.value != null && widget.value != "" && widget.enabled)
           Positioned(
             right: 0,
             child: IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  _controller.clear();
+                  _controller.text = '';
+                  // setState(() {});
+                  if (widget.onChanged != null) widget.onChanged!("");
+                },
                 icon: Icon(
                   Icons.clear,
                 )),

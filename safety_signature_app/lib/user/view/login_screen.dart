@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:safety_signature_app/common/components/login_button.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/enumeration/social.dart';
+import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
 import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
@@ -81,8 +82,16 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       {required String platform, required BuildContext context}) async {
     UserModelBase? model =
         await ref.read(userAuthProvider.notifier).login(platform: platform);
+
     if (model is UserMinModel) {
-      context.goNamed(RootTab.routeName);
+      if (UserStatusCode.getByCode(model.userStatusCode) ==
+          UserStatusCode.PENDING) {
+        print("왜 말안듣냥...");
+        context.goNamed(JoinScreen.routeName);
+        return;
+      } else {
+        context.goNamed(RootTab.routeName);
+      }
     }
   }
 

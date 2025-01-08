@@ -81,12 +81,16 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
       state = UserModelGuest();
       return;
     }
-    final response = await userMasterRepository.userProfile();
-    if (response == null) {
-      state = UserModelGuest();
-      return;
+    try {
+      final response = await userMasterRepository.userProfile();
+      if (response == null) {
+        state = UserModelGuest();
+        return;
+      }
+      state = response;
+    } catch (e) {
+      state = UserModelError(message: e.toString());
     }
-    state = response;
   }
 
   Future<void> userLogout() async {

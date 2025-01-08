@@ -1,10 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:safety_signature_app/common/components/common_dialog.dart';
+import 'package:safety_signature_app/common/components/pagination_list_view.dart';
 import 'package:safety_signature_app/common/const/color.dart';
+import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
 import 'package:safety_signature_app/common/model/permission_model.dart';
+import 'package:safety_signature_app/common/provider/go_router.dart';
 import 'package:safety_signature_app/common/provider/permission_provider.dart';
+import 'package:safety_signature_app/user/model/user_model.dart';
+import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
+import 'package:safety_signature_app/user/view/join_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   static String get routeName => 'splash';
@@ -39,6 +47,26 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   @override
   Widget build(BuildContext context) {
     final permission = ref.watch(permissionProvider);
+    final state = ref.watch(userAuthProvider);
+    if (ModalRoute.of(context)?.isCurrent ?? false) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (state is UserMinModel &&
+            UserStatusCode.getByCode(state.userStatusCode) ==
+                UserStatusCode.PENDING) {
+          commonDialog(
+            context: context,
+            title: "회원가입 안내",
+            content: Center(child: Text("전자 서명 정보 등록 후 간편가입 완료됩니다.")),
+            onConfirm: () async {
+              final result = await context.pushNamed(JoinScreen.routeName);
+              if (result == null)
+                ref.watch(userAuthProvider.notifier).userLogout();
+            },
+          );
+        }
+      });
+    }
+
     return DefaultLayout(
       backgroundColor: BACK_GROUND_COLOR,
       child: SizedBox(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safety_signature_app/common/components/text_editor.dart';
 import 'package:safety_signature_app/common/const/color.dart';
+import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
 
@@ -40,6 +41,7 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           _profile(model: state),
+          Text(state.userStatusCode as String),
           ElevatedButton(
               onPressed: () {
                 ref.read(userAuthProvider.notifier).userLogout();

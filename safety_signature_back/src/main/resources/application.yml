@@ -18,7 +18,7 @@ spring:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     database: postgresql
     hibernate:
-      ddl-auto: update        # DB 초기화 전략 (none, create, create-drop, update, validate)
+      ddl-auto: create        # DB 초기화 전략 (none, create, create-drop, update, validate)
     open-in-view: false
     properties:
       hibernate:

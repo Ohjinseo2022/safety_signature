@@ -4,6 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safety_signature_app/common/components/custom_text_form_field.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
+import 'package:safety_signature_app/user/model/user_model.dart';
+import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
 
 class JoinScreen extends ConsumerStatefulWidget {
   static String get routeName => "JoinScreen";
@@ -18,10 +20,20 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
   String userId = "";
   String password = "";
   String passwordCheck = "";
-  String middleNumber = "";
-  String lastNumber = "";
+  String mobile = "010";
+
   @override
   Widget build(BuildContext context) {
+    final state = ref.watch(userAuthProvider);
+
+    if (state is UserMinModel) {
+      setState(() {
+        name = state.name;
+        userId = state.email;
+        mobile = state.mobile ?? "010";
+      });
+    }
+
     return DefaultLayout(
       title: "회원가입",
       backgroundColor: SECONDARY_COLOR,
@@ -30,73 +42,72 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
         child: ListView(
           children: [
             _inputField(
-                inputValue: name,
-                title: "이름",
-                placeholder: "이름을 입력해 주세요.",
+              inputValue: name,
+              title: "이름",
+              placeholder: "이름을 입력해 주세요.",
+              onChangedValue: (value) {
+                setState(() {
+                  name = value;
+                });
+              },
+              enabled: state is! UserMinModel,
+            ),
+            _inputField(
+                inputValue: mobile,
+                title: "핸드폰 번호",
+                placeholder: "핸드폰 번호를 입력해 주세요. 숫자만 입력해 주세요",
                 onChangedValue: (value) {
                   setState(() {
-                    name = value;
+                    mobile = value;
                   });
-                }),
-            Padding(
-              padding:
-                  const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  _phoneNumber(
-                      inputValue: "",
-                      onChangedValue: (value) {
-                        print(value);
-                      }),
-                  SizedBox(
-                    width: 20,
-                    height: 80,
-                    child: Center(
-                      child: Text(
-                        "-",
-                        style: defaultTextStyle,
-                      ),
-                    ),
-                  ),
-                  _phoneNumber(
-                    inputValue: middleNumber,
-                  ),
-                  SizedBox(
-                    width: 20,
-                  ),
-                  _phoneNumber(
-                    inputValue: lastNumber,
-                  ),
-                ],
-              ),
-            ),
+                },
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  LengthLimitingTextInputFormatter(11),
+                ]),
             _inputField(
               inputValue: userId,
               title: "아이디(이메일)",
+              placeholder: "아이디(이메일)을 입력해 주세요. ex)xxx@gmail.com",
+              enabled: state is! UserMinModel,
             ),
             _inputField(
               inputValue: password,
               title: "비밀번호",
+              placeholder: "비밀번호를 입력해 주세요.",
+              onChangedValue: (value) {
+                setState(() {
+                  password = value;
+                });
+              },
             ),
-            _inputField(
-              inputValue: passwordCheck,
-              title: "비밀번호 확인",
-            ),
+            if (password != "")
+              _inputField(
+                inputValue: passwordCheck,
+                title: "비밀번호 확인",
+                placeholder: "비밀번호를 다시한번 입력해주세요.",
+                onChangedValue: (value) {
+                  setState(() {
+                    passwordCheck = value;
+                  });
+                },
+              ),
           ],
         ),
       ),
     );
   }
 
-  _inputField(
-      {required String inputValue,
-      String? validation,
-      String? title,
-      String? placeholder,
-      Function? onChangedValue,
-      bool obscureText = false}) {
+  _inputField({
+    String? inputValue,
+    String? validation,
+    String? title,
+    String? placeholder,
+    Function? onChangedValue,
+    List<TextInputFormatter>? inputFormatters,
+    bool obscureText = false,
+    bool? enabled,
+  }) {
     return Padding(
       padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
       child: Column(
@@ -118,9 +129,11 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
                 if (onChangedValue != null) onChangedValue(value);
               },
               value: inputValue,
+              enabled: enabled ?? true,
               obscureText: obscureText,
               errorText: validation,
               hintText: placeholder ?? "입력해 주세요.",
+              inputFormatters: inputFormatters,
             ),
           ),
         ],

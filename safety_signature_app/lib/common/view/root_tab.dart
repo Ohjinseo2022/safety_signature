@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safety_signature_app/common/const/color.dart';
+import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
 import 'package:safety_signature_app/common/model/permission_model.dart';
 import 'package:safety_signature_app/common/provider/permission_provider.dart';
 import 'package:safety_signature_app/common/view/splash_screen.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
+import 'package:safety_signature_app/user/view/join_screen.dart';
 import 'package:safety_signature_app/user/view/login_screen.dart';
 import 'package:safety_signature_app/user/view/my_page_screen.dart';
 
@@ -89,6 +91,13 @@ class _RootTabState extends ConsumerState<RootTab>
       return DefaultLayout(
         child: LoginScreen(),
       );
+    }
+    if (state is UserMinModel &&
+        UserStatusCode.getByCode(state.userStatusCode) ==
+            UserStatusCode.PENDING) {
+      setState(() {});
+
+      return SplashScreen();
     }
     return DefaultLayout(
       title: tabList[index]["title"],

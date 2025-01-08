@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
 
 part 'user_model.g.dart';
 
@@ -22,28 +23,32 @@ class UserMinModel extends UserModelBase {
   // )
   final String? profileImageUri;
   final String email;
+  final String? mobile;
   final String? signatureDocId;
 
+  final String userStatusCode;
   UserMinModel(
       {required this.id,
       required this.name,
       this.profileImageUri,
       required this.email,
-      this.signatureDocId});
+      this.signatureDocId,
+      this.mobile,
+      required this.userStatusCode});
   factory UserMinModel.fromJson(Map<String, dynamic> json) =>
       _$UserMinModelFromJson(json);
 }
 
 @JsonSerializable()
 class UserSummaryModel extends UserMinModel {
-  final String? mobile;
   UserSummaryModel(
       {required super.id,
       required super.name,
       required super.email,
+      required super.userStatusCode,
       super.profileImageUri,
       super.signatureDocId,
-      this.mobile});
+      super.mobile});
   factory UserSummaryModel.fromJson(Map<String, dynamic> json) =>
       _$UserSummaryModelFromJson(json);
 }
@@ -58,6 +63,7 @@ class UserDetailModel extends UserSummaryModel {
     required super.id,
     required super.name,
     required super.email,
+    required super.userStatusCode,
     super.profileImageUri,
     super.mobile,
     super.signatureDocId,
@@ -76,6 +82,7 @@ class UserHiddenModel extends UserDetailModel {
     required super.id,
     required super.name,
     required super.email,
+    required super.userStatusCode,
     super.profileImageUri,
     super.signatureDocId,
     super.mobile,

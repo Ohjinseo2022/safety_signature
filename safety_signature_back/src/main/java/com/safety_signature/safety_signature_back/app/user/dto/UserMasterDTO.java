@@ -3,6 +3,7 @@ package com.safety_signature.safety_signature_back.app.user.dto;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.safety_signature.safety_signature_back.app.common.dto.AbstractAuditingDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.View;
+import com.safety_signature.safety_signature_back.app.common.enumeration.UserStatusCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -28,7 +29,7 @@ public class UserMasterDTO  extends AbstractAuditingDTO<String> implements Seria
     @Schema(description = "회원 이름" ,requiredMode= Schema.RequiredMode.REQUIRED)
     private String name;
 
-    @JsonView(View.Summary.class)
+    @JsonView(View.Min.class)
     @Size(max = 2000)
     @Schema(description = "핸드폰 번호" )
     private String mobile;
@@ -73,6 +74,6 @@ public class UserMasterDTO  extends AbstractAuditingDTO<String> implements Seria
     private String userType;
 
     @JsonView(View.Min.class)
-    @Schema(description="계정 상태")
-    private String userStatus;
+    @Schema(description="계정 상태 코드")
+    private UserStatusCode userStatusCode;
 }

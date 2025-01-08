@@ -2,6 +2,7 @@ package com.safety_signature.safety_signature_back.app.user.domain;
 
 
 import com.safety_signature.safety_signature_back.app.common.domain.AbstractAuditingEntity;
+import com.safety_signature.safety_signature_back.app.common.enumeration.UserStatusCode;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -95,9 +96,10 @@ public class UserMaster extends AbstractAuditingEntity<String> implements Serial
     @Column(name="user_type")
     private String userType;
 
+    @Enumerated(value = EnumType.STRING)
     @Comment("계정 상태")
     @Column(name="user_status")
-    private String userStatus;
+    private UserStatusCode userStatusCode;
 
 
 }
