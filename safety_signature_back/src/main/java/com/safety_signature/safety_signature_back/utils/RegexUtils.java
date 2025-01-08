@@ -15,7 +15,9 @@ public class RegexUtils {
         // 전화번호가 정규식과 매칭될 경우
         if (matcher.matches()) {
             // 국가 코드는 무시하고, 010-xxxx-xxxx 형식으로 변환
-            return "010-" + matcher.group(2) + "-" + matcher.group(3);
+//            return "010-" + matcher.group(2) + "-" + matcher.group(3);
+            //010xxxxxxxx 형식으로 저장 할랭...
+            return "010" + matcher.group(2) + matcher.group(3);
         }
 
         // 형식에 맞지 않으면 원래의 번호를 그대로 반환
