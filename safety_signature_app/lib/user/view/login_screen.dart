@@ -6,6 +6,7 @@ import 'package:safety_signature_app/common/components/login_button.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/enumeration/social.dart';
 import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
+import 'package:safety_signature_app/common/provider/modal_controller_porivder.dart';
 import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
@@ -50,6 +51,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             width: double.infinity,
           ),
           _googleLoginButton(onPressed: () async {
+            await ref
+                .watch(modalControllerProvider.notifier)
+                .isPopUp(Visibility: true);
             await onLoginHandler(
                 context: context, platform: SocialTypeCode.GOOGLE.code);
           }),
@@ -57,6 +61,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             height: 15,
           ),
           _kakaoLoginButton(onPressed: () async {
+            await ref
+                .watch(modalControllerProvider.notifier)
+                .isPopUp(Visibility: true);
             await onLoginHandler(
                 context: context, platform: SocialTypeCode.KAKAO.code);
           }),
@@ -64,7 +71,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             height: 15,
           ),
           // TODO : 이메일 로그인 ui 만들기
-          _emailLoginButton(onPressed: () {}),
+          _emailLoginButton(onPressed: () async {
+            await ref
+                .watch(modalControllerProvider.notifier)
+                .isPopUp(Visibility: true);
+          }),
           _emailJoin(onPressed: () {
             context.pushNamed(JoinScreen.routeName);
             widget.animationController?.animateTo(0);
@@ -78,21 +89,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     );
   }
 
-  Future<void> onLoginHandler(
+  Future<UserModelBase?> onLoginHandler(
       {required String platform, required BuildContext context}) async {
     UserModelBase? model =
         await ref.read(userAuthProvider.notifier).login(platform: platform);
-
     if (model is UserMinModel) {
-      if (UserStatusCode.getByCode(model.userStatusCode) ==
-          UserStatusCode.PENDING) {
-        print("왜 말안듣냥...");
-        context.goNamed(JoinScreen.routeName);
-        return;
-      } else {
-        context.goNamed(RootTab.routeName);
-      }
+      mounted ? context.goNamed(RootTab.routeName) : null;
     }
+    return model;
   }
 
   Widget _googleLoginButton({required VoidCallback? onPressed}) {

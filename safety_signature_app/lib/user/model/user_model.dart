@@ -77,7 +77,7 @@ class UserDetailModel extends UserSummaryModel {
 
 @JsonSerializable()
 class UserHiddenModel extends UserDetailModel {
-  final String userPassword;
+  final String password;
   UserHiddenModel({
     required super.id,
     required super.name,
@@ -89,7 +89,7 @@ class UserHiddenModel extends UserDetailModel {
     super.googleSignIn,
     super.kakaoSignIn,
     super.naverSignIn,
-    required this.userPassword,
+    required this.password,
   });
   factory UserHiddenModel.fromJson(Map<String, dynamic> json) =>
       _$UserHiddenModelFromJson(json);

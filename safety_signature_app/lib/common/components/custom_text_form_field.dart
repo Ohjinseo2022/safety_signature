@@ -12,6 +12,7 @@ class CustomTextFormField extends StatefulWidget {
   final String? labelText;
   final ValueChanged<String>? onChanged;
   final List<TextInputFormatter>? inputFormatters; // 입력 제한 설정
+  final FormFieldValidator<String>? validator;
   CustomTextFormField({
     super.key,
     required this.value,
@@ -22,6 +23,7 @@ class CustomTextFormField extends StatefulWidget {
     this.obscureText = false,
     this.autofocus = false,
     this.inputFormatters,
+    this.validator,
     required this.onChanged,
   });
 
@@ -31,14 +33,14 @@ class CustomTextFormField extends StatefulWidget {
 
 class _CustomTextFormFieldState extends State<CustomTextFormField> {
   final TextEditingController _controller = TextEditingController();
-
+  bool obscureText = false;
   @override
   void initState() {
     // TODO: implement initState
     if (widget.value != null && widget.value != "") {
       _controller.text = widget.value!;
     }
-
+    obscureText = widget.obscureText;
     super.initState();
   }
 
@@ -62,14 +64,23 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
     return Stack(
       children: [
         TextFormField(
+          autovalidateMode: widget.validator != null
+              ? AutovalidateMode.onUserInteraction
+              : null,
           controller: _controller,
           // initialValue: widget.value,
           cursorColor: TEXT_COLOR,
           //비밀번호 입력할때 사용
-          obscureText: widget.obscureText,
+          obscureText: obscureText,
           autofocus: widget.autofocus,
-          onChanged: widget.onChanged,
+          onChanged: (value) {
+            setState(() {
+              if (widget.onChanged != null) widget.onChanged!(value);
+              _controller.text = value;
+            });
+          },
           inputFormatters: widget.inputFormatters,
+          validator: widget.validator,
           //입력 필드의 데코레이션
           decoration: InputDecoration(
             labelText: widget.labelText,
@@ -79,10 +90,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             hintText: widget.hintText,
             errorText: widget.errorText,
 
-            // errorStyle: const TextStyle(
-            //   height: 0,
-            //   fontSize: 0,
-            // ),
+            errorStyle: const TextStyle(overflow: TextOverflow.ellipsis),
             hintStyle: TextStyle(
               color: TEXT_COLOR.withOpacity(0.3),
               fontSize: 14.0,
@@ -99,20 +107,38 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             ),
           ),
         ),
-        if (widget.value != null && widget.value != "" && widget.enabled)
+        if (_controller.text != "" && widget.enabled && widget.obscureText)
           Positioned(
             right: 0,
             child: IconButton(
-                onPressed: () {
+              onPressed: () {
+                setState(() {
+                  obscureText = !obscureText;
+                });
+              },
+              icon: Icon(
+                obscureText
+                    ? Icons.visibility_outlined
+                    : Icons.visibility_off_outlined,
+              ),
+            ),
+          ),
+        if (_controller.text != "" && widget.enabled && !widget.obscureText)
+          Positioned(
+            right: 0,
+            child: IconButton(
+              onPressed: () {
+                setState(() {
                   _controller.clear();
                   _controller.text = '';
-                  // setState(() {});
                   if (widget.onChanged != null) widget.onChanged!("");
-                },
-                icon: Icon(
-                  Icons.clear,
-                )),
-          )
+                });
+              },
+              icon: Icon(
+                Icons.clear,
+              ),
+            ),
+          ),
       ],
     );
   }

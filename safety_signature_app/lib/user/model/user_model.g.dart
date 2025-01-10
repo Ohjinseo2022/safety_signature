@@ -89,7 +89,7 @@ UserHiddenModel _$UserHiddenModelFromJson(Map<String, dynamic> json) =>
       googleSignIn: json['googleSignIn'] as bool? ?? false,
       kakaoSignIn: json['kakaoSignIn'] as bool? ?? false,
       naverSignIn: json['naverSignIn'] as bool? ?? false,
-      userPassword: json['userPassword'] as String,
+      password: json['password'] as String,
     );
 
 Map<String, dynamic> _$UserHiddenModelToJson(UserHiddenModel instance) =>
@@ -104,5 +104,5 @@ Map<String, dynamic> _$UserHiddenModelToJson(UserHiddenModel instance) =>
       'googleSignIn': instance.googleSignIn,
       'kakaoSignIn': instance.kakaoSignIn,
       'naverSignIn': instance.naverSignIn,
-      'userPassword': instance.userPassword,
+      'password': instance.password,
     };

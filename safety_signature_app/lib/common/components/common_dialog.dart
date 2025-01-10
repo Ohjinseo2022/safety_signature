@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 Future<void> commonDialog(
     {required BuildContext context,
-    required String title,
+    String? title,
     required Widget content,
     required VoidCallback onConfirm,
     VoidCallback? onCancel,
@@ -12,7 +12,7 @@ Future<void> commonDialog(
     barrierDismissible: barrierDismissible, // 다이얼로그 외부를 눌러도 닫히지 않도록 설정
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text(title),
+        title: title == null ? null : Text(title),
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
