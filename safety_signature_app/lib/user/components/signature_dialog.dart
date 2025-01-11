@@ -95,8 +95,8 @@ Future<void> signatureDialog(
                       content: Container(
                           height: 50,
                           alignment: Alignment.bottomCenter,
-                          child: Text(
-                            "서명 정보는 등록 후 수정이 어렵습니다. 회원가입 진행 할까요?",
+                          child: const Text(
+                            "서명 정보는 등록 후 수정 할수 없습니다. 회원가입 진행 할까요?",
                             style: defaultTextStyle,
                           )),
                       onConfirm: () async {
@@ -104,6 +104,7 @@ Future<void> signatureDialog(
                             await signaturePadKey.currentState!.toImage();
                         ByteData? byteData = (await image.toByteData(
                             format: ImageByteFormat.png)) as ByteData?;
+
                         Uint8List? pngBytes = byteData?.buffer.asUint8List();
                         onConfirm(pngBytes!);
                         Navigator.of(context).pop();

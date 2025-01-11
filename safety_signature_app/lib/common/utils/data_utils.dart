@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:safety_signature_app/common/const/data.dart';
 
@@ -58,5 +59,13 @@ class DataUtils {
     } else {
       return '이메일 형식이 맞지 않습니다.';
     }
+  }
+
+  static Uint8List stringToUint8List(String base64String) {
+    return base64Decode(base64String);
+  }
+
+  static String uint8ListToString(Uint8List object) {
+    return base64Encode(object);
   }
 }

@@ -32,7 +32,6 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
   String? mobileValid = "";
   String? passwordValid = "";
   String? passwordCheckValid = "";
-  GlobalKey<SfSignaturePadState> _signaturePadKey = GlobalKey();
   bool isSubmit = false;
   bool isSignature = false;
   Uint8List? image;
@@ -171,7 +170,6 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
                         barrierDismissible: true);
                     return;
                   } else {
-                    print("엥? ");
                     signatureDialog(
                         context: context,
                         onConfirm: (Uint8List value) {
