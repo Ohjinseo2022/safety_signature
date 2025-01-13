@@ -21,6 +21,6 @@ Map<String, dynamic> _$PostJoinBodyToJson(PostJoinBody instance) =>
       'name': instance.name,
       'userId': instance.userId,
       'mobile': instance.mobile,
-      'password': instance.password,
+      'password': DataUtils.plainToBase64(instance.password),
       'image': DataUtils.uint8ListToString(instance.image),
     };

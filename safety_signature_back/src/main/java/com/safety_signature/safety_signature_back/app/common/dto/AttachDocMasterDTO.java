@@ -87,5 +87,5 @@ public class AttachDocMasterDTO  extends AbstractAuditingDTO<String> implements 
      * MinIO삭제여부
      */
     @Schema(description = "MinIO삭제여부")
-    private Boolean minioDeleteYn;
+    private Boolean minioDeleteYn = false;
 }

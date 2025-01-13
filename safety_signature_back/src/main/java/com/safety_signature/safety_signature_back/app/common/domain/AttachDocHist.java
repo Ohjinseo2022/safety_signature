@@ -54,7 +54,7 @@ public class AttachDocHist extends AbstractAuditingEntity<String> implements Ser
      */
     @Comment("작업자IP주소")
     @Size(max = 20)
-    @Column(name = "operator_ip_address", length = 20, nullable = false)
+    @Column(name = "operator_ip_address", length = 20)
     private String operatorIpAddress;
 
     /**

@@ -7,6 +7,7 @@ import com.safety_signature.safety_signature_back.utils.jwt.TokenValues;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.data.domain.AuditorAware;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -26,8 +27,12 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
         //createdBy lastModifiedBy 를 자동으로 입력시켜주는 코드
-        HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
         try {
+            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+            String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+            if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+                return  Optional.of("anonymoususer");
+            }
             UserMasterDTO userMasterDTO = userMasterService.isValidTokenCheckToGetUserMaster(request, tokenValues.secretKey());
             if (userMasterDTO == null) {
                 Optional.of("anonymoususer");

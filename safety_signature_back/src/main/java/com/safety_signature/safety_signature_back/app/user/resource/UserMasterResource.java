@@ -1,12 +1,21 @@
 package com.safety_signature.safety_signature_back.app.user.resource;
 
+import com.safety_signature.safety_signature_back.app.auth.dto.responseDTO.LoginResDTO;
 import com.safety_signature.safety_signature_back.app.auth.service.AuthTransactionalService;
+import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.View;
+import com.safety_signature.safety_signature_back.app.common.enumeration.UserStatusCode;
+import com.safety_signature.safety_signature_back.app.common.service.AttachDocMasterService;
+import com.safety_signature.safety_signature_back.app.token.dto.TokenManagementMaterDTO;
+import com.safety_signature.safety_signature_back.app.token.service.TokenManagementMasterService;
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.dto.UserResponseMessageDTO;
+import com.safety_signature.safety_signature_back.app.user.dto.request.PostJoinBody;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
 import com.safety_signature.safety_signature_back.config.FieldSelector;
 import com.safety_signature.safety_signature_back.config.Partial;
+import com.safety_signature.safety_signature_back.utils.PasswordUtils;
+import com.safety_signature.safety_signature_back.utils.common.TsidUtil;
 import com.safety_signature.safety_signature_back.utils.jwt.JwtTokenProvider;
 import com.safety_signature.safety_signature_back.utils.jwt.TokenValues;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,9 +28,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name="회원 관련 API")
 @RestController
@@ -33,6 +40,8 @@ public class UserMasterResource {
     private final AuthTransactionalService authTransactionalService;
     private final TokenValues tokenValues;
     private final UserMasterService userMasterService;
+    private final AttachDocMasterService attachDocMasterService;
+    private final TokenManagementMasterService tokenManagementMasterService;
     private static final String ENTITY_NAME = "UserMasterResource";
     @Operation(summary = "로그인 요청")
     @GetMapping("/profile")
@@ -46,10 +55,10 @@ public class UserMasterResource {
          * */
         UserMasterDTO result = userMasterService.isValidTokenCheckToGetUserMaster(request,tokenValues.secretKey());
         if(ObjectUtils.isEmpty(result)){
-            UserResponseMessageDTO messageDTO = new UserResponseMessageDTO();
-            messageDTO.setMassage("Status requiring login or sign");
-
-            messageDTO.setStatus(HttpStatus.UNAUTHORIZED);
+            UserResponseMessageDTO messageDTO = UserResponseMessageDTO.builder()
+                    .massage("Status requiring login or sign")
+                    .Status(HttpStatus.UNAUTHORIZED)
+                    .build();
             return ResponseEntity.status(messageDTO.getStatus()).build();
         }else{
             return ResponseEntity.ok().headers(HttpHeaders.EMPTY).body(Partial.with(
@@ -57,5 +66,46 @@ public class UserMasterResource {
                     FieldSelector.withDefaultView(null, View.Min.class)
             ));
         }
+    }
+
+    @Operation(summary = "로그인 요청")
+    @PostMapping("/join")
+    public ResponseEntity<?> postUserJoin(@RequestBody PostJoinBody postJoinBody)throws Exception{
+        log.info("post user join start");
+        /**
+         * 1. id 정보가 있다면 기존 계정 상태 바꿔줘야함 .
+         * 2. 비밀번호는 스프링 시큐리티에서 제공하는 암호화 처리
+         * 3. 이미지 minio 저장 처리
+         * 4. 기존 회원 유무를 체크할건지.. 이건 고민 필요할듯
+         */
+        String userMasterId =  postJoinBody.getId() ==null ? TsidUtil.getId() : postJoinBody.getId();
+
+
+        AttachDocMasterDTO attachDocMasterDTO = attachDocMasterService.base64StringSignatureImageSave(postJoinBody.getImage(),userMasterId);
+
+        if(ObjectUtils.isEmpty(attachDocMasterDTO)){
+            log.info("post user join failed");
+            UserResponseMessageDTO messageDTO = UserResponseMessageDTO.builder()
+                    .Status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .massage("회원가입 처리중 오류 발생")
+                    .build();
+            return ResponseEntity.status(messageDTO.getStatus()).body(messageDTO);
+        }else{
+            log.info("post user join success");
+            UserMasterDTO userMasterDTO = new UserMasterDTO().builder()
+                    .userPassword(PasswordUtils.encodePassword(postJoinBody.getPassword()))
+                    .id(userMasterId)
+                    .email(postJoinBody.getUserId())
+                    .name(postJoinBody.getName())
+                    .mobile(postJoinBody.getMobile())
+                    .signatureDocId(attachDocMasterDTO.getId())
+                    .userStatusCode(UserStatusCode.ACTIVE)
+                    .build();
+            UserMasterDTO result =  userMasterService.partialUpdate(userMasterDTO);
+            TokenManagementMaterDTO tokenManagementMaterDTO= tokenManagementMasterService.createOrUpdateTokenManagementMaster(result);
+            return ResponseEntity.ok().body(LoginResDTO.builder().accessToken(tokenManagementMaterDTO.getAccessToken()).refreshToken(tokenManagementMaterDTO.getRefreshToken()).build());
+        }
+
+
     }
 }

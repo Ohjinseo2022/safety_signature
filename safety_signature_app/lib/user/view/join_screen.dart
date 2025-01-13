@@ -5,12 +5,17 @@ import 'package:flutter/services.dart' hide Uint8List;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safety_signature_app/common/components/common_dialog.dart';
 import 'package:safety_signature_app/common/components/custom_text_form_field.dart';
+import 'package:safety_signature_app/common/components/pagination_list_view.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
+import 'package:safety_signature_app/common/provider/go_router.dart';
 import 'package:safety_signature_app/common/utils/data_utils.dart';
+import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/components/signature_dialog.dart';
+import 'package:safety_signature_app/user/model/post_join_body.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
+import 'package:go_router/go_router.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
 
 class JoinScreen extends ConsumerStatefulWidget {
@@ -172,8 +177,18 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
                   } else {
                     signatureDialog(
                         context: context,
-                        onConfirm: (Uint8List value) {
-                          print(value);
+                        onConfirm: (Uint8List image) async {
+                          bool isJoin = await ref
+                              .read(userAuthProvider.notifier)
+                              .userJoin(PostJoinBody(
+                                  id: state is UserMinModel ? state.id : null,
+                                  name: name,
+                                  userId: userId,
+                                  mobile: mobile,
+                                  password: password,
+                                  image: image));
+                          isJoin ? context.goNamed(RootTab.routeName) : null;
+                          // print(value);
                         });
                   }
                 },

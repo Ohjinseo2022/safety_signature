@@ -58,7 +58,7 @@ Future<void> signatureDialog(
                         minimumStrokeWidth: 1,
                         maximumStrokeWidth: 5,
 
-                        strokeColor: Colors.blue,
+                        strokeColor: Colors.black,
                         backgroundColor: Colors.transparent,
                       ),
                     ]),

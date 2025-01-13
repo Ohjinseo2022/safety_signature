@@ -12,4 +12,6 @@ public interface UserMasterService {
     UserMasterDTO createOrPartialUpdateUserMaster(OauthUserProfileResponse profileResponse , LoginReqDTO loginReqDTO);
     UserMasterDTO getUserMasterById(String userId);
     UserMasterDTO isValidTokenCheckToGetUserMaster(HttpServletRequest request ,String secretKey);
+
+    UserMasterDTO partialUpdate(UserMasterDTO userMasterDTO);
 }

@@ -5,6 +5,7 @@ import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:safety_signature_app/common/const/data.dart';
 import 'package:safety_signature_app/common/secure_storage/secure_storage.dart';
 import 'package:safety_signature_app/user/model/login_req_model.dart';
+import 'package:safety_signature_app/user/model/post_join_body.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
 import 'package:safety_signature_app/user/repository/auth_repository.dart';
 import 'package:safety_signature_app/user/repository/user_master_repository.dart';
@@ -98,6 +99,22 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
     await storage.delete(key: REFRESH_TOKEN_KEY);
     // TODO : 데이터 베이스에 저장돼있는 토큰정보도 같이 삭제 필요함.
     state = UserModelGuest();
+  }
+
+  Future<bool> userJoin(PostJoinBody postJoinBody) async {
+    state = UserModelLoading();
+    try {
+      final response =
+          await userMasterRepository.userJoin(postJoinBody: postJoinBody);
+      await storage.write(key: ACCESS_TOKEN_KEY, value: response.accessToken);
+      await storage.write(key: REFRESH_TOKEN_KEY, value: response.refreshToken);
+      await getProfile();
+      return true;
+    } catch (e) {
+      print("join error ${e.toString()}");
+      state = UserModelError(message: e.toString());
+      return false;
+    }
   }
 
   Future<bool> _onKakaoLogin() async {

@@ -54,17 +54,26 @@ public class UserMasterServiceImpl implements UserMasterService {
             if (SocialTypeCode.NAVER.getValue().equals(socialTypeCode))    newUserDTO.setNaverSignIn(true);
         };
         if (existingUserMaster.isPresent()) {
-
             return existingUserMaster.map((existingUser) -> {
-
                 newUserDTO.setId(existingUser.getId());
                 userMaterMapper.partialUpdate(existingUser, newUserDTO);
                 return existingUser;
             }).map(userMasterRepository::save).map(userMaterMapper::toDto).get();
         }else{
-
             newUserDTO.setUserStatusCode(UserStatusCode.PENDING);
             return userMaterMapper.toDto(userMasterRepository.save(userMaterMapper.toEntity(newUserDTO)));
+        }
+    }
+    public UserMasterDTO partialUpdate(UserMasterDTO userMasterDTO) {
+        Optional<UserMaster> existingUserMaster =userMasterRepository.findById(userMasterDTO.getId());
+        if (existingUserMaster.isPresent()) {
+            return existingUserMaster.map((existingUser) -> {
+//                userMasterDTO.setId(existingUser.getId());
+                userMaterMapper.partialUpdate(existingUser, userMasterDTO);
+                return existingUser;
+            }).map(userMasterRepository::save).map(userMaterMapper::toDto).get();
+        }else{
+            return userMaterMapper.toDto(userMasterRepository.save(userMaterMapper.toEntity(userMasterDTO)));
         }
     }
 

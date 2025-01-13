@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/http.dart';
 import 'package:safety_signature_app/common/const/data.dart';
 import 'package:safety_signature_app/common/dio/dio.dart';
+import 'package:safety_signature_app/common/model/login_response.dart';
 import 'package:safety_signature_app/user/model/post_join_body.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
 
@@ -27,8 +28,8 @@ abstract class UserMasterRepository {
   Future<void> userLogout();
 
   @POST('/join')
-  @Headers({'accessToken': 'true'})
-  Future<UserMinModel?> userJoin({
+  // @Headers({'accessToken': 'true'})
+  Future<LoginResponse> userJoin({
     @Body() required PostJoinBody postJoinBody,
   });
 }

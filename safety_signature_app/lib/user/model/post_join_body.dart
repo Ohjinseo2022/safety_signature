@@ -12,6 +12,7 @@ class PostJoinBody {
   final String name;
   final String userId;
   final String mobile;
+  @JsonKey(toJson: DataUtils.plainToBase64)
   final String password;
   @JsonKey(
     fromJson: DataUtils.stringToUint8List,

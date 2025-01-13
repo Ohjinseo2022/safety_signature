@@ -3,10 +3,12 @@ package com.safety_signature.safety_signature_back.utils;
 import com.google.common.io.ByteSource;
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.DownloadResourceDTO;
+import com.safety_signature.safety_signature_back.app.common.dto.util.MinIOUtilsReturnDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.util.PartitionDTO;
 import com.safety_signature.safety_signature_back.app.common.enumeration.ContentsCatalogClassValue;
 import com.safety_signature.safety_signature_back.config.payload.FileResponse;
 import io.minio.*;
+import io.minio.errors.*;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.pdfbox.Loader;
 import org.apache.pdfbox.pdmodel.PDDocument;
@@ -31,10 +33,13 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.math.BigDecimal;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
@@ -46,10 +51,10 @@ public class MinioUtils {
     @Autowired
     MinioClient minioClient;
 
-    @Value("${client.minio.bucket:marketplace}")
+    @Value("${client.minio.bucket}")
     private String bucket;
 
-    @Value("${client.minio.bucketImage:mpimage}")
+    @Value("${client.minio.bucketImage}")
     private String bucketImage;
 
     @Value("${client.minio.imageCompanyNo:mp_attach_comp_img/LICENSE/no-img.png}")
@@ -108,6 +113,24 @@ public class MinioUtils {
 
         return uploadFileFullName;
         // 동일한 경로/이름 파일 업로드시 기존오브젝트를 삭제해야 하는가?
+    }
+    public MinIOUtilsReturnDTO base64StringImageUpload(String base64StringSignatureImage , String uuId) throws Exception{
+        byte[] decodedBytes = Base64.getDecoder().decode(base64StringSignatureImage);
+        InputStream inputStream = new ByteArrayInputStream(decodedBytes);
+        String directory = String.format("signature/%s/", uuId);
+        LocalDateTime date = LocalDateTime.now();
+        String formatedFileNow = date.format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"));
+        String uploadFileFullName = String.format("%s_%s.png", uuId, formatedFileNow);
+        String attachDocPosition = directory + "/" + uploadFileFullName;
+
+        // 파일 이름을 저장소에 기록하거나 별도로 사용
+        minioClient.putObject(PutObjectArgs.builder()
+                .bucket(bucket)
+                .object(attachDocPosition) // 파일 이름 전달
+                .stream(inputStream, decodedBytes.length, -1)
+                .contentType("image/png") // 적절한 Content-Type 설정
+                .build());
+        return MinIOUtilsReturnDTO.builder().attachDocPosition(attachDocPosition).attachDocName(uploadFileFullName).attachDocSize(FileUtil.getFileSize(decodedBytes.length)).build();
     }
     
     public String uploadEp(MultipartFile file, String bucket) throws Exception {

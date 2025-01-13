@@ -20,6 +20,8 @@ public interface AttachDocMasterService {
      */
     AttachDocMasterDTO save(AttachDocMasterDTO attachDocMasterDTO);
 
+
+    AttachDocMasterDTO base64StringSignatureImageSave(String base64StringSignatureImage , String userId);
     /**
      * Updates a attachDocMaster.
      *

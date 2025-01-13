@@ -73,15 +73,14 @@ class _UserMasterRepository implements UserMasterRepository {
   }
 
   @override
-  Future<UserMinModel?> userJoin({required PostJoinBody postJoinBody}) async {
+  Future<LoginResponse> userJoin({required PostJoinBody postJoinBody}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'accessToken': 'true'};
-    _headers.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(postJoinBody.toJson());
     final _result = await _dio
-        .fetch<Map<String, dynamic>?>(_setStreamType<UserMinModel>(Options(
+        .fetch<Map<String, dynamic>>(_setStreamType<LoginResponse>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
@@ -97,8 +96,7 @@ class _UserMasterRepository implements UserMasterRepository {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value =
-        _result.data == null ? null : UserMinModel.fromJson(_result.data!);
+    final value = LoginResponse.fromJson(_result.data!);
     return value;
   }
 

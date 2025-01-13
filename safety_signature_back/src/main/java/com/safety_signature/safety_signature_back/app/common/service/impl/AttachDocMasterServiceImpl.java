@@ -1,7 +1,11 @@
 package com.safety_signature.safety_signature_back.app.common.service.impl;
 
 import com.safety_signature.safety_signature_back.app.common.domain.AttachDocMaster;
+import com.safety_signature.safety_signature_back.app.common.dto.AttachDocHistDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
+import com.safety_signature.safety_signature_back.app.common.dto.util.MinIOUtilsReturnDTO;
+import com.safety_signature.safety_signature_back.app.common.enumeration.AttachDocOwnerClassCode;
+import com.safety_signature.safety_signature_back.app.common.enumeration.OperationTypeCode;
 import com.safety_signature.safety_signature_back.app.common.mapper.AttachDocMasterMapper;
 import com.safety_signature.safety_signature_back.app.common.repository.AttachDocMasterRepository;
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocHistService;
@@ -32,6 +36,7 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
     private final AttachDocMasterRepository attachDocMasterRepository;
     private final AttachDocMasterMapper attachDocMasterMapper;
     private final AttachDocHistService attachDocHistService;
+
     private final MinioUtils minioUtils;
 
     public AttachDocMasterServiceImpl(
@@ -41,6 +46,7 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
         this.attachDocMasterRepository = attachDocMasterRepository;
         this.attachDocMasterMapper = attachDocMasterMapper;
         this.attachDocHistService = attachDocHistService;
+
         this.minioUtils = minioUtils;
     }
 
@@ -73,6 +79,28 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
         AttachDocMaster attachDocMaster = attachDocMasterMapper.toEntity(attachDocMasterDTO);
         attachDocMaster = attachDocMasterRepository.save(attachDocMaster);
         return attachDocMasterMapper.toDto(attachDocMaster);
+    }
+
+    @Override
+    public AttachDocMasterDTO base64StringSignatureImageSave(String base64StringSignatureImage,  String userId) {
+        try{
+            MinIOUtilsReturnDTO minIOUtilsReturnDTO  = minioUtils.base64StringImageUpload(base64StringSignatureImage,userId);
+            AttachDocMasterDTO attachDocMasterDTO = AttachDocMasterDTO.builder()
+                    .attachDocName(minIOUtilsReturnDTO.getAttachDocName())
+                    .attachDocExplain("회원 고유 전자 서명 이미지")
+                    .attachDocId(userId)
+                    .attachDocPosition(minIOUtilsReturnDTO.getAttachDocPosition())
+                    .attachDocOwnerClassCode(AttachDocOwnerClassCode.USER_SIGNATURE)
+                    .attachDocSize(minIOUtilsReturnDTO.getAttachDocSize())
+                    .attachDocOwnerId(userId)
+                    .build();
+            AttachDocMaster attachDocMaster = attachDocMasterMapper.toEntity(attachDocMasterDTO);
+            attachDocMaster = attachDocMasterRepository.save(attachDocMaster);
+            return attachDocMasterMapper.toDto(attachDocMaster);
+        }catch (Exception e){
+            log.debug("base64StringSignatureImageSave   Exception : {}", e.getMessage());
+            return null;
+        }
     }
 
     @Override
