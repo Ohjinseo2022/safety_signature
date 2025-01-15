@@ -10,6 +10,7 @@ import 'package:safety_signature_app/common/provider/modal_controller_porivder.d
 import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
+import 'package:safety_signature_app/user/view/email_login_screen.dart';
 import 'package:safety_signature_app/user/view/join_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -53,7 +54,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           _googleLoginButton(onPressed: () async {
             await ref
                 .watch(modalControllerProvider.notifier)
-                .isPopUp(Visibility: true);
+                .isPopUp(visibility: true);
             await onLoginHandler(
                 context: context, platform: SocialTypeCode.GOOGLE.code);
           }),
@@ -63,7 +64,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           _kakaoLoginButton(onPressed: () async {
             await ref
                 .watch(modalControllerProvider.notifier)
-                .isPopUp(Visibility: true);
+                .isPopUp(visibility: true);
             await onLoginHandler(
                 context: context, platform: SocialTypeCode.KAKAO.code);
           }),
@@ -74,7 +75,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           _emailLoginButton(onPressed: () async {
             await ref
                 .watch(modalControllerProvider.notifier)
-                .isPopUp(Visibility: true);
+                .isPopUp(visibility: true);
+            context.pushNamed(EmailLoginScreen.routeName);
           }),
           _emailJoin(onPressed: () {
             context.pushNamed(JoinScreen.routeName);

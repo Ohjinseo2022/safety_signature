@@ -6,7 +6,6 @@ server:
 spring:
   application:
     name: safety_signature_back
-
   datasource:
     driver-class-name: org.postgresql.Driver
     url: ENC(j5u3O8qDJlFBy5+lnH1LSFZYg26UMcMoOOaOtKO/2bz1Y9rWQxPfp4JkoKLOpONczOUoIhO6qYM=)

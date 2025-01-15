@@ -42,13 +42,13 @@ public class UserMasterServiceImpl implements UserMasterService {
      * */
         UserMasterDTO newUserDTO = new UserMasterDTO();
         String socialTypeCode = SocialTypeCode.from(loginReqDTO.getSocialType());
-        newUserDTO.setEmail(profileResponse.email());
         newUserDTO.setName(profileResponse.name());
         if(profileResponse.phoneNumber()!=null){
             newUserDTO.setMobile(profileResponse.phoneNumber());
         }
         newUserDTO.setProfileImageUri(profileResponse.profileImageUri());
         if(!socialTypeCode.isEmpty()){
+
             if (SocialTypeCode.GOOGLE.getValue().equals(socialTypeCode))   newUserDTO.setGoogleSignIn(true);
             if (SocialTypeCode.KAKAO.getValue().equals(socialTypeCode))    newUserDTO.setKakaoSignIn(true);
             if (SocialTypeCode.NAVER.getValue().equals(socialTypeCode))    newUserDTO.setNaverSignIn(true);
@@ -60,6 +60,7 @@ public class UserMasterServiceImpl implements UserMasterService {
                 return existingUser;
             }).map(userMasterRepository::save).map(userMaterMapper::toDto).get();
         }else{
+            newUserDTO.setEmail(profileResponse.email());
             newUserDTO.setUserStatusCode(UserStatusCode.PENDING);
             return userMaterMapper.toDto(userMasterRepository.save(userMaterMapper.toEntity(newUserDTO)));
         }

@@ -36,7 +36,7 @@ public class UserMasterDTO  extends AbstractAuditingDTO<String> implements Seria
 
 
     @JsonView(View.Hidden.class)
-    @Size(max = 200)
+    @Size(max = 5000)
     @Schema(description = "회원 비밀번호")
     private String userPassword;
 

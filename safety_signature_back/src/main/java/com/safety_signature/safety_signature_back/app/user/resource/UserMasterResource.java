@@ -8,9 +8,12 @@ import com.safety_signature.safety_signature_back.app.common.enumeration.UserSta
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocMasterService;
 import com.safety_signature.safety_signature_back.app.token.dto.TokenManagementMaterDTO;
 import com.safety_signature.safety_signature_back.app.token.service.TokenManagementMasterService;
+import com.safety_signature.safety_signature_back.app.user.domain.UserMaster;
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.dto.UserResponseMessageDTO;
 import com.safety_signature.safety_signature_back.app.user.dto.request.PostJoinBody;
+import com.safety_signature.safety_signature_back.app.user.dto.response.UserJoinFailedResponseDTO;
+import com.safety_signature.safety_signature_back.app.user.repository.UserMasterRepository;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
 import com.safety_signature.safety_signature_back.config.FieldSelector;
 import com.safety_signature.safety_signature_back.config.Partial;
@@ -30,6 +33,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @Tag(name="회원 관련 API")
 @RestController
 @RequiredArgsConstructor
@@ -43,7 +48,9 @@ public class UserMasterResource {
     private final AttachDocMasterService attachDocMasterService;
     private final TokenManagementMasterService tokenManagementMasterService;
     private static final String ENTITY_NAME = "UserMasterResource";
-    @Operation(summary = "로그인 요청")
+    private final UserMasterRepository userMasterRepository;
+
+    @Operation(summary = "회원 프로필 요청")
     @GetMapping("/profile")
     public ResponseEntity<?> getUserMe(HttpServletRequest request)throws Exception{
         log.info("get user profile start");
@@ -68,7 +75,7 @@ public class UserMasterResource {
         }
     }
 
-    @Operation(summary = "로그인 요청")
+    @Operation(summary = "회원가입 요청")
     @PostMapping("/join")
     public ResponseEntity<?> postUserJoin(@RequestBody PostJoinBody postJoinBody)throws Exception{
         log.info("post user join start");
@@ -79,15 +86,28 @@ public class UserMasterResource {
          * 4. 기존 회원 유무를 체크할건지.. 이건 고민 필요할듯
          */
         String userMasterId =  postJoinBody.getId() ==null ? TsidUtil.getId() : postJoinBody.getId();
-
-
+        /**
+         * 회원가입 실패 조건
+         * 1. 이미지 저장실패
+         * 2. 이미 가입된 회원일때
+         * 3. 이메일, 이름, 전화번호 중복확인 필요함.
+         * */
+        Optional<UserMaster> existingUserEmail = userMasterRepository.findByEmail(postJoinBody.getUserId());
+        Optional<UserMaster> existingUserMobile = userMasterRepository.findByMobile(postJoinBody.getMobile());
+        //회원 정보가 존재 한다면 현재 회원 상태코드를 체크. 회원 상태코드가 계정 신청중이 아닐경우
+        if(existingUserEmail.isPresent() && !(existingUserEmail.get().getUserStatusCode().equals(UserStatusCode.PENDING))){
+            return ResponseEntity.ok().body( UserJoinFailedResponseDTO.builder().message("이미 가입된 이메일이 존재합니다.").userStatusCode(existingUserEmail.get().getUserStatusCode()).build());
+        }
+        if(existingUserMobile.isPresent() && !(existingUserMobile.get().getUserStatusCode().equals(UserStatusCode.PENDING))){
+            return ResponseEntity.ok().body( UserJoinFailedResponseDTO.builder().message("이미 가입된 핸드폰번호가 존재합니다.").userStatusCode(existingUserMobile.get().getUserStatusCode()).build());
+        }
         AttachDocMasterDTO attachDocMasterDTO = attachDocMasterService.base64StringSignatureImageSave(postJoinBody.getImage(),userMasterId);
 
         if(ObjectUtils.isEmpty(attachDocMasterDTO)){
             log.info("post user join failed");
             UserResponseMessageDTO messageDTO = UserResponseMessageDTO.builder()
                     .Status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .massage("회원가입 처리중 오류 발생")
+                    .massage("전자서명 정보 저장실패")
                     .build();
             return ResponseEntity.status(messageDTO.getStatus()).body(messageDTO);
         }else{

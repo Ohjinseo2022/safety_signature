@@ -29,10 +29,12 @@ public class SpringSecurityConfig {
 //                .headers((httpSecurityHeadersConfigurer ->
 //                        httpSecurityHeadersConfigurer.disable()
 //                ))
+                .csrf(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests((authorizeRequests) ->
                     authorizeRequests
                             .requestMatchers("/**").permitAll()// 필요에 따라 허용할 url 설정
                             .requestMatchers("/login/**").permitAll()
+                            .requestMatchers("/user/**").permitAll()
                             .requestMatchers("/swagger/**").permitAll()
                             .requestMatchers("/v3/api-docs/**").permitAll()
                             .requestMatchers("/auth/**").permitAll()
@@ -40,7 +42,7 @@ public class SpringSecurityConfig {
                             .anyRequest().authenticated()// 허용된 url 이 아니면 권한 체크 필요함 !?
 //                            .anyRequest().permitAll()// 허용된 url 이 아니면 권한 체크 필요함 !?
             )
-                .csrf(AbstractHttpConfigurer::disable)
+
             .exceptionHandling((exceptionConfig) ->
                         exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler)
             ); // 401 403 관련 예외처리

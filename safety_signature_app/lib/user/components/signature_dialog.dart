@@ -47,7 +47,6 @@ Future<void> signatureDialog(
                       SfSignaturePad(
                         onDraw: (offset, time) async {
                           if (image == null && !isSignature) {
-                            print("emfhj");
                             setDialog(() {
                               isSignature = !isSignature;
                             });

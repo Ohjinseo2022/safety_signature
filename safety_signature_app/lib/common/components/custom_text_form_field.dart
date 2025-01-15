@@ -10,9 +10,11 @@ class CustomTextFormField extends StatefulWidget {
   final bool autofocus;
   final bool enabled;
   final String? labelText;
+  final InputBorder? border;
   final ValueChanged<String>? onChanged;
   final List<TextInputFormatter>? inputFormatters; // 입력 제한 설정
   final FormFieldValidator<String>? validator;
+  final Icon? prefixIcon;
   CustomTextFormField({
     super.key,
     required this.value,
@@ -24,6 +26,8 @@ class CustomTextFormField extends StatefulWidget {
     this.autofocus = false,
     this.inputFormatters,
     this.validator,
+    this.border,
+    this.prefixIcon,
     required this.onChanged,
   });
 
@@ -83,7 +87,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           validator: widget.validator,
           //입력 필드의 데코레이션
           decoration: InputDecoration(
+            prefixIcon: widget.prefixIcon,
             labelText: widget.labelText,
+            labelStyle: TextStyle(color: SECONDARY_COLOR),
             contentPadding: EdgeInsets.symmetric(horizontal: 5),
             //placeholder
             enabled: widget.enabled, // 활성화 비활성화
@@ -95,16 +101,17 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               color: TEXT_COLOR.withOpacity(0.3),
               fontSize: 14.0,
             ),
-            fillColor: SECONDARY_COLOR,
+            fillColor: Colors.transparent, //SECONDARY_COLOR ,
             filled: true,
             //모든 input 상태의 기본 스타일 세팅
-            border: baseBorder,
-            enabledBorder: baseBorder,
-            focusedBorder: baseBorder.copyWith(
-              borderSide: baseBorder.borderSide.copyWith(
-                color: TEXT_COLOR,
-              ),
-            ),
+            border: widget.border ?? baseBorder,
+            enabledBorder: widget.border ?? baseBorder,
+            focusedBorder: widget.border ??
+                baseBorder.copyWith(
+                  borderSide: baseBorder.borderSide.copyWith(
+                    color: TEXT_COLOR,
+                  ),
+                ),
           ),
         ),
         if (_controller.text != "" && widget.enabled && widget.obscureText)

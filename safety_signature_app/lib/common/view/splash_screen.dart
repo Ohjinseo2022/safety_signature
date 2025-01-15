@@ -55,7 +55,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         if (state is UserMinModel &&
             UserStatusCode.getByCode(state.userStatusCode) ==
                 UserStatusCode.PENDING) {
-          ref.read(modalControllerProvider.notifier).isPopUp(Visibility: false);
+          ref.read(modalControllerProvider.notifier).isPopUp(visibility: false);
           commonDialog(
             context: context,
             title: "회원가입 안내",

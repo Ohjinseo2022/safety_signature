@@ -29,7 +29,7 @@ abstract class UserMasterRepository {
 
   @POST('/join')
   // @Headers({'accessToken': 'true'})
-  Future<LoginResponse> userJoin({
+  Future<LoginResponseBase?> userJoin({
     @Body() required PostJoinBody postJoinBody,
   });
 }

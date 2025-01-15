@@ -17,3 +17,15 @@ Map<String, dynamic> _$LoginResponseToJson(LoginResponse instance) =>
       'refreshToken': instance.refreshToken,
       'accessToken': instance.accessToken,
     };
+
+JoinFailedResponse _$JoinFailedResponseFromJson(Map<String, dynamic> json) =>
+    JoinFailedResponse(
+      userStatusCode: json['userStatusCode'] as String,
+      message: json['message'] as String,
+    );
+
+Map<String, dynamic> _$JoinFailedResponseToJson(JoinFailedResponse instance) =>
+    <String, dynamic>{
+      'userStatusCode': instance.userStatusCode,
+      'message': instance.message,
+    };

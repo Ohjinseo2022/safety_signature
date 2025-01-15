@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kakao_flutter_sdk/kakao_flutter_sdk.dart';
 import 'package:safety_signature_app/common/const/data.dart';
+import 'package:safety_signature_app/common/model/login_response.dart';
 import 'package:safety_signature_app/common/secure_storage/secure_storage.dart';
 import 'package:safety_signature_app/user/model/login_req_model.dart';
 import 'package:safety_signature_app/user/model/post_join_body.dart';
@@ -101,19 +102,25 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
     state = UserModelGuest();
   }
 
-  Future<bool> userJoin(PostJoinBody postJoinBody) async {
+  Future<LoginResponseBase?> userJoin(PostJoinBody postJoinBody) async {
     state = UserModelLoading();
     try {
       final response =
           await userMasterRepository.userJoin(postJoinBody: postJoinBody);
-      await storage.write(key: ACCESS_TOKEN_KEY, value: response.accessToken);
-      await storage.write(key: REFRESH_TOKEN_KEY, value: response.refreshToken);
-      await getProfile();
-      return true;
+      if (response is LoginResponse) {
+        await storage.write(key: ACCESS_TOKEN_KEY, value: response.accessToken);
+        await storage.write(
+            key: REFRESH_TOKEN_KEY, value: response.refreshToken);
+        await getProfile();
+      }
+      if (response is JoinFailedResponse) {
+        state = UserModelError(message: response.message);
+      }
+      return response;
     } catch (e) {
       print("join error ${e.toString()}");
       state = UserModelError(message: e.toString());
-      return false;
+      return null;
     }
   }
 

@@ -53,7 +53,7 @@ public class UserMaster extends AbstractAuditingEntity<String> implements Serial
      * 비밀번호의 경우 소셜로그인처리시 별도로 입력받지 않음
      */
     @Comment("비밀번호")
-    @Size(max = 200)
+    @Size(max = 5000)
     @Column(name="user_password",length = 200)
     private String userPassword;
 

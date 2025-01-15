@@ -7,8 +7,11 @@ import 'package:safety_signature_app/common/components/common_dialog.dart';
 import 'package:safety_signature_app/common/components/custom_text_form_field.dart';
 import 'package:safety_signature_app/common/components/pagination_list_view.dart';
 import 'package:safety_signature_app/common/const/color.dart';
+import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
+import 'package:safety_signature_app/common/model/login_response.dart';
 import 'package:safety_signature_app/common/provider/go_router.dart';
+import 'package:safety_signature_app/common/provider/modal_controller_porivder.dart';
 import 'package:safety_signature_app/common/utils/data_utils.dart';
 import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/components/signature_dialog.dart';
@@ -27,9 +30,9 @@ class JoinScreen extends ConsumerStatefulWidget {
 }
 
 class _JoinScreenState extends ConsumerState<JoinScreen> {
-  String name = "";
-  String userId = "";
-  String mobile = "";
+  String? name;
+  String? userId;
+  String? mobile;
   String password = "";
   String passwordCheck = "";
 
@@ -43,17 +46,49 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
   @override
   Widget build(BuildContext context) {
     final state = ref.watch(userAuthProvider);
-
+    final isPopUp = ref.watch(modalControllerProvider);
     if (state is UserMinModel) {
+      print("설마 여러번 동작하니 ?");
       setState(() {
-        name = state.name;
-        userId = state.email;
-        mobile = state.mobile ?? "";
+        name = name ?? state.name;
+        userId = userId ?? state.email;
+        mobile = mobile ?? state.mobile;
         userIdValid = null;
         mobileValid = null;
       });
     }
-
+    if (isPopUp && (ModalRoute.of(context)?.isCurrent ?? false)) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (state is UserModelError) {
+          ref.read(modalControllerProvider.notifier).isPopUp(visibility: false);
+          commonDialog(
+            context: context,
+            title: '회원가입 실패',
+            content: Text(
+              state.message,
+              style: defaultTextStyle,
+            ),
+            onConfirm: () {},
+          );
+        }
+        if (state is UserMinModel &&
+            UserStatusCode.getByCode(state.userStatusCode) ==
+                UserStatusCode.ACTIVE) {
+          ref.read(modalControllerProvider.notifier).isPopUp(visibility: false);
+          commonDialog(
+            context: context,
+            title: '회원가입 완료',
+            content: Text(
+              "회원가입이 완료 됐습니다.",
+              style: defaultTextStyle,
+            ),
+            onConfirm: () {
+              context.goNamed(RootTab.routeName);
+            },
+          );
+        }
+      });
+    }
     return DefaultLayout(
       title: "회원가입",
       backgroundColor: SECONDARY_COLOR,
@@ -175,19 +210,34 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
                         barrierDismissible: true);
                     return;
                   } else {
-                    signatureDialog(
+                    await signatureDialog(
                         context: context,
                         onConfirm: (Uint8List image) async {
-                          bool isJoin = await ref
-                              .read(userAuthProvider.notifier)
-                              .userJoin(PostJoinBody(
+                          ref
+                              .read(modalControllerProvider.notifier)
+                              .isPopUp(visibility: true);
+                          await ref.read(userAuthProvider.notifier).userJoin(
+                              PostJoinBody(
                                   id: state is UserMinModel ? state.id : null,
-                                  name: name,
-                                  userId: userId,
-                                  mobile: mobile,
+                                  name: name!,
+                                  userId: userId!,
+                                  mobile: mobile!,
                                   password: password,
                                   image: image));
-                          isJoin ? context.goNamed(RootTab.routeName) : null;
+                          // if (isJoin is JoinFailedResponse) {
+                          //   await commonDialog(
+                          //     context: context,
+                          //     title: '회원가입 실패',
+                          //     content: Text(
+                          //       isJoin.message,
+                          //       style: defaultTextStyle,
+                          //     ),
+                          //     onConfirm: () {},
+                          //   );
+                          // } else {
+                          //   print("ddd");
+                          //   context.goNamed(RootTab.routeName);
+                          // }
                           // print(value);
                         });
                   }
