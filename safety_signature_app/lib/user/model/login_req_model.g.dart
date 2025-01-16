@@ -21,3 +21,16 @@ Map<String, dynamic> _$LoginReqModelToJson(LoginReqModel instance) =>
       'email': instance.email,
       'mobile': instance.mobile,
     };
+
+LoginNormalReqModel _$LoginNormalReqModelFromJson(Map<String, dynamic> json) =>
+    LoginNormalReqModel(
+      userId: json['userId'] as String?,
+      password: json['password'] as String?,
+    );
+
+Map<String, dynamic> _$LoginNormalReqModelToJson(
+        LoginNormalReqModel instance) =>
+    <String, dynamic>{
+      'userId': instance.userId,
+      'password': instance.password,
+    };

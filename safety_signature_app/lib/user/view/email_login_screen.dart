@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:safety_signature_app/common/components/common_dialog.dart';
 import 'package:safety_signature_app/common/components/custom_text_form_field.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
+import 'package:safety_signature_app/user/model/login_req_model.dart';
+import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
+import 'package:safety_signature_app/user/view/join_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class EmailLoginScreen extends ConsumerStatefulWidget {
   static String get routeName => "emailLoginScreen";
@@ -17,6 +22,7 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
   String password = '';
   @override
   Widget build(BuildContext context) {
+    final userState = ref.watch(userAuthProvider);
     return DefaultLayout(
         title: "안전싸인 로그인",
         topAppBarBtn: false,
@@ -29,7 +35,10 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
               _inputField(
                 text: userId,
                 onChanged: (value) => userId = value,
-                prefixIcon: Icon(Icons.email),
+                prefixIcon: Icon(
+                  Icons.email,
+                  color: SECONDARY_COLOR,
+                ),
                 labelText: "아이디",
                 hintText: "이메일 형식의 아이디를 입력해 주세요.",
               ),
@@ -41,7 +50,7 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
                 onChanged: (value) => password = value,
                 prefixIcon: Icon(
                   Icons.key_outlined,
-                  color: PRIMARY_COLOR,
+                  color: SECONDARY_COLOR,
                 ),
                 labelText: "비밀번호",
                 hintText: "비밀번호를 입력해주세요",
@@ -49,22 +58,43 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
               ),
               SizedBox(height: 24),
               // 로그인 버튼
+
               ElevatedButton(
-                onPressed: () {
+                onPressed: () async {
                   // 로그인 액션
+                  bool isLogin = await ref
+                      .read(userAuthProvider.notifier)
+                      .normalLogin(
+                          loginNormalReqModel: LoginNormalReqModel(
+                              userId: userId, password: password));
+                  if (isLogin) {
+                  } else {
+                    await commonDialog(
+                        context: context,
+                        title: "로그인 실패",
+                        content: Text(
+                          "아이디/비밀번호 를 확인해주세요.",
+                          style: defaultTextStyle,
+                        ),
+                        onConfirm: () {});
+                  }
                 },
-                child: Text('Login'),
+                child: Text('로그인'),
                 style: ElevatedButton.styleFrom(
                   padding: EdgeInsets.symmetric(vertical: 16),
                 ),
               ),
-              SizedBox(height: 16),
+              // SizedBox(height: 16),
               // 비밀번호 찾기 & 회원가입 링크
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   _underLineTextBtn(onPressed: () {}, text: "비밀번호를 잊어버렸나요?"),
-                  _underLineTextBtn(onPressed: () {}, text: "회원가입"),
+                  _underLineTextBtn(
+                      onPressed: () {
+                        context.goNamed(JoinScreen.routeName);
+                      },
+                      text: "회원가입"),
                 ],
               ),
             ],
@@ -112,17 +142,17 @@ Widget _underLineTextBtn(
           text,
           style: defaultTextStyle.copyWith(
             fontSize: 12,
-            color: PRIMARY_COLOR,
+            color: SECONDARY_COLOR,
           ),
         ),
-        SizedBox(
-          height: 3,
-        ),
-        Container(
-          height: 1.0,
-          width: text.replaceAll(" ", "").length * 12,
-          color: SECONDARY_COLOR,
-        ),
+        // SizedBox(
+        //   height: 3,
+        // ),
+        // Container(
+        //   height: 1.0,
+        //   width: text.replaceAll(" ", "").length * 12,
+        //   color: SECONDARY_COLOR,
+        // ),
       ],
     ),
   );

@@ -49,22 +49,19 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
           pState = state as UserMinModel;
         }
         state = UserModelLoading();
-
         final response = await authRepository.login(
             loginReqDTO: LoginReqModel(
           socialType: platform,
           name: isProfile ? pState?.name : null,
           email: isProfile ? pState?.email : null,
         )); //email: email, password: password
-        print("accessToken : ${response.accessToken}");
-        print("refreshToken : ${response.refreshToken}");
         // 소셜 로그인 완료 후
         await storage.write(key: ACCESS_TOKEN_KEY, value: response.accessToken);
         await storage.write(
             key: REFRESH_TOKEN_KEY, value: response.refreshToken);
-        final userData = await userMasterRepository.userProfile();
-        state = userData as UserModelBase?;
-        return userData;
+        pState = await userMasterRepository.userProfile();
+        state = pState as UserModelBase?;
+        return pState;
       } else {
         state = UserModelError(message: "소셜 로그인 중 에러가 발생 했습니다.");
         return Future.value(state);
@@ -72,6 +69,29 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
     } catch (e) {
       state = UserModelError(message: e.toString());
       return Future.value(state);
+    }
+  }
+
+  Future<bool> normalLogin(
+      {required LoginNormalReqModel loginNormalReqModel}) async {
+    try {
+      var pState = null;
+      state = UserModelLoading();
+      final response = await authRepository.normalLogin(
+          loginNormalReqModel: loginNormalReqModel);
+      if (response is LoginResponse) {
+        await storage.write(key: ACCESS_TOKEN_KEY, value: response.accessToken);
+        await storage.write(
+            key: REFRESH_TOKEN_KEY, value: response.refreshToken);
+        pState = await userMasterRepository.userProfile();
+        state = pState as UserModelBase?;
+        return true;
+      } else {
+        return false;
+      }
+    } catch (e) {
+      state = UserModelError(message: e.toString());
+      return false;
     }
   }
 

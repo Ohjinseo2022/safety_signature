@@ -14,3 +14,15 @@ class LoginReqModel {
 
   Map<String, dynamic> toJson() => _$LoginReqModelToJson(this);
 }
+
+@JsonSerializable()
+class LoginNormalReqModel {
+  final String? userId;
+  final String? password;
+
+  LoginNormalReqModel({this.userId, this.password});
+  factory LoginNormalReqModel.fromJson(Map<String, dynamic> json) =>
+      _$LoginNormalReqModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LoginNormalReqModelToJson(this);
+}

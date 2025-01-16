@@ -21,4 +21,10 @@ abstract class AuthRepository {
   @POST('/login/social')
   @Headers({'accessToken': 'true'})
   Future<LoginResponse> login({@Body() required LoginReqModel loginReqDTO});
+
+  @POST('/login/normal')
+  // @Headers({'accessToken': 'true'})
+  Future<LoginResponseBase?> normalLogin({
+    @Body() required LoginNormalReqModel loginNormalReqModel,
+  });
 }
