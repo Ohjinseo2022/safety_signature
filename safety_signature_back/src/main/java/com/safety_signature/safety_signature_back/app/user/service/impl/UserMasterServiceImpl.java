@@ -1,6 +1,6 @@
 package com.safety_signature.safety_signature_back.app.user.service.impl;
 import com.safety_signature.safety_signature_back.app.auth.dto.OauthUserProfileResponse;
-import com.safety_signature.safety_signature_back.app.auth.dto.requestDTO.LoginReqDTO;
+import com.safety_signature.safety_signature_back.app.auth.dto.requestDTO.SocialLoginReqDTO;
 import com.safety_signature.safety_signature_back.app.auth.service.AuthTransactionalService;
 import com.safety_signature.safety_signature_back.app.common.enumeration.SocialTypeCode;
 import com.safety_signature.safety_signature_back.app.common.enumeration.UserStatusCode;
@@ -35,13 +35,13 @@ public class UserMasterServiceImpl implements UserMasterService {
 
     @Override
     @Transactional(rollbackFor = Exception.class)
-    public UserMasterDTO createOrPartialUpdateUserMaster(OauthUserProfileResponse profileResponse , LoginReqDTO loginReqDTO) {
+    public UserMasterDTO createOrPartialUpdateUserMaster(OauthUserProfileResponse profileResponse , SocialLoginReqDTO socialLoginReqDTO) {
         Optional<UserMaster> existingUserMaster =profileResponse.phoneNumber() == null ? userMasterRepository.findByEmail(profileResponse.email()) :userMasterRepository.findByMobile(profileResponse.phoneNumber()); ;
     /**
      * TODO 해결 해야할 문제점.... 소셜로그인 진행시 구글계정, 카카오계정, 네이버 계정 이메일 정보가 다를 수 있음....
      * */
         UserMasterDTO newUserDTO = new UserMasterDTO();
-        String socialTypeCode = SocialTypeCode.from(loginReqDTO.getSocialType());
+        String socialTypeCode = SocialTypeCode.from(socialLoginReqDTO.getSocialType());
         newUserDTO.setName(profileResponse.name());
         if(profileResponse.phoneNumber()!=null){
             newUserDTO.setMobile(profileResponse.phoneNumber());
@@ -79,8 +79,17 @@ public class UserMasterServiceImpl implements UserMasterService {
     }
 
     @Override
-    public UserMasterDTO getUserMasterById(String userId) {
-        UserMaster userMaster = userMasterRepository.findById(userId).orElse(null);
+    public UserMasterDTO getUserMasterById(String id) {
+        UserMaster userMaster = userMasterRepository.findById(id).orElse(null);
+        if(userMaster != null){
+            return userMaterMapper.toDto(userMaster);
+        }
+        return null;
+    }
+
+    @Override
+    public UserMasterDTO getUserMasterByEmail(String userEmail) {
+        UserMaster userMaster = userMasterRepository.findByEmail(userEmail).orElse(null);
         if(userMaster != null){
             return userMaterMapper.toDto(userMaster);
         }

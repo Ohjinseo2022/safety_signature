@@ -4,6 +4,7 @@ import 'package:safety_signature_app/common/components/common_dialog.dart';
 import 'package:safety_signature_app/common/components/custom_text_form_field.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
+import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/model/login_req_model.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
 import 'package:safety_signature_app/user/view/join_screen.dart';
@@ -68,6 +69,7 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
                           loginNormalReqModel: LoginNormalReqModel(
                               userId: userId, password: password));
                   if (isLogin) {
+                    context.goNamed(RootTab.routeName);
                   } else {
                     await commonDialog(
                         context: context,

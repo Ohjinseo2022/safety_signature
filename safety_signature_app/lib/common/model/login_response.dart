@@ -28,6 +28,15 @@ class LoginResponse implements LoginResponseBase {
 }
 
 @JsonSerializable()
+class LoginFailedResponse implements LoginResponseBase {
+  final String message;
+  final String httpStatus;
+  LoginFailedResponse({required this.message, required this.httpStatus});
+  factory LoginFailedResponse.fromJson(Map<String, dynamic> json) =>
+      _$LoginFailedResponseFromJson(json);
+}
+
+@JsonSerializable()
 class JoinFailedResponse implements LoginResponseBase {
   final String userStatusCode;
   final String message;

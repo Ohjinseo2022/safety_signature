@@ -4,7 +4,7 @@ package com.safety_signature.safety_signature_back.app.auth.service.ipml;
 import com.safety_signature.safety_signature_back.app.auth.dto.OauthUserProfileResponse;
 import com.safety_signature.safety_signature_back.app.auth.dto.kakaoDTO.KakaoAccount;
 import com.safety_signature.safety_signature_back.app.auth.dto.kakaoDTO.KakaoOauthDTO;
-import com.safety_signature.safety_signature_back.app.auth.dto.requestDTO.LoginReqDTO;
+import com.safety_signature.safety_signature_back.app.auth.dto.requestDTO.SocialLoginReqDTO;
 import com.safety_signature.safety_signature_back.app.auth.dto.responseDTO.LoginResDTO;
 import com.safety_signature.safety_signature_back.app.auth.exception.OauthServerException;
 import com.safety_signature.safety_signature_back.app.auth.oauth2.OAuthWebClient;
@@ -32,14 +32,14 @@ public class OAuth2ServiceImpl implements OAuth2Service {
     }
 
     @Override
-    public LoginResDTO oauthLogin(String accessToken, LoginReqDTO loginReqDTO) {
+    public LoginResDTO oauthLogin(String accessToken, SocialLoginReqDTO socialLoginReqDTO) {
         // 전달 받은 엑세스 토큰을 사용해서 사용자 프로필 정보를 요청해서 가져오기
-        String socialTypeCode = SocialTypeCode.from(loginReqDTO.getSocialType());
+        String socialTypeCode = SocialTypeCode.from(socialLoginReqDTO.getSocialType());
 
         if (SocialTypeCode.GOOGLE.getValue().equals(socialTypeCode)){
             OauthUserProfileResponse profileResponse = oAuthWebClient.requestGoogleOauthUserProfile(accessToken);
             if(!ObjectUtils.isEmpty(profileResponse)) {
-                UserMasterDTO userMasterDTO =  userMasterService.createOrPartialUpdateUserMaster(profileResponse ,loginReqDTO);
+                UserMasterDTO userMasterDTO =  userMasterService.createOrPartialUpdateUserMaster(profileResponse ,socialLoginReqDTO);
                 TokenManagementMaterDTO tokenManagementMaterDTO = tokenManagementMasterService.createOrUpdateTokenManagementMaster(userMasterDTO);
                 log.info("userMasterDTO : {}", userMasterDTO);
                 return new LoginResDTO(tokenManagementMaterDTO.getAccessToken(),tokenManagementMaterDTO.getRefreshToken());
@@ -53,14 +53,14 @@ public class OAuth2ServiceImpl implements OAuth2Service {
                         kakaoAccount.getEmail(),
                         kakaoAccount.getPhone_number(),
                         kakaoAccount.getProfile().getProfile_image_url()) ,
-                        loginReqDTO);
+                        socialLoginReqDTO);
                 TokenManagementMaterDTO tokenManagementMaterDTO = tokenManagementMasterService.createOrUpdateTokenManagementMaster(userMasterDTO);
                 log.info("userMasterDTO : {}", userMasterDTO);
                 return new LoginResDTO(tokenManagementMaterDTO.getAccessToken(),tokenManagementMaterDTO.getRefreshToken());
             }
         }
 //        if (SocialTypeCode.NAVER.getValue().equals(socialTypeCode)){
-//            UserMasterDTO userMasterDTO =  userMasterService.createOrPartialUpdateUserMaster(new OauthUserProfileResponse(loginReqDTO.getName(), loginReqDTO.getEmail(), null) ,loginReqDTO);
+//            UserMasterDTO userMasterDTO =  userMasterService.createOrPartialUpdateUserMaster(new OauthUserProfileResponse(SocialLoginReqDTO.getName(), SocialLoginReqDTO.getEmail(), null) ,SocialLoginReqDTO);
 //            TokenManagementMaterDTO tokenManagementMaterDTO = tokenManagementMasterService.createOrUpdateTokenManagementMaster(userMasterDTO);
 //            return new LoginResDTO(tokenManagementMaterDTO.getAccessToken(),tokenManagementMaterDTO.getRefreshToken());
 //        }

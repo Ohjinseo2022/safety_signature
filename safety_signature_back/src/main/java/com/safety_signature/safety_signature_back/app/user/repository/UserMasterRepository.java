@@ -12,5 +12,5 @@ import java.util.Optional;
 @Repository
 public interface UserMasterRepository extends CrudRepository<UserMaster,String>, JpaSpecificationExecutor<UserMaster> {
     Optional<UserMaster> findByEmail(String email);
-    Optional<UserMaster> findByMobile( String phoneNumber);
+    Optional<UserMaster> findByMobile(String phoneNumber);
 }
