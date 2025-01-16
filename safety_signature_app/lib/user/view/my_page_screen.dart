@@ -41,7 +41,9 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           _profile(model: state),
-          Text(state.userStatusCode as String),
+          Text("회원 활성 상태코드 : ${state.userStatusCode}" as String),
+          Text("전자서명 ID : ${state.signatureDocId}" as String),
+          Text("회원 고유 번호 : ${state.id}" as String),
           ElevatedButton(
               onPressed: () {
                 ref.read(userAuthProvider.notifier).userLogout();

@@ -35,7 +35,7 @@ class _RootTabState extends ConsumerState<RootTab>
     animationController
       ..duration = Duration(milliseconds: 500)
       ..reverseDuration = Duration(milliseconds: 500);
-    controller = TabController(length: 3, vsync: this);
+    controller = TabController(length: 2, vsync: this);
     controller.addListener(tabListener);
   }
 
@@ -71,8 +71,8 @@ class _RootTabState extends ConsumerState<RootTab>
 
   Widget _rootTab({required UserModelBase? state}) {
     List<dynamic> tabList = [
-      {"title": "테스트중", "child": MyPageScreen()},
-      {"title": "테스트중", "child": MyPageScreen()},
+      {"title": "전자결제 게시판", "child": MyPageScreen()},
+      // {"title": "테스트중", "child": MyPageScreen()},
       {
         "title": state is UserMinModel ? "메이페이지" : null,
         "child": MyPageScreen()
@@ -116,7 +116,7 @@ class _RootTabState extends ConsumerState<RootTab>
         type: BottomNavigationBarType.fixed,
         onTap: (int index) {
           print(state);
-          if (index == 2 && state is UserModelGuest) {
+          if (index == 1 && state is UserModelGuest) {
             loginBottomSheet(context, animationController);
             return;
           }
@@ -128,13 +128,13 @@ class _RootTabState extends ConsumerState<RootTab>
             icon: Icon(index == 0
                 ? Icons.calendar_month
                 : Icons.calendar_month_outlined),
-            label: "아마따",
+            label: "전자결제",
           ),
-          BottomNavigationBarItem(
-              icon: Icon(index == 1
-                  ? Icons.content_paste
-                  : Icons.content_paste_outlined),
-              label: "아차차"),
+          // BottomNavigationBarItem(
+          //     icon: Icon(index == 1
+          //         ? Icons.content_paste
+          //         : Icons.content_paste_outlined),
+          //     label: "아차차"),
           // BottomNavigationBarItem(
           //     icon:
           //         Icon(index == 2 ? Icons.groups_2 : Icons.groups_2_outlined),
@@ -143,7 +143,7 @@ class _RootTabState extends ConsumerState<RootTab>
           //     icon: Icon(Icons.accessibility_new_outlined), label: "로그인"),
           BottomNavigationBarItem(
               icon: Icon(
-                index == 3
+                index == 1
                     ? Icons.account_circle
                     : Icons.account_circle_outlined,
               ),

@@ -1,4 +1,5 @@
 .idea/
+.history
 # Miscellaneous
 /safety_signature_app/*.class
 /safety_signature_app/*.log
@@ -95,3 +96,7 @@
 ### VS Code ###
 /safety_signature_back/.vscode/
 /.idea/
+
+
+/safety_signature_web/.history
+/safety_signature_web/node_modules
