@@ -2,11 +2,11 @@
 
 import { useState, useEffect } from 'react';
 
-interface pageProps{
+interface MainPageProps{
 
 }
 
-const page = ({}:pageProps) => {
+const MainPage = ({}:MainPageProps) => {
     return(
         <>
         해위잉
@@ -14,4 +14,4 @@ const page = ({}:pageProps) => {
     );
 }
 
-export default page;
+export default MainPage;
