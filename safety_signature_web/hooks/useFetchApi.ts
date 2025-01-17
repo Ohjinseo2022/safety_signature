@@ -1,16 +1,20 @@
+import { useLoadingStore } from '@/store/store'
 import { getItem } from '@/utils/localStorage'
 import axios, { Method } from 'axios'
 
+const { isLoading, onLoading, offLoading } = useLoadingStore()
 export const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
 })
 instance.interceptors.request.use(
   (config) => {
     //요청을 보내기 전에 수행할 로직
+    onLoading()
     return config
   },
   (error) => {
     //요청 에러가 발생했을 때 수행할 로직
+    offLoading()
     console.log(`[FetchApi] : request 오류 발생`)
     console.log(error)
     return Promise.reject(error)
@@ -18,6 +22,7 @@ instance.interceptors.request.use(
 )
 instance.interceptors.response.use(
   (response) => {
+    offLoading()
     //응답에 대한 로직 작성
     if (response.headers['x-total-count']) {
       return { ...response, count: response.headers['x-total-count'] }
@@ -25,6 +30,7 @@ instance.interceptors.response.use(
     return response
   },
   (error) => {
+    offLoading()
     //응답 에러가 발생했을 때 수행할 로직
     console.log(
       `[FetchApi] : ${

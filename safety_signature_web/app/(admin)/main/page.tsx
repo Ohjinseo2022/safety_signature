@@ -1,17 +1,24 @@
 'use client'
 
-import { useState, useEffect } from 'react';
+import { useLoadingStore } from '@/store/store'
+import { useEffect, useState } from 'react'
 
-interface MainPageProps{
+interface MainPageProps {}
 
+const MainPage = ({}: MainPageProps) => {
+  const { isLoading, onLoading, offLoading } = useLoadingStore()
+  return (
+    <>
+      해위잉
+      <button
+        onClick={() => {
+          onLoading()
+        }}
+      >
+        로딩떠라
+      </button>
+    </>
+  )
 }
 
-const MainPage = ({}:MainPageProps) => {
-    return(
-        <>
-        해위잉
-        </>
-    );
-}
-
-export default MainPage;
+export default MainPage
