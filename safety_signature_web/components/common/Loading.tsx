@@ -2,9 +2,8 @@
 
 import { useLoadingStore } from '@/store/store'
 import { HashLoader } from 'react-spinners'
-import ClipLoader from 'react-spinners/ClipLoader'
 import styled, { keyframes } from 'styled-components'
-import { CSSProperties, useEffect, useState } from 'react'
+import { CSSProperties } from 'react'
 
 const override: CSSProperties = {
   display: 'block',
