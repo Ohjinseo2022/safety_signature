@@ -7,6 +7,7 @@ import {
   ThemeProvider,
 } from 'styled-components'
 import { ReactNode, useState } from 'react'
+import { useServerInsertedHTML } from 'next/navigation'
 
 // 전역 스타일 정의
 const GlobalStyle = createGlobalStyle`
@@ -58,14 +59,19 @@ export default function StyledComponentsRegistry({
 }: {
   children: ReactNode
 }) {
-  const [sheet] = useState(() => new ServerStyleSheet())
+  const [styledComponentsStyleSheet] = useState(() => new ServerStyleSheet())
+
+  useServerInsertedHTML(() => {
+    const styles = styledComponentsStyleSheet.getStyleElement()
+    styledComponentsStyleSheet.instance.clearTag()
+    return <>{styles}</>
+  })
+
+  if (typeof window !== 'undefined') return <>{children}</>
 
   return (
-    <StyleSheetManager sheet={sheet.instance}>
-      <ThemeProvider theme={theme}>
-        <GlobalStyle />
-        {children}
-      </ThemeProvider>
+    <StyleSheetManager sheet={styledComponentsStyleSheet.instance}>
+      {children}
     </StyleSheetManager>
   )
 }

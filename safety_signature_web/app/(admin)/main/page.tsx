@@ -14,7 +14,7 @@ const MainPage = ({}: MainPageProps) => {
   }
   return (
     <>
-      해위잉
+      메인페이지 애오
       <button
         onClick={() => {
           onLoading()

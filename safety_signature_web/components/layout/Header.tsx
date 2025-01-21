@@ -2,6 +2,60 @@
 
 import styled, { css, keyframes } from 'styled-components'
 import { useState } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+
+export default function Header() {
+  const router = useRouter()
+  const [visibleSubMenu, setVisibleSubMenu] = useState<number | null>(null)
+
+  const menuItems: { label: string; path: string; subMenu: string[] }[] = [
+    { label: '회원관리', path: '/user', subMenu: [] },
+    { label: '안전문서관리', path: '/safety', subMenu: [] },
+    { label: '현장관리', path: '/site', subMenu: [] },
+  ]
+
+  return (
+    <HeaderContainer>
+      <Logo>
+        <Link href={`${process.env.NEXT_PUBLIC_DOMAIN}/main`}>안전 싸인</Link>
+      </Logo>
+      <Nav>
+        {menuItems.map((item, index) => (
+          <li
+            key={index}
+            onMouseEnter={() => setVisibleSubMenu(index)}
+            onMouseLeave={() => setVisibleSubMenu(null)}
+          >
+            <button
+              onClick={() =>
+                router.push(`${process.env.NEXT_PUBLIC_DOMAIN}${item.path}`)
+              }
+            >
+              {item.label}
+            </button>
+
+            {item.subMenu.length > 0 && (
+              <SubMenu $isVisible={visibleSubMenu === index}>
+                {item.subMenu.length > 0
+                  ? item.subMenu.map((subItem, subIndex) => (
+                      <li key={subIndex}>
+                        <a
+                          href={`/${subItem.toLowerCase().replace(/ /g, '-')}`}
+                        >
+                          {subItem}
+                        </a>
+                      </li>
+                    ))
+                  : null}
+              </SubMenu>
+            )}
+          </li>
+        ))}
+      </Nav>
+    </HeaderContainer>
+  )
+}
 
 // 나타나는 애니메이션
 const slideDown = keyframes`
@@ -46,16 +100,22 @@ const Nav = styled.nav`
   li {
     position: relative;
     cursor: pointer;
-
     &:hover {
       color: #60a5fa;
+    }
+    button {
+      color: #ffffff;
+      background-color: transparent;
+      /* &:hover {
+        color: #60a5fa;
+      } */
     }
   }
 `
 interface SubMenuType {
   $isVisible: boolean
 }
-const SubMenu = styled.ul<{ $isVisible: boolean }>`
+const SubMenu = styled.ul<SubMenuType>`
   position: absolute;
   top: 100%;
   left: 0;
@@ -89,43 +149,12 @@ const SubMenu = styled.ul<{ $isVisible: boolean }>`
 `
 
 const Logo = styled.h1`
-  font-size: 24px;
+  font-size: 36px;
+  font-weight: bold;
+  a {
+    color: #ffffff;
+    &:hover {
+      color: #60a5fa;
+    }
+  }
 `
-
-export default function Header() {
-  const [visibleSubMenu, setVisibleSubMenu] = useState<number | null>(null)
-
-  const menuItems = [
-    { label: 'Home', subMenu: [] },
-    { label: 'About', subMenu: ['Our Story', 'Mission', 'Team'] },
-    { label: 'Contact', subMenu: ['Email', 'Location', 'Support'] },
-  ]
-
-  return (
-    <HeaderContainer>
-      <Logo>My App</Logo>
-      <Nav>
-        {menuItems.map((item, index) => (
-          <li
-            key={index}
-            onMouseEnter={() => setVisibleSubMenu(index)}
-            onMouseLeave={() => setVisibleSubMenu(null)}
-          >
-            {item.label}
-            {item.subMenu.length > 0 && (
-              <SubMenu $isVisible={visibleSubMenu === index}>
-                {item.subMenu.map((subItem, subIndex) => (
-                  <li key={subIndex}>
-                    <a href={`/${subItem.toLowerCase().replace(/ /g, '-')}`}>
-                      {subItem}
-                    </a>
-                  </li>
-                ))}
-              </SubMenu>
-            )}
-          </li>
-        ))}
-      </Nav>
-    </HeaderContainer>
-  )
-}
