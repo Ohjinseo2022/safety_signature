@@ -21,9 +21,12 @@
     "next": "15.1.4",
     "nprogress": "^0.2.0",
     "react": "^19.0.0",
+    "react-color": "^2.19.3",
     "react-dom": "^19.0.0",
     "react-spinners": "^0.15.0",
     "styled-components": "^6.1.14",
+    "suneditor": "^2.47.2",
+    "suneditor-react": "^3.6.1",
     "xlsx": "^0.18.5",
     "zustand": "^5.0.3"
   },
@@ -39,6 +42,7 @@
     "eslint-config-next": "15.1.4",
     "eslint-config-prettier": "^10.0.1",
     "postcss": "^8",
+    "prettier": "^3.4.2",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }

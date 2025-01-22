@@ -150,7 +150,7 @@ const SafetyDetailPage = ({ params }: SafetyDetailPageProps) => {
       docName: '문서1.pdf',
       name: '홍길동',
       signature: '✔️',
-      time: '2025-01-20 10:00',
+      time: '2025-01-22 10:00',
       site: '현장1',
     },
     {

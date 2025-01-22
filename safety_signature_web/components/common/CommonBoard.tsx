@@ -1,7 +1,7 @@
 'use client'
 
+import { durationDay, nowDate } from '@/utils/utils'
 import styled from 'styled-components'
-import Link from 'next/link'
 
 export interface PostsType {
   id: string
@@ -41,20 +41,19 @@ const CommonBoard = ({
           <span key={`${header.columns}-${idx}`}>{header.label}</span>
         ))}
       </BoardTableHeader>
-      <BoardList>
+      <BoardList $isNew={true}>
         {posts.map((post) => (
           <li key={post.id}>
             {headers.map((header, idx) => {
               if (header.columns === 'title' && post.path) {
                 return (
-                  <Link
+                  <CustomLink
+                    $isNew={durationDay(post.createdDate, nowDate()) <= 1}
                     key={`${header.columns}-${post.id}`}
-                    href={{
-                      pathname: `${post.path}${post.id}`,
-                    }}
+                    href={`${post.path}${post.id}`}
                   >
                     {post[header.columns]}
-                  </Link>
+                  </CustomLink>
                 )
               } else {
                 return (
@@ -135,7 +134,7 @@ const StickyContainer = styled.div`
 `
 
 const FloatingButton = styled.button`
-  position: sticky;
+  /* position: sticky; */
   width: 150px;
   right: 20px; /* 오른쪽으로 고정 */
   bottom: 20px; /* 컨테이너 하단에서 20px 위로 */
@@ -178,28 +177,6 @@ const BoardList = styled.ul<BoardListCssType>`
       background-color: #333333;
     }
 
-    a {
-      text-decoration: none;
-      color: #60a5fa;
-      position: relative;
-
-      &:hover {
-        color: #3b82f6;
-      }
-
-      &::after {
-        content: ${({ $isNew }) => ($isNew ? 'N' : '')};
-        display: inline-block;
-        background-color: #ff4d4f;
-        color: #ffffff;
-        font-size: 12px;
-        font-weight: bold;
-        padding: 2px 6px;
-        border-radius: 8px;
-        margin-left: 8px;
-      }
-    }
-
     span {
       color: #b0b0b0;
       font-size: 14px;
@@ -209,5 +186,28 @@ const BoardList = styled.ul<BoardListCssType>`
     span:first-child {
       text-align: left; /* 첫 번째 열은 왼쪽 정렬 */
     }
+  }
+`
+const CustomLink = styled.a<BoardListCssType>`
+  text-decoration: none;
+  color: #60a5fa !important;
+  position: relative;
+
+  &:hover {
+    color: #3b82f6 !important;
+  }
+
+  &::after {
+    content: '${({ $isNew }) => ($isNew ? 'N' : '')}';
+    display: ${({ $isNew }) => ($isNew ? 'inline-block' : 'none')} !important;
+    background-color: #ff4d4f !important;
+    color: #ffffff !important;
+    font-size: 10px; /* 아이콘 크기 축소 */
+    font-weight: bold;
+    padding: 2px 4px; /* 패딩 축소 */
+    border-radius: 4px !important;
+    margin-left: 6px;
+    position: absolute;
+    transform: translateY(-50%);
   }
 `
