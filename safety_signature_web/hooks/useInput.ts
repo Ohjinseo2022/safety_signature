@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { SyntheticEvent, useCallback, useState } from 'react'
 
 /**
  * @param initialValue
@@ -10,11 +10,11 @@ const useInput = (initialValue: any, validation?: (e: any) => {}) => {
   const onChange = useCallback((e: any) => {
     let willUpdate: boolean = true
     if (typeof validation === 'function') {
-      const tempValue = typeof e === 'string' ? e : e.target.value
+      const tempValue = !(typeof e === 'object') ? e : e.target.value
       willUpdate = validation(tempValue) as boolean
     }
     if (willUpdate) {
-      setValue(typeof e === 'string' ? e : e.target.value)
+      setValue(!(typeof e === 'object') ? e : e.target.value)
     }
   }, [])
   return [value, onChange, setValue]

@@ -2,8 +2,85 @@
 
 import styled from 'styled-components'
 import { useState } from 'react'
+import { useInput } from '@/hooks/useInput'
 import CommonEditor from '@/components/common/CommonEditor'
+import CommonInput from '@/components/common/CommonInput'
+import CommonModal from '@/components/modal/CommonModal'
 
+const WritePage = () => {
+  const [title, onChangeTitle, setTitle] = useInput('')
+  const [content, onChangeContent, setContent] = useInput('')
+  const [files, setFiles] = useState<FileList | null>(null)
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFiles(e.target.files)
+  }
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault()
+    console.log('제목:', title)
+    console.log('내용:', content)
+    console.log('첨부 파일:', files)
+    console.log(files)
+    if (!files) {
+      alert('파일이 없어연')
+      return
+    }
+    alert('게시글이 등록되었습니다!')
+  }
+  const [isModalVisible, onChangeModelVisible, setModalVisible] =
+    useInput(false)
+
+  const openModal = () => setModalVisible(true)
+  const closeModal = () => setModalVisible(false)
+
+  return (
+    <WriteContainer>
+      <div>
+        <button onClick={openModal}>모달 열기</button>
+        <CommonModal
+          isVisible={isModalVisible}
+          title="공통 모달"
+          setIsVisible={onChangeModelVisible}
+        >
+          <p>이 모달은 재사용 가능한 공통 모달 컴포넌트입니다.</p>
+          <p>다른 내용도 여기에 추가할 수 있습니다.</p>
+        </CommonModal>
+      </div>
+      <form onSubmit={handleSubmit}>
+        <FormGroup>
+          <CommonInput
+            htmlFor="title"
+            label="제목"
+            placeholder="제목을 입력해주세요."
+            type="text"
+            value={title}
+            onChange={onChangeTitle}
+          />
+        </FormGroup>
+        <br />
+        <br />
+        <FormGroup>
+          <CommonEditor
+            defaultValue={content}
+            onChange={onChangeContent}
+            placeholder="내용을 입력해주세요."
+          ></CommonEditor>
+        </FormGroup>
+
+        <FileUploadContainer>
+          <label htmlFor="files">파일 첨부</label>
+          <input id="files" type="file" multiple onChange={handleFileChange} />
+        </FileUploadContainer>
+        <FormGroup>
+          <SubmitButton type="submit">등록하기</SubmitButton>
+        </FormGroup>
+      </form>
+    </WriteContainer>
+  )
+}
+
+export default WritePage
 const WriteContainer = styled.div`
   background-color: #121212;
   color: #e0e0e0;
@@ -24,9 +101,8 @@ const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-
   label {
-    font-size: 16px;
+    font-size: 18px;
     color: #b0b0b0;
   }
 
@@ -47,6 +123,8 @@ const FormGroup = styled.div`
   textarea {
     min-height: 200px; /* 기본 높이 */
     resize: vertical; /* 크기 조절 가능 */
+  }
+  button {
   }
 `
 
@@ -69,6 +147,7 @@ const FileUploadContainer = styled.div`
 `
 
 const SubmitButton = styled.button`
+  width: 150px;
   background-color: #60a5fa;
   color: #ffffff;
   border: none;
@@ -82,59 +161,3 @@ const SubmitButton = styled.button`
     background-color: #3b82f6;
   }
 `
-
-const WritePage = () => {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
-  const [files, setFiles] = useState<FileList | null>(null)
-
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFiles(e.target.files)
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log('제목:', title)
-    console.log('내용:', content)
-    console.log('첨부 파일:', files)
-    alert('게시글이 등록되었습니다!')
-  }
-
-  return (
-    <WriteContainer>
-      <h2>글 작성하기</h2>
-      <form onSubmit={handleSubmit}>
-        <FormGroup>
-          <label htmlFor="title">제목</label>
-          <input
-            id="title"
-            type="text"
-            placeholder="제목을 입력하세요"
-            value={title}
-            onChange={(e) => setTitle(e.target.value)}
-          />
-        </FormGroup>
-
-        <FormGroup>
-          <label htmlFor="content">내용</label>
-          <CommonEditor></CommonEditor>
-          <textarea
-            id="content"
-            placeholder="내용을 입력하세요"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-          />
-        </FormGroup>
-
-        <FileUploadContainer>
-          <label htmlFor="files">파일 첨부</label>
-          <input id="files" type="file" multiple onChange={handleFileChange} />
-        </FileUploadContainer>
-
-        <SubmitButton type="submit">등록하기</SubmitButton>
-      </form>
-    </WriteContainer>
-  )
-}
-
-export default WritePage

@@ -4,16 +4,18 @@ import 'suneditor/dist/css/suneditor.min.css'
 import SunEditorCore from 'suneditor/src/lib/core'
 
 interface EditorProps {
+  placeholder?: string
   defaultValue?: string
-  setValue?: (content: string) => void
+  onChange?: (content: string) => void
   height?: string
   disabled?: boolean
   hideToolbar?: boolean
 }
 
 const CommonEditor: React.FC<EditorProps> = ({
+  placeholder,
   defaultValue,
-  setValue,
+  onChange,
   height = '550px',
   disabled = false,
   hideToolbar = false,
@@ -27,6 +29,7 @@ const CommonEditor: React.FC<EditorProps> = ({
   return (
     <>
       <SunEditor
+        placeholder={placeholder}
         width="100%"
         height={height}
         setOptions={{
@@ -50,7 +53,7 @@ const CommonEditor: React.FC<EditorProps> = ({
         readOnly={disabled}
         hideToolbar={hideToolbar}
         onChange={(e) => {
-          setValue && setValue(e)
+          onChange?.(e)
         }}
       />
     </>

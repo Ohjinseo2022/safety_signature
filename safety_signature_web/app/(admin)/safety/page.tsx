@@ -1,13 +1,10 @@
 'use client'
 
-import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useInput } from '@/hooks/useInput'
 import CommonBoard, { PostsType } from '@/components/common/CommonBoard'
-import CommonButton from '@/components/common/CommonButton'
 import CommonSearchBar from '@/components/common/CommonSearchBar'
-import CommonSelectBox from '@/components/common/CommonSelectBox'
 
 interface SafetyPageProps {}
 
@@ -116,7 +113,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
     console.log(e)
     alert('검색 실행')
   }
-   const [optionValue, onChangeOptionValue] = useInput('')
+  const [optionValue, onChangeOptionValue] = useInput('')
 
   return (
     <CommonBoard
@@ -137,71 +134,3 @@ const SafetyPage = ({}: SafetyPageProps) => {
   )
 }
 export default SafetyPage
-const SearchContainer = styled.div`
-  background-color: #1e1e1e;
-  padding: 20px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-
-  form {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .search-fields {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 16px;
-    justify-content: space-between;
-
-    .search-field {
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      min-width: 200px;
-
-      label {
-        margin-bottom: 8px;
-        color: #b0b0b0;
-        font-size: 14px;
-      }
-
-      input,
-      select {
-        padding: 10px;
-        border-radius: 4px;
-        border: 1px solid #444444;
-        background-color: #2a2a2a;
-        color: #e0e0e0;
-        font-size: 14px;
-        height: 40px;
-      }
-
-      input::placeholder {
-        color: #666666;
-      }
-    }
-
-    .search-button {
-      display: flex;
-      align-items: end;
-      justify-content: flex-end;
-
-      button {
-        background-color: #60a5fa;
-        color: #ffffff;
-        border: none;
-        padding: 10px 16px;
-        border-radius: 4px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-        height: 40px;
-
-        &:hover {
-          background-color: #3b82f6;
-        }
-      }
-    }
-  }
-`
