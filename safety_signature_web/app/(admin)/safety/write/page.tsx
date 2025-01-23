@@ -11,7 +11,7 @@ const WritePage = () => {
   const [title, onChangeTitle, setTitle] = useInput('')
   const [content, onChangeContent, setContent] = useInput('')
   const [files, setFiles] = useState<FileList | null>(null)
-
+  const [alertMessage, onChangealertMessage, setAlertMessage] = useInput('')
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiles(e.target.files)
   }
@@ -23,7 +23,7 @@ const WritePage = () => {
     console.log('첨부 파일:', files)
     console.log(files)
     if (!files) {
-      alert('파일이 없어연')
+      openModal({ msg: '첨부파일은 필수입니다.' })
       return
     }
     alert('게시글이 등록되었습니다!')
@@ -31,20 +31,19 @@ const WritePage = () => {
   const [isModalVisible, onChangeModelVisible, setModalVisible] =
     useInput(false)
 
-  const openModal = () => setModalVisible(true)
-  const closeModal = () => setModalVisible(false)
-
+  const openModal = ({ msg }: { msg: string }) => {
+    setAlertMessage(msg)
+    setModalVisible(true)
+  }
   return (
     <WriteContainer>
       <div>
-        <button onClick={openModal}>모달 열기</button>
         <CommonModal
           isVisible={isModalVisible}
-          title="공통 모달"
+          title=""
           setIsVisible={onChangeModelVisible}
         >
-          <p>이 모달은 재사용 가능한 공통 모달 컴포넌트입니다.</p>
-          <p>다른 내용도 여기에 추가할 수 있습니다.</p>
+          {alertMessage}
         </CommonModal>
       </div>
       <form onSubmit={handleSubmit}>

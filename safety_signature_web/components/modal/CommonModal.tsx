@@ -1,7 +1,7 @@
 'use client'
 
 import styled from 'styled-components'
-import { ReactNode } from 'react'
+import { ReactNode, useEffect } from 'react'
 
 interface CommonModalProps {
   overlayClose?: boolean
@@ -11,6 +11,8 @@ interface CommonModalProps {
   isCancel?: boolean
   title?: string
   setIsVisible: (bool: boolean) => void
+  width?: string // 모달 가로 크기
+  height?: string // 모달 세로 크기
 }
 
 const CommonModal: React.FC<CommonModalProps> = ({
@@ -21,6 +23,8 @@ const CommonModal: React.FC<CommonModalProps> = ({
   isCancel = false,
   setIsVisible,
   callBackFunction,
+  width = '250px',
+  height = '300px',
 }) => {
   const onClose = () => {
     setIsVisible(false)
@@ -31,6 +35,23 @@ const CommonModal: React.FC<CommonModalProps> = ({
       setIsVisible(false)
     }
   }
+  // ESC 키로 모달 닫기
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        setIsVisible(false)
+      }
+    }
+    if (isVisible) {
+      window.addEventListener('keydown', handleKeyDown)
+    }
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+    }
+  }, [isVisible])
+
+  const isTextOnly = typeof children === 'string'
+
   if (!isVisible) return null
   return (
     <ModalOverlay
@@ -39,12 +60,14 @@ const CommonModal: React.FC<CommonModalProps> = ({
           setIsVisible(false)
       }}
     >
-      <ModalContainer>
-        <ModalHeader>
-          <h2>{title}</h2>
-          <button onClick={onClose}>&times;</button>
-        </ModalHeader>
-        <ModalContent>
+      <ModalContainer $height={height} $isTextOnly={isTextOnly} $width={width}>
+        {title && (
+          <ModalHeader>
+            <h2>{title}</h2>
+            <button onClick={onClose}>&times;</button>
+          </ModalHeader>
+        )}
+        <ModalContent $isTextOnly={isTextOnly}>
           {/* children을 렌더링 (태그 또는 HTML 문자열 모두 가능) */}
           {typeof children === 'string' ? (
             <div dangerouslySetInnerHTML={{ __html: children }} />
@@ -81,15 +104,24 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `
 
-const ModalContainer = styled.div`
+const ModalContainer = styled.div<{
+  $width: string
+  $height: string
+  $isTextOnly: boolean
+}>`
   background-color: #1e1e1e;
   color: #e0e0e0;
   border-radius: 8px;
-  width: 90%;
-  max-width: 500px;
-  padding: 20px;
+  width: ${({ $width }) => $width};
+  max-width: 90%; /* 화면에 꽉 차지 않도록 제한 */
+  height: ${({ $isTextOnly, $height }) => ($isTextOnly ? 'auto' : $height)};
+  max-height: 90%; /* 세로 크기 제한 */
+  padding: ${({ $isTextOnly }) => ($isTextOnly ? '40px 20px' : '20px')};
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-  animation: fadeIn 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  animation: fadeIn 0.2s ease-in-out;
 
   @keyframes fadeIn {
     from {
@@ -128,21 +160,25 @@ const ModalHeader = styled.div`
   }
 `
 
-const ModalContent = styled.div`
-  font-size: 16px;
-  color: #b0b0b0;
-
+const ModalContent = styled.div<{ $isTextOnly: boolean }>`
+  font-size: ${({ $isTextOnly }) => ($isTextOnly ? '18px' : '16px')};
+  color: ${({ $isTextOnly }) => ($isTextOnly ? '#ffffff' : '#b0b0b0')};
+  text-align: ${({ $isTextOnly }) => ($isTextOnly ? 'center' : 'left')};
+  line-height: ${({ $isTextOnly }) => ($isTextOnly ? '1.8' : '1.6')};
+  flex: 1;
+  overflow-y: auto; /* 내용이 많을 경우 스크롤 */
+  margin-bottom: 20px;
   /* HTML 문자열을 처리할 수 있도록 스타일 정의 */
   p,
   div {
     margin: 10px 0;
+    font-weight: bold;
   }
 `
 
 const ModalFooter = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-top: 20px;
   gap: 10px;
 
   button {
