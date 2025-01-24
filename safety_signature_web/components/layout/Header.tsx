@@ -1,9 +1,11 @@
 'use client'
 
+import { useAlertStore } from '@/store/alertStore'
 import styled, { css, keyframes } from 'styled-components'
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import CommonModal from '../modal/CommonModal'
 
 export default function Header() {
   const router = useRouter()
@@ -14,7 +16,7 @@ export default function Header() {
     { label: '안전문서관리', path: '/safety', subMenu: [] },
     { label: '현장관리', path: '/site', subMenu: [] },
   ]
-
+  const { isModalVisible, onChangeModelVisible, children } = useAlertStore()
   return (
     <HeaderContainer>
       <Logo>
@@ -53,6 +55,17 @@ export default function Header() {
           </li>
         ))}
       </Nav>
+      <div>
+        <CommonModal
+          isVisible={isModalVisible}
+          title=""
+          setIsVisible={(e) => {
+            onChangeModelVisible({ isVisible: e })
+          }}
+        >
+          {children}
+        </CommonModal>
+      </div>
     </HeaderContainer>
   )
 }

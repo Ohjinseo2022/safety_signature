@@ -30,15 +30,19 @@ const CommonModal: React.FC<CommonModalProps> = ({
     setIsVisible(false)
   }
   const onConfirm = async () => {
-    const result = await callBackFunction?.()
-    if (result) {
+    if (callBackFunction) {
+      const result = await callBackFunction?.()
+      if (result) {
+        setIsVisible(false)
+      }
+    } else {
       setIsVisible(false)
     }
   }
   // ESC 키로 모달 닫기
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' || e.key === 'Enter') {
         setIsVisible(false)
       }
     }

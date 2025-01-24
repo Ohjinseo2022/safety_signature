@@ -7,6 +7,7 @@ interface CommonButtonProps {
   type: 'button' | 'submit' | 'reset' | undefined
   onClick?: (e: any) => void
   children?: React.ReactNode
+  disabled?: boolean
   $color?: string
 }
 
@@ -14,10 +15,11 @@ const CommonButton = ({
   type = 'button',
   onClick,
   children,
+  disabled = false,
   $color = '#ffffff',
 }: CommonButtonProps) => {
   return (
-    <Button type={type} onClick={onClick} $color={$color}>
+    <Button type={type} disabled={disabled} onClick={onClick} $color={$color}>
       {children}
     </Button>
   )

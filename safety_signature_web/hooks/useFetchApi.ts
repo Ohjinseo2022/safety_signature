@@ -1,20 +1,20 @@
-import { useLoadingStore } from '@/store/store'
-import { getItem } from '@/utils/localStorage'
-import axios, { Method } from 'axios'
+'use client'
 
-const { isLoading, onLoading, offLoading } = useLoadingStore()
+import { getItem } from '@/store/localStorage'
+// import { useLoadingStore } from '@/store/store'
+import axios, { Method } from 'axios'
+import { TokenCode } from '@/app/(common)/user/login/_repository/types'
+
 export const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
 })
 instance.interceptors.request.use(
   (config) => {
     //요청을 보내기 전에 수행할 로직
-    onLoading()
     return config
   },
   (error) => {
     //요청 에러가 발생했을 때 수행할 로직
-    offLoading()
     console.log(`[FetchApi] : request 오류 발생`)
     console.log(error)
     return Promise.reject(error)
@@ -22,7 +22,6 @@ instance.interceptors.request.use(
 )
 instance.interceptors.response.use(
   (response) => {
-    offLoading()
     //응답에 대한 로직 작성
     if (response.headers['x-total-count']) {
       return { ...response, count: response.headers['x-total-count'] }
@@ -30,7 +29,6 @@ instance.interceptors.response.use(
     return response
   },
   (error) => {
-    offLoading()
     //응답 에러가 발생했을 때 수행할 로직
     console.log(
       `[FetchApi] : ${
@@ -41,7 +39,41 @@ instance.interceptors.response.use(
     return Promise.reject({ error: error.response.data })
   }
 )
-const useFetchApi = async (
+// const useFetchApi = async <T>(
+//   apiUrl: string,
+//   opts: {
+//     method: Method
+//     data?: { [key: string]: any }
+//     params?: any
+//     headers?: any
+//   },
+//   etc?: { isAuth: boolean }
+// ) => {
+//   const headers = opts.headers
+//     ? { ...opts.headers }
+//     : { 'Content-Type': 'application/json' }
+//   return instance(apiUrl, {
+//     method: opts.method,
+//     url: apiUrl,
+//     data: opts.data,
+//     params: opts.params,
+//     headers: etc?.isAuth
+//       ? {
+//           ...headers,
+//           Authorization: `Bearer ${getItem('accessToken')}`,
+//         }
+//       : headers,
+//   })
+//     .then((res) => {
+//       return { ...res }
+//     })
+//     .catch((err) => {
+//       console.error(err)
+//       return err
+//     })
+// }
+
+const useFetchApi = async <T>(
   apiUrl: string,
   opts: {
     method: Method
@@ -51,10 +83,13 @@ const useFetchApi = async (
   },
   etc?: { isAuth: boolean }
 ) => {
+  // const { onLoading, offLoading } = useLoadingStore() // 반드시 컴포넌트 내부에서 호출
+
+  // onLoading()
   const headers = opts.headers
     ? { ...opts.headers }
     : { 'Content-Type': 'application/json' }
-  return instance(apiUrl, {
+  return await instance({
     method: opts.method,
     url: apiUrl,
     data: opts.data,
@@ -62,16 +97,17 @@ const useFetchApi = async (
     headers: etc?.isAuth
       ? {
           ...headers,
-          Authorization: `Bearer ${getItem('accessToken')}`,
+          Authorization: `Bearer ${getItem({ key: TokenCode.accessToken })}`,
         }
       : headers,
   })
     .then((res) => {
-      return { ...res }
+      return res
     })
     .catch((err) => {
-      console.error(err)
       return err
     })
+    .finally(() => {})
 }
+
 export default useFetchApi

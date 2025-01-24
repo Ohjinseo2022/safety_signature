@@ -10,6 +10,7 @@ interface CommonInputProps {
   value: any
   onChange: (e: any) => void
   label?: string
+  isEnter?: boolean
 }
 
 const CommonInput = ({
@@ -18,6 +19,7 @@ const CommonInput = ({
   htmlFor,
   value,
   label,
+  isEnter = false,
   onChange,
 }: CommonInputProps) => {
   return (
@@ -29,6 +31,9 @@ const CommonInput = ({
         type={type}
         value={value}
         onChange={onChange}
+        onKeyDown={(e) => {
+          // isEnter && e.key.toLowerCase() === 'enter' ?
+        }}
       ></Input>
     </DefaultInputField>
   )
