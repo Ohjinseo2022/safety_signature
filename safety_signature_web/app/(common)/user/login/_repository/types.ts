@@ -7,22 +7,21 @@ export enum TokenCode {
   accessToken = 'accessToken',
   refreshToken = 'refreshToken',
 }
-export interface LoginResponseBase {}
+export interface LoginResponseBase {
+  type: LoginResponseCode
+}
 export interface LoginRequestType {
   userId: string
   password: string
 }
 export interface LoginResponseToken extends LoginResponseBase {
-  type: LoginResponseCode.LoginResponseToken
   accessToken: string
   refreshToken: string
 }
 export interface LoginResponseFailed extends LoginResponseBase {
-  type: LoginResponseCode.LoginResponseFailed
   msg: string
 }
 export interface LoginResponseSuccess extends LoginResponseBase {
-  type: LoginResponseCode.LoginResponseSuccess
   id: string
   name: string
   profileImageUri?: string
@@ -31,20 +30,10 @@ export interface LoginResponseSuccess extends LoginResponseBase {
   signatureDocId?: string
   userStatusCode: string
 }
-// final String id;
-// final String name;
-// // @JsonKey(
-// //   fromJson: DataUtils.pathToUrl,
-// // )
-// final String? profileImageUri;
-// final String email;
-// final String? mobile;
-// final String? signatureDocId;
 
-// final String userStatusCode;
 export const isLoginResponceToken = (obj: LoginResponseBase) => {
-  return LoginResponseCode.LoginResponseToken in obj
+  return obj.type === LoginResponseCode.LoginResponseToken
 }
 export const isLoginResponceSuccess = (obj: LoginResponseBase) => {
-  return LoginResponseCode.LoginResponseSuccess in obj
+  return obj.type === LoginResponseCode.LoginResponseSuccess
 }

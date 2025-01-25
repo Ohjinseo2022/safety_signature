@@ -9,9 +9,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name="토큰 관련 API")
 @RestController
@@ -21,7 +19,7 @@ public class TokenManagementResource {
     private final TokenManagementMasterService tokenManagementMasterService;
 
     @Operation(summary = "토큰 갱신요청")
-    @PostMapping("/")
+    @PostMapping("/renew")
     public ResponseEntity<ResponseTokenManagementBaseDTO> postTokenRefresh(HttpServletRequest request) {
         ResponseTokenManagementBaseDTO result = tokenManagementMasterService.renewalUpdateToken(request);
         if(result instanceof RenewalTokenSuccessDTO){

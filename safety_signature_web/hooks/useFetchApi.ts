@@ -3,6 +3,7 @@
 import { getItem } from '@/store/localStorage'
 // import { useLoadingStore } from '@/store/store'
 import axios, { Method } from 'axios'
+import { postTokenRefresh } from '@/app/(common)/user/login/_repository/tokenRepository'
 import { TokenCode } from '@/app/(common)/user/login/_repository/types'
 
 export const instance = axios.create({
@@ -26,52 +27,46 @@ instance.interceptors.response.use(
     if (response.headers['x-total-count']) {
       return { ...response, count: response.headers['x-total-count'] }
     }
+
     return response
   },
-  (error) => {
+  async (error) => {
+    const {
+      config,
+      response: { status, message },
+    } = error
+
     //응답 에러가 발생했을 때 수행할 로직
     console.log(
       `[FetchApi] : ${
         error.code.includes('REQUEST') ? 'request' : 'response'
       } 오류 발생`
     )
-    console.log(error.response.data)
-    return Promise.reject({ error: error.response.data })
+    console.log(error)
+    console.log(status === 401)
+    const refreshToken = getItem({ key: TokenCode.refreshToken })
+    const isPathRefresh = config.url.includes('token')
+    if (!refreshToken || isPathRefresh) {
+      return Promise.reject({ error: error.response })
+    }
+    console.log(config.url)
+    if (status === 401) {
+      // 기존 토큰이 만료 상태라면
+      const originalRequset = config
+
+      const isRefresh = await postTokenRefresh()
+      if (!isRefresh) {
+        return Promise.reject({ error: error.response })
+      } else {
+        originalRequset.headers.authorization = `Bearer ${getItem({ key: TokenCode.accessToken })}`
+      }
+      const res = await instance(originalRequset)
+      return res
+    }
+    console.log(error.response)
+    return Promise.reject({ error: error.response })
   }
 )
-// const useFetchApi = async <T>(
-//   apiUrl: string,
-//   opts: {
-//     method: Method
-//     data?: { [key: string]: any }
-//     params?: any
-//     headers?: any
-//   },
-//   etc?: { isAuth: boolean }
-// ) => {
-//   const headers = opts.headers
-//     ? { ...opts.headers }
-//     : { 'Content-Type': 'application/json' }
-//   return instance(apiUrl, {
-//     method: opts.method,
-//     url: apiUrl,
-//     data: opts.data,
-//     params: opts.params,
-//     headers: etc?.isAuth
-//       ? {
-//           ...headers,
-//           Authorization: `Bearer ${getItem('accessToken')}`,
-//         }
-//       : headers,
-//   })
-//     .then((res) => {
-//       return { ...res }
-//     })
-//     .catch((err) => {
-//       console.error(err)
-//       return err
-//     })
-// }
 
 const useFetchApi = async <T>(
   apiUrl: string,
@@ -97,7 +92,7 @@ const useFetchApi = async <T>(
     headers: etc?.isAuth
       ? {
           ...headers,
-          Authorization: `Bearer ${getItem({ key: TokenCode.accessToken })}`,
+          authorization: `Bearer ${getItem({ key: TokenCode.accessToken })}`,
         }
       : headers,
   })

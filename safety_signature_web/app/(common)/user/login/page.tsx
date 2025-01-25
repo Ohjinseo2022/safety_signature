@@ -8,7 +8,11 @@ import { useInput } from '@/hooks/useInput'
 import CommonButton from '@/components/common/CommonButton'
 import CommonInput from '@/components/common/CommonInput'
 import { postLogin } from './_repository/loginRepository'
-import { LoginResponseBase, TokenCode } from './_repository/types'
+import {
+  isLoginResponceSuccess,
+  LoginResponseBase,
+  TokenCode,
+} from './_repository/types'
 
 interface UserLoginProps {}
 
@@ -33,7 +37,12 @@ const UserLogin: React.FC<UserLoginProps> = ({}) => {
         })
         return
       }
-      await postLogin({ userId: userId, password: password })
+      const userProfile = await postLogin({
+        userId: userId,
+        password: password,
+      })
+      if (isLoginResponceSuccess(userProfile)) {
+      }
     }
     //// 서버통신 완료 이후
     setBtnDisabled(false)

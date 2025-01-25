@@ -17,12 +17,10 @@ export const postLogin = async (props: LoginRequestType) => {
     }
   )
   if (status === 200) {
-    console.log('accessToken', data[TokenCode.accessToken])
-    console.log('refreshToken', data[TokenCode.refreshToken])
     setItem({ key: TokenCode.accessToken, item: data[TokenCode.accessToken] })
     setItem({ key: TokenCode.refreshToken, item: data[TokenCode.refreshToken] })
-    // setItem(TokenCode.accessToken , )
-    return { ...data, type: LoginResponseCode.LoginResponseToken }
+
+    return await getUserProfile()
   }
   if (status === 204) {
     return {
@@ -44,7 +42,20 @@ export const postLogin = async (props: LoginRequestType) => {
   //     return error
   //   }
 }
-const getUserProfile = () => {}
+export const getUserProfile = async () => {
+  const { data, status, error } = await useFetchApi(
+    '/user/profile',
+    {
+      method: 'get',
+    },
+    { isAuth: true }
+  )
+  if (status === 200) {
+    return { ...data, type: LoginResponseCode.LoginResponseSuccess }
+  } else {
+    return { ...error, type: LoginResponseCode.LoginResponseFailed }
+  }
+}
 /**
  * 상태를 관리할 필요가 없음 ! ! ! ! ! !!
  */

@@ -35,6 +35,7 @@ export const useCountStore = create<CountStore>()(
     'countStore'
   )
 )
+
 export const useLoadingStore = create<uesLoadingStore>()(
   logger<uesLoadingStore>(
     (set) => ({
@@ -48,14 +49,21 @@ export const useLoadingStore = create<uesLoadingStore>()(
     }),
     'loadingStore'
   )
-
-  //   (set: any) => ({
-  //   isLoading: false,
-  //   setLoading: () => {
-  //     set((state: any) => ({ isLoading: state }))
-  //   },
-  //   offLoading: () => {
-  //     set(() => ({ isLoading: false }))
-  //   },
-  // })
+)
+interface PathParamStore {
+  lastPath: string
+  setLastPaht: (e: string) => void
+  resetLastPath: () => void
+}
+export const usePathParamStore = create<PathParamStore>()(
+  logger<PathParamStore>(
+    (set) => ({
+      lastPath: '',
+      setLastPaht: (path: string) => {
+        set(() => ({ lastPath: path }))
+      },
+      resetLastPath: () => set(() => ({ lastPath: '' })),
+    }),
+    'usePathParamStore'
+  )
 )

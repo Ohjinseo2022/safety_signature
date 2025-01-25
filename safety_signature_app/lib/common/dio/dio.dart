@@ -69,12 +69,12 @@ class CustomInterceptor extends Interceptor {
     }
     final isStatus401 = err.response?.statusCode == 401;
     final isPathRefresh = err.requestOptions.path ==
-        '$baseUrl/auth/token'; //토큰을 새로 받급 받으려다가 에러난경우
+        '$baseUrl/auth/token/renew'; //토큰을 새로 받급 받으려다가 에러난경우
     //토큰을 재발급 하려는게 아니고 다른 api를 호출했을때 401(권한에러? ) 가 났다면
     if (isStatus401 && !isPathRefresh) {
       final dio = Dio();
       try {
-        final res = await dio.post('http://$ip$baseUrl/auth/token/',
+        final res = await dio.post('http://$ip$baseUrl/auth/token/renew',
             options: Options(headers: {
               'authorization': 'Bearer $refreshToken',
             }));
