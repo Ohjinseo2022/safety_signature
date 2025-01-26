@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.safety_signature.safety_signature_back.app.common.dto.AbstractAuditingDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.View;
 import com.safety_signature.safety_signature_back.app.common.enumeration.UserStatusCode;
+import com.safety_signature.safety_signature_back.app.common.enumeration.UserTypeCode;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -70,8 +71,8 @@ public class UserMasterDTO  extends AbstractAuditingDTO<String> implements Seria
     private String signatureDocId;
 
     @JsonView(View.Min.class)
-    @Schema(description="회원 타입")
-    private String userType;
+    @Schema(description="회원 타입 코드")
+    private UserTypeCode userTypeCode;
 
     @JsonView(View.Min.class)
     @Schema(description="계정 상태 코드")

@@ -42,11 +42,12 @@ const PageChangeMiddleware = ({
       3. 유저정보가 유효하지 않다면 접근권한 없음 알림창을 보여주며 로그인 창으로 이동 시켜준다.
       4. 마지막 이동해야했던 url 정보는 따로 스토어에 저장해준다.
       */
-      console.log('이동할 패스인가요 ?', args[0])
       await handleRouteStart()
       const lastUrl: string = args[0]
       if (!lastUrl.includes('login')) {
+        //관리자 페이지는 로그인한 사용자만 접근가능 함
         const userProfile = await getUserProfile()
+        console.log(userProfile)
         if (!isLoginResponceSuccess(userProfile)) {
           originalPush('/user/login', args[1])
         } else {
