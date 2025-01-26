@@ -72,7 +72,7 @@ public class UserMasterDTO  extends AbstractAuditingDTO<String> implements Seria
 
     @JsonView(View.Min.class)
     @Schema(description="회원 타입 코드")
-    private UserTypeCode userTypeCode;
+    private UserTypeCode userTypeCode = UserTypeCode.GENERAL_MEMBER;
 
     @JsonView(View.Min.class)
     @Schema(description="계정 상태 코드")
