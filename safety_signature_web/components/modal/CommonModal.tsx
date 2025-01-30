@@ -6,7 +6,7 @@ import { ReactNode, useEffect } from 'react'
 interface CommonModalProps {
   overlayClose?: boolean
   children: ReactNode | string // HTML 태그 또는 HTML 문자열 허용
-  callBackFunction?: () => Promise<boolean>
+  callBackFunction?: (e: any) => boolean | undefined
   isVisible?: boolean
   isCancel?: boolean
   title?: string
@@ -29,9 +29,9 @@ const CommonModal: React.FC<CommonModalProps> = ({
   const onClose = () => {
     setIsVisible(false)
   }
-  const onConfirm = async () => {
+  const onConfirm = async (e: any) => {
     if (callBackFunction) {
-      const result = await callBackFunction?.()
+      const result = await callBackFunction?.(e)
       if (result) {
         setIsVisible(false)
       }
@@ -41,16 +41,18 @@ const CommonModal: React.FC<CommonModalProps> = ({
   }
   // ESC 키로 모달 닫기
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' || e.key === 'Enter') {
-        setIsVisible(false)
+    if (overlayClose) {
+      const handleKeyDown = (e: KeyboardEvent) => {
+        if (e.key === 'Escape' || e.key === 'Enter') {
+          setIsVisible(false)
+        }
       }
-    }
-    if (isVisible) {
-      window.addEventListener('keydown', handleKeyDown)
-    }
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown)
+      if (isVisible) {
+        window.addEventListener('keydown', handleKeyDown)
+      }
+      return () => {
+        window.removeEventListener('keydown', handleKeyDown)
+      }
     }
   }, [isVisible])
 

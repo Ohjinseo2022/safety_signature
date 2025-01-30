@@ -26,7 +26,7 @@ export default function Home() {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        zIndex: 8999, // 모든 요소 위로
+        zIndex: 999, // 모든 요소 위로
         color: '#fff', // 글자 색상
       }}
     ></div>

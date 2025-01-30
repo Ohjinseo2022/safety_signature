@@ -14,6 +14,7 @@ UserMinModel _$UserMinModelFromJson(Map<String, dynamic> json) => UserMinModel(
       signatureDocId: json['signatureDocId'] as String?,
       mobile: json['mobile'] as String?,
       userStatusCode: json['userStatusCode'] as String,
+      userTypeCode: json['userTypeCode'] as String?,
     );
 
 Map<String, dynamic> _$UserMinModelToJson(UserMinModel instance) =>
@@ -25,6 +26,7 @@ Map<String, dynamic> _$UserMinModelToJson(UserMinModel instance) =>
       'mobile': instance.mobile,
       'signatureDocId': instance.signatureDocId,
       'userStatusCode': instance.userStatusCode,
+      'userTypeCode': instance.userTypeCode,
     };
 
 UserSummaryModel _$UserSummaryModelFromJson(Map<String, dynamic> json) =>
@@ -36,6 +38,7 @@ UserSummaryModel _$UserSummaryModelFromJson(Map<String, dynamic> json) =>
       profileImageUri: json['profileImageUri'] as String?,
       signatureDocId: json['signatureDocId'] as String?,
       mobile: json['mobile'] as String?,
+      userTypeCode: json['userTypeCode'] as String?,
     );
 
 Map<String, dynamic> _$UserSummaryModelToJson(UserSummaryModel instance) =>
@@ -47,6 +50,7 @@ Map<String, dynamic> _$UserSummaryModelToJson(UserSummaryModel instance) =>
       'mobile': instance.mobile,
       'signatureDocId': instance.signatureDocId,
       'userStatusCode': instance.userStatusCode,
+      'userTypeCode': instance.userTypeCode,
     };
 
 UserDetailModel _$UserDetailModelFromJson(Map<String, dynamic> json) =>
@@ -55,6 +59,7 @@ UserDetailModel _$UserDetailModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       email: json['email'] as String,
       userStatusCode: json['userStatusCode'] as String,
+      userTypeCode: json['userTypeCode'] as String?,
       profileImageUri: json['profileImageUri'] as String?,
       mobile: json['mobile'] as String?,
       signatureDocId: json['signatureDocId'] as String?,
@@ -72,6 +77,7 @@ Map<String, dynamic> _$UserDetailModelToJson(UserDetailModel instance) =>
       'mobile': instance.mobile,
       'signatureDocId': instance.signatureDocId,
       'userStatusCode': instance.userStatusCode,
+      'userTypeCode': instance.userTypeCode,
       'googleSignIn': instance.googleSignIn,
       'kakaoSignIn': instance.kakaoSignIn,
       'naverSignIn': instance.naverSignIn,
@@ -83,6 +89,7 @@ UserHiddenModel _$UserHiddenModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       email: json['email'] as String,
       userStatusCode: json['userStatusCode'] as String,
+      userTypeCode: json['userTypeCode'] as String?,
       profileImageUri: json['profileImageUri'] as String?,
       signatureDocId: json['signatureDocId'] as String?,
       mobile: json['mobile'] as String?,
@@ -101,6 +108,7 @@ Map<String, dynamic> _$UserHiddenModelToJson(UserHiddenModel instance) =>
       'mobile': instance.mobile,
       'signatureDocId': instance.signatureDocId,
       'userStatusCode': instance.userStatusCode,
+      'userTypeCode': instance.userTypeCode,
       'googleSignIn': instance.googleSignIn,
       'kakaoSignIn': instance.kakaoSignIn,
       'naverSignIn': instance.naverSignIn,

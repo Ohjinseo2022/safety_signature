@@ -7,6 +7,14 @@ export enum TokenCode {
   accessToken = 'accessToken',
   refreshToken = 'refreshToken',
 }
+export enum UserTypeCode {
+  MASTER_ADMINISTRATOR = 'MASTER_ADMINISTRATOR',
+  CORPORATE_MANAGER = 'CORPORATE_MANAGER',
+  GENERAL_MEMBER = 'GENERAL_MEMBER',
+}
+// MASTER_ADMINISTRATOR('마스터 관리자 계정'),
+//   CORPORATE_MANAGER('기업관리자'),
+//   GENERAL_MEMBER('일반 회원')
 export interface LoginResponseBase {
   type: LoginResponseCode
 }
@@ -29,6 +37,7 @@ export interface LoginResponseSuccess extends LoginResponseBase {
   mobile?: string
   signatureDocId?: string
   userStatusCode: string
+  userTypeCode: string
 }
 
 export const isLoginResponceToken = (obj: LoginResponseBase) => {

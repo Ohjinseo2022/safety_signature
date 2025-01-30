@@ -16,17 +16,30 @@ interface AlertStoreType {
     isVisible: boolean
     msg?: string
   }) => void
+  callBackFunction?: (e: any) => boolean
   children: ReactNode | string
+  initAlertStore: () => void
 }
 export const useAlertStore = create<AlertStoreType>()(
   logger<AlertStoreType>(
     (set) => ({
       isModalVisible: false,
+      overlayClose: true,
+      title: undefined,
       children: '',
       onChangeModelVisible: ({ isVisible, msg = '' }) => {
         set(() => ({
           isModalVisible: isVisible,
           children: msg,
+        }))
+      },
+      initAlertStore: () => {
+        set(() => ({
+          isModalVisible: false,
+          overlayClose: true,
+          title: undefined,
+          children: '',
+          callBackFunction: (e: any) => true,
         }))
       },
     }),

@@ -16,7 +16,8 @@ export default function Header() {
     { label: '안전문서관리', path: '/safety', subMenu: [] },
     { label: '현장관리', path: '/site', subMenu: [] },
   ]
-  const { isModalVisible, onChangeModelVisible, children } = useAlertStore()
+  const { isModalVisible, onChangeModelVisible, children, callBackFunction } =
+    useAlertStore()
   return (
     <HeaderContainer>
       <Logo>
@@ -62,6 +63,7 @@ export default function Header() {
           setIsVisible={(e) => {
             onChangeModelVisible({ isVisible: e })
           }}
+          callBackFunction={(e: any) => callBackFunction?.(e)}
         >
           {children}
         </CommonModal>

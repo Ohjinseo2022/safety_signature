@@ -48,7 +48,6 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
     final state = ref.watch(userAuthProvider);
     final isPopUp = ref.watch(modalControllerProvider);
     if (state is UserMinModel) {
-      print("설마 여러번 동작하니 ?");
       setState(() {
         name = name ?? state.name;
         userId = userId ?? state.email;

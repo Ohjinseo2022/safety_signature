@@ -27,6 +27,7 @@ class UserMinModel extends UserModelBase {
   final String? signatureDocId;
 
   final String userStatusCode;
+  final String? userTypeCode;
   UserMinModel(
       {required this.id,
       required this.name,
@@ -34,7 +35,8 @@ class UserMinModel extends UserModelBase {
       required this.email,
       this.signatureDocId,
       this.mobile,
-      required this.userStatusCode});
+      required this.userStatusCode,
+      this.userTypeCode});
   factory UserMinModel.fromJson(Map<String, dynamic> json) =>
       _$UserMinModelFromJson(json);
 }
@@ -48,7 +50,8 @@ class UserSummaryModel extends UserMinModel {
       required super.userStatusCode,
       super.profileImageUri,
       super.signatureDocId,
-      super.mobile});
+      super.mobile,
+      super.userTypeCode});
   factory UserSummaryModel.fromJson(Map<String, dynamic> json) =>
       _$UserSummaryModelFromJson(json);
 }
@@ -64,6 +67,7 @@ class UserDetailModel extends UserSummaryModel {
     required super.name,
     required super.email,
     required super.userStatusCode,
+    super.userTypeCode,
     super.profileImageUri,
     super.mobile,
     super.signatureDocId,
@@ -83,6 +87,7 @@ class UserHiddenModel extends UserDetailModel {
     required super.name,
     required super.email,
     required super.userStatusCode,
+    super.userTypeCode,
     super.profileImageUri,
     super.signatureDocId,
     super.mobile,
