@@ -1,5 +1,6 @@
 import { logger } from '@/store/logger'
 import { create } from 'zustand'
+import { NavigateOptions } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 
 interface CountState {
   countState: number
@@ -51,18 +52,20 @@ export const useLoadingStore = create<uesLoadingStore>()(
   )
 )
 interface PathParamStore {
-  lastPath: string
-  setLastPaht: (e: string) => void
+  lastPath: [href: string, options?: any | undefined] | any
+  useLastPath: boolean
+  setLastPath: (href: string, options?: any | undefined) => void
   resetLastPath: () => void
 }
 export const usePathParamStore = create<PathParamStore>()(
   logger<PathParamStore>(
     (set) => ({
-      lastPath: '',
-      setLastPaht: (path: string) => {
-        set(() => ({ lastPath: path }))
+      lastPath: [''],
+      useLastPath: false,
+      setLastPath: (args: any) => {
+        set(() => ({ lastPath: args }))
       },
-      resetLastPath: () => set(() => ({ lastPath: '' })),
+      resetLastPath: () => set(() => ({ lastPath: [''] })),
     }),
     'usePathParamStore'
   )

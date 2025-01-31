@@ -2,20 +2,34 @@
 
 import { useAlertStore } from '@/store/alertStore'
 import styled, { css, keyframes } from 'styled-components'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+import {
+  isLoginResponceSuccess,
+  LoginResponseCode,
+  LoginResponseSuccess,
+} from '@/app/(common)/user/login/_userRepository/types'
+import { useUserProfile } from '@/app/(common)/user/login/_userState/userStore'
 import CommonModal from '../modal/CommonModal'
 
 export default function Header() {
   const router = useRouter()
   const [visibleSubMenu, setVisibleSubMenu] = useState<number | null>(null)
-
+  const { userProfile } = useUserProfile()
   const menuItems: { label: string; path: string; subMenu: string[] }[] = [
     { label: '회원관리', path: '/user', subMenu: [] },
     { label: '안전문서관리', path: '/safety', subMenu: [] },
     { label: '현장관리', path: '/site', subMenu: [] },
   ]
+  const [profile, setProfile] = useState<LoginResponseSuccess>()
+  useEffect(() => {
+    if (isLoginResponceSuccess(userProfile)) {
+      setProfile((state) => (state = userProfile as LoginResponseSuccess))
+    } else {
+      setProfile(undefined)
+    }
+  }, [userProfile.type])
   const { isModalVisible, onChangeModelVisible, children, callBackFunction } =
     useAlertStore()
   return (
@@ -56,6 +70,12 @@ export default function Header() {
           </li>
         ))}
       </Nav>
+      {profile && (
+        <Profile>
+          <Link href={'/user/login'}>{profile.name} </Link>
+        </Profile>
+      )}
+
       <div>
         <CommonModal
           isVisible={isModalVisible}
@@ -63,7 +83,7 @@ export default function Header() {
           setIsVisible={(e) => {
             onChangeModelVisible({ isVisible: e })
           }}
-          callBackFunction={(e: any) => callBackFunction?.(e)}
+          callBackFunction={callBackFunction}
         >
           {children}
         </CommonModal>
@@ -173,3 +193,4 @@ const Logo = styled.h1`
     }
   }
 `
+const Profile = styled.div``

@@ -3,8 +3,8 @@
 import { getItem } from '@/store/localStorage'
 // import { useLoadingStore } from '@/store/store'
 import axios, { Method } from 'axios'
-import { postTokenRefresh } from '@/app/(common)/user/login/_repository/tokenRepository'
-import { TokenCode } from '@/app/(common)/user/login/_repository/types'
+import { postTokenRefresh } from '@/app/(common)/user/login/_userRepository/tokenRepository'
+import { TokenCode } from '@/app/(common)/user/login/_userRepository/types'
 
 export const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -42,14 +42,11 @@ instance.interceptors.response.use(
         error.code.includes('REQUEST') ? 'request' : 'response'
       } 오류 발생`
     )
-    console.log(error)
-    console.log(status === 401)
     const refreshToken = getItem({ key: TokenCode.refreshToken })
     const isPathRefresh = config.url.includes('token')
     if (!refreshToken || isPathRefresh) {
       return Promise.reject({ error: error.response })
     }
-    console.log(config.url)
     if (status === 401) {
       // 기존 토큰이 만료 상태라면
       const originalRequset = config

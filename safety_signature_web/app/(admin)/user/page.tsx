@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import CommonComingSoon from '@/components/common/CommonComingSoon'
 
 interface UserPageProps {}
 
 const UserPage = ({}: UserPageProps) => {
-  return <>회원관리 페이지</>
+  return <CommonComingSoon />
 }
 
 export default UserPage

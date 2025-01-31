@@ -1,7 +1,8 @@
 export enum LoginResponseCode {
-  LoginResponseToken = 'LoginResponseToken',
-  LoginResponseFailed = 'LoginResponseFailed',
-  LoginResponseSuccess = 'LoginResponseSuccess',
+  LoginResponseToken = '로그인 토큰',
+  LoginResponseFailed = '로그인 실패',
+  LoginResponseSuccess = '로그인 성공',
+  LoginPrevious = '로그인 전',
 }
 export enum TokenCode {
   accessToken = 'accessToken',

@@ -29,18 +29,6 @@ export const postLogin = async (props: LoginRequestType) => {
     }
   }
   return error
-  // await useFetchApi<LoginResponseType>(
-  //     '/login/normal',
-  //     {
-  //       method: 'post',
-  //       data: props,
-  //     }
-  //   )
-  //   if (!error && data) {
-  //     return { ...data }
-  //   } else {
-  //     return error
-  //   }
 }
 export const getUserProfile = async () => {
   const { data, status, error } = await useFetchApi(

@@ -1,11 +1,12 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import CommonCommingSoon from '@/components/common/CommonComingSoon'
 
 interface SitePageProps {}
 
 const SitePage = ({}: SitePageProps) => {
-  return <>현장관리 페이지</>
+  return <CommonCommingSoon />
 }
 
 export default SitePage

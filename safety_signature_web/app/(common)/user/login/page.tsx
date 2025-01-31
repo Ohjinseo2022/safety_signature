@@ -1,18 +1,21 @@
 'use client'
 
 import { useAlertStore } from '@/store/alertStore'
+import { useLoadingStore } from '@/store/store'
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 import useFetchApi from '@/hooks/useFetchApi'
 import { useInput } from '@/hooks/useInput'
 import CommonButton from '@/components/common/CommonButton'
 import CommonInput from '@/components/common/CommonInput'
-import { postLogin } from './_repository/loginRepository'
+import { postLogin } from './_userRepository/loginRepository'
 import {
   isLoginResponceSuccess,
   LoginResponseBase,
   TokenCode,
-} from './_repository/types'
+} from './_userRepository/types'
+import { useUserProfile } from './_userState/userStore'
 
 interface UserLoginProps {}
 
@@ -20,8 +23,10 @@ const UserLogin: React.FC<UserLoginProps> = ({}) => {
   const [userId, onChangeUserId, setUserId] = useInput('')
   const [password, onChangePassword, setPassword] = useInput('')
   const [btnDisabled, onChangeBtnDisabled, setBtnDisabled] = useInput(false)
+  const { userProfile: userInfo } = useUserProfile()
+  const { isLoading } = useLoadingStore()
   const { isModalVisible, onChangeModelVisible } = useAlertStore()
-
+  const router = useRouter()
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setBtnDisabled(true)
@@ -42,6 +47,7 @@ const UserLogin: React.FC<UserLoginProps> = ({}) => {
         password: password,
       })
       if (isLoginResponceSuccess(userProfile)) {
+        router.push('/main')
       }
     }
     //// 서버통신 완료 이후
@@ -51,42 +57,48 @@ const UserLogin: React.FC<UserLoginProps> = ({}) => {
   useEffect(() => {
     setBtnDisabled(isModalVisible)
   }, [isModalVisible])
-  return (
-    <LoginContainer>
-      <LoginBox>
-        <Title>로그인</Title>
-        <form onSubmit={handleLogin}>
-          <FormGroup>
-            <CommonInput
-              htmlFor="아이디"
-              label="아이디"
-              placeholder="이메일형식의 아이디를 입력하세요."
-              type="email"
-              value={userId}
-              onChange={onChangeUserId}
-            />
-          </FormGroup>
-          <FormGroup>
-            <CommonInput
-              htmlFor="비밀번호"
-              label="비밀번호"
-              placeholder="비밀번호를 입력하세요."
-              type="password"
-              value={password}
-              onChange={onChangePassword}
-            />
-          </FormGroup>
-          <br />
-          <CommonButton type="submit" disabled={btnDisabled}>
-            로그인
-          </CommonButton>
-        </form>
-        <ForgotPassword href="/forgot-password">
-          비밀번호를 잊으셨나요?
-        </ForgotPassword>
-      </LoginBox>
-    </LoginContainer>
-  )
+
+  if (isLoginResponceSuccess(userInfo)) {
+    return <></>
+  } else {
+    console.log(userInfo)
+    return (
+      <LoginContainer>
+        <LoginBox>
+          <Title>로그인</Title>
+          <form onSubmit={handleLogin}>
+            <FormGroup>
+              <CommonInput
+                htmlFor="아이디"
+                label="아이디"
+                placeholder="이메일형식의 아이디를 입력하세요."
+                type="email"
+                value={userId}
+                onChange={onChangeUserId}
+              />
+            </FormGroup>
+            <FormGroup>
+              <CommonInput
+                htmlFor="비밀번호"
+                label="비밀번호"
+                placeholder="비밀번호를 입력하세요."
+                type="password"
+                value={password}
+                onChange={onChangePassword}
+              />
+            </FormGroup>
+            <br />
+            <CommonButton type="submit" disabled={btnDisabled}>
+              로그인
+            </CommonButton>
+          </form>
+          <ForgotPassword href="/forgot-password">
+            비밀번호를 잊으셨나요?
+          </ForgotPassword>
+        </LoginBox>
+      </LoginContainer>
+    )
+  }
 }
 
 export default UserLogin
@@ -94,7 +106,7 @@ export default UserLogin
 const LoginContainer = styled.div`
   background-color: #121212;
   color: #e0e0e0;
-  height: 100vh;
+  height: 70vh; //100vh;
   width: 100vh;
   display: flex;
   justify-content: center;
