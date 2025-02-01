@@ -1,6 +1,7 @@
 'use client'
 
 import { useAlertStore } from '@/store/alertStore'
+import { removeItem } from '@/store/localStorage'
 import styled, { css, keyframes } from 'styled-components'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
@@ -9,18 +10,20 @@ import {
   isLoginResponceSuccess,
   LoginResponseCode,
   LoginResponseSuccess,
+  TokenCode,
 } from '@/app/(common)/user/login/_userRepository/types'
 import { useUserProfile } from '@/app/(common)/user/login/_userState/userStore'
+import CommonButton from '../common/CommonButton'
 import CommonModal from '../modal/CommonModal'
 
 export default function Header() {
   const router = useRouter()
   const [visibleSubMenu, setVisibleSubMenu] = useState<number | null>(null)
-  const { userProfile } = useUserProfile()
+  const { userProfile, initProfile } = useUserProfile()
   const menuItems: { label: string; path: string; subMenu: string[] }[] = [
-    { label: '회원관리', path: '/user', subMenu: [] },
-    { label: '안전문서관리', path: '/safety', subMenu: [] },
-    { label: '현장관리', path: '/site', subMenu: [] },
+    { label: '회원 관리', path: '/user', subMenu: [] },
+    { label: '전자결제 관리', path: '/bulletin', subMenu: [] },
+    { label: '현장 관리', path: '/site', subMenu: [] },
   ]
   const [profile, setProfile] = useState<LoginResponseSuccess>()
   useEffect(() => {
@@ -32,6 +35,16 @@ export default function Header() {
   }, [userProfile.type])
   const { isModalVisible, onChangeModelVisible, children, callBackFunction } =
     useAlertStore()
+
+  const onLoginAndOutHandler = async (type: string) => {
+    if (type === 'o') {
+      //로그아웃 로직 추가해야함.
+      removeItem({ key: TokenCode.accessToken })
+      removeItem({ key: TokenCode.refreshToken })
+      initProfile()
+    }
+    router.push('/user/login')
+  }
   return (
     <HeaderContainer>
       <Logo>
@@ -70,9 +83,17 @@ export default function Header() {
           </li>
         ))}
       </Nav>
-      {profile && (
+      {profile ? (
         <Profile>
-          <Link href={'/user/login'}>{profile.name} </Link>
+          <CommonButton onClick={() => onLoginAndOutHandler('o')}>
+            로그아웃
+          </CommonButton>
+        </Profile>
+      ) : (
+        <Profile>
+          <CommonButton onClick={() => onLoginAndOutHandler('i')}>
+            로그인
+          </CommonButton>
         </Profile>
       )}
 

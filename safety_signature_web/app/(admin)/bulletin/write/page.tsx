@@ -1,5 +1,6 @@
 'use client'
 
+import { useAlertStore } from '@/store/alertStore'
 import styled from 'styled-components'
 import { useState } from 'react'
 import { useInput } from '@/hooks/useInput'
@@ -8,10 +9,11 @@ import CommonInput from '@/components/common/CommonInput'
 import CommonModal from '@/components/modal/CommonModal'
 
 const WritePage = () => {
+  const { isModalVisible, onChangeModelVisible } = useAlertStore()
   const [title, onChangeTitle, setTitle] = useInput('')
   const [content, onChangeContent, setContent] = useInput('')
   const [files, setFiles] = useState<FileList | null>(null)
-  const [alertMessage, onChangealertMessage, setAlertMessage] = useInput('')
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFiles(e.target.files)
   }
@@ -22,30 +24,22 @@ const WritePage = () => {
     console.log('내용:', content)
     console.log('첨부 파일:', files)
     console.log(files)
+    if (!title) {
+      onChangeModelVisible({ isVisible: true, msg: '제목을 입력해주세요.' })
+      return
+    }
+    if (!content) {
+      onChangeModelVisible({ isVisible: true, msg: '내용을 입력해주세요.' })
+      return
+    }
     if (!files) {
-      openModal({ msg: '첨부파일은 필수입니다.' })
+      onChangeModelVisible({ isVisible: true, msg: '첨부파일은 필수입니다.' })
       return
     }
     alert('게시글이 등록되었습니다!')
   }
-  const [isModalVisible, onChangeModelVisible, setModalVisible] =
-    useInput(false)
-
-  const openModal = ({ msg }: { msg: string }) => {
-    setAlertMessage(msg)
-    setModalVisible(true)
-  }
   return (
     <WriteContainer>
-      <div>
-        <CommonModal
-          isVisible={isModalVisible}
-          title=""
-          setIsVisible={onChangeModelVisible}
-        >
-          {alertMessage}
-        </CommonModal>
-      </div>
       <form onSubmit={handleSubmit}>
         <FormGroup>
           <CommonInput

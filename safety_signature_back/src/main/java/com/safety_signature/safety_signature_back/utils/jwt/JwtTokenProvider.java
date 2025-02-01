@@ -5,6 +5,8 @@ import com.safety_signature.safety_signature_back.app.auth.exception.AccessToken
 import com.safety_signature.safety_signature_back.app.auth.exception.InvalidAccessTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.HttpServletRequest;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
@@ -80,5 +82,13 @@ public class JwtTokenProvider {
         }catch (ExpiredJwtException exception){
             return false;
         }
+    }
+    // 요청 헤더에서 토큰 추출
+    public String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(HttpHeaders.AUTHORIZATION);
+        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+            return bearerToken.substring(7);
+        }
+        return null;
     }
 }

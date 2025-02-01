@@ -6,9 +6,9 @@ import { useInput } from '@/hooks/useInput'
 import CommonBoard, { PostsType } from '@/components/common/CommonBoard'
 import CommonSearchBar from '@/components/common/CommonSearchBar'
 
-interface SafetyPageProps {}
+interface BulletinPageProps {}
 
-const SafetyPage = ({}: SafetyPageProps) => {
+const BulletinPage = ({}: BulletinPageProps) => {
   const router = useRouter()
   const posts: PostsType[] = [
     {
@@ -17,7 +17,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
       site: '현장명 1',
       author: '작성자 1',
       createdDate: '2025-01-22',
-      path: '/safety/detail/',
+      path: '/bulletin/detail/',
       signature: 5,
     },
     {
@@ -26,7 +26,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
       site: '현장명 2',
       author: '작성자 2',
       createdDate: '2025-01-19',
-      path: '/safety/detail/',
+      path: '/bulletin/detail/',
       signature: 2,
     },
     {
@@ -35,7 +35,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
       site: '현장명 3',
       author: '작성자 3',
       createdDate: '2025-01-22',
-      path: '/safety/detail/',
+      path: '/bulletin/detail/',
       signature: 0,
     },
     {
@@ -44,7 +44,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
       site: '현장명 3',
       author: '작성자 3',
       createdDate: '2025-01-18',
-      path: '/safety/detail/',
+      path: '/bulletin/detail/',
       signature: 0,
     },
     {
@@ -53,7 +53,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
       site: '현장명 3',
       author: '작성자 3',
       createdDate: '2025-01-18',
-      path: '/safety/detail/',
+      path: '/bulletin/detail/',
       signature: 0,
     },
     {
@@ -62,7 +62,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
       site: '현장명 3',
       author: '작성자 3',
       createdDate: '2025-01-18',
-      path: '/safety/detail/',
+      path: '/bulletin/detail/',
       signature: 0,
     },
     {
@@ -71,7 +71,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
       site: '현장명 3',
       author: '작성자 3',
       createdDate: '2025-01-18',
-      path: '/safety/detail/',
+      path: '/bulletin/detail/',
       signature: 0,
     },
     {
@@ -80,7 +80,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
       site: '현장명 3',
       author: '작성자 3',
       createdDate: '2025-01-18',
-      path: '/safety/detail/',
+      path: '/bulletin/detail/',
       signature: 0,
     },
     {
@@ -89,7 +89,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
       site: '현장명 3',
       author: '작성자 3',
       createdDate: '2025-01-18',
-      path: '/safety/detail/',
+      path: '/bulletin/detail/',
       signature: 0,
     },
     {
@@ -98,7 +98,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
       site: '현장명 3',
       author: '작성자 3',
       createdDate: '2025-01-18',
-      path: '/safety/detail/',
+      path: '/bulletin/detail/',
       signature: 0,
     },
   ]
@@ -120,7 +120,7 @@ const SafetyPage = ({}: SafetyPageProps) => {
       title={'안전문서 게시판'}
       headers={headers}
       createBtn={() => {
-        router.push('/safety/write')
+        router.push('/bulletin/write')
       }}
       posts={posts}
       children={
@@ -133,4 +133,4 @@ const SafetyPage = ({}: SafetyPageProps) => {
     ></CommonBoard>
   )
 }
-export default SafetyPage
+export default BulletinPage

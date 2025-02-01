@@ -15,7 +15,7 @@ const CommonComingSoon: React.FC<CommonCommingSoonProps> = ({}) => {
       <Description>
         현재 이 페이지는 개발 중입니다. 빠른 시일 내에 제공될 예정입니다.
       </Description>
-      <BackButton onClick={() => router.push('/safety')}>
+      <BackButton onClick={() => router.push('/bulletin')}>
         홈으로 돌아가기
       </BackButton>
     </Container>

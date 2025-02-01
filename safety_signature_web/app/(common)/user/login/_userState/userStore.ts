@@ -5,6 +5,7 @@ import { LoginResponseBase, LoginResponseCode } from '../_userRepository/types'
 interface UserProfildStore {
   userProfile: LoginResponseBase
   setProfile: (data: LoginResponseBase) => void
+  initProfile: () => void
 }
 export const useUserProfile = create<UserProfildStore>()(
   logger<UserProfildStore>(

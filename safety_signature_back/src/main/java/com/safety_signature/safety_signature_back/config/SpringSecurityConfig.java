@@ -1,6 +1,11 @@
 package com.safety_signature.safety_signature_back.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
+import com.safety_signature.safety_signature_back.app.user.service.impl.UserMasterServiceImpl;
+import com.safety_signature.safety_signature_back.utils.jwt.JwtAuthenticationFilter;
+import com.safety_signature.safety_signature_back.utils.jwt.JwtTokenProvider;
+import com.safety_signature.safety_signature_back.utils.jwt.TokenValues;
 import jakarta.servlet.DispatcherType;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +20,8 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
+import org.springframework.security.web.authentication.AuthenticationFilter;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import java.io.PrintWriter;
 
@@ -22,8 +29,15 @@ import java.io.PrintWriter;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SpringSecurityConfig {
+
+    private final UserMasterService userMasterService;
+
+    public SpringSecurityConfig( UserMasterService userMasterService) {
+        this.userMasterService = userMasterService;
+    }
+
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http, JwtTokenProvider jwtTokenProvider, UserMasterServiceImpl userMasterServiceImpl, TokenValues tokenValues) throws Exception {
         http
             .cors((corsConfigurer)->corsConfigurer.disable())
 //                .headers((httpSecurityHeadersConfigurer ->
@@ -42,7 +56,7 @@ public class SpringSecurityConfig {
                             .anyRequest().authenticated()// 허용된 url 이 아니면 권한 체크 필요함 !?
 //                            .anyRequest().permitAll()// 허용된 url 이 아니면 권한 체크 필요함 !?
             )
-
+                .addFilterBefore(new JwtAuthenticationFilter(tokenValues,jwtTokenProvider,userMasterService), UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling((exceptionConfig) ->
                         exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler)
             ); // 401 403 관련 예외처리

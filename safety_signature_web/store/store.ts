@@ -1,6 +1,5 @@
 import { logger } from '@/store/logger'
 import { create } from 'zustand'
-import { NavigateOptions } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 
 interface CountState {
   countState: number

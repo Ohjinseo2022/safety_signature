@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 
 interface CommonButtonProps {
-  type: 'button' | 'submit' | 'reset' | undefined
+  type?: 'button' | 'submit' | 'reset' | undefined
   onClick?: (e: any) => void
   children?: React.ReactNode
   disabled?: boolean

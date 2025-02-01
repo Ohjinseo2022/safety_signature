@@ -129,11 +129,11 @@ const CommentsTable = styled.table`
     }
   }
 `
-interface SafetyDetailPageProps {
+interface BulletinDetailPageProps {
   params: Promise<{ id: string }>
 }
 
-const SafetyDetailPage = ({ params }: SafetyDetailPageProps) => {
+const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
   const unwrappedParams = use(params) // params를 언래핑
   const post = {
     title: '게시글 제목',
@@ -223,4 +223,4 @@ const SafetyDetailPage = ({ params }: SafetyDetailPageProps) => {
   )
 }
 
-export default SafetyDetailPage
+export default BulletinDetailPage
