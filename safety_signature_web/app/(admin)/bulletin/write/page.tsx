@@ -1,34 +1,58 @@
 'use client'
 
 import { useAlertStore } from '@/store/alertStore'
+import { isEncryptedFile } from '@/utils/fileUtils'
 import styled from 'styled-components'
 import { useState } from 'react'
+import useFetchApi from '@/hooks/useFetchApi'
 import { useInput } from '@/hooks/useInput'
 import CommonEditor from '@/components/common/CommonEditor'
 import CommonInput from '@/components/common/CommonInput'
-import CommonModal from '@/components/modal/CommonModal'
 
 const WritePage = () => {
   const { isModalVisible, onChangeModelVisible } = useAlertStore()
-  const [title, onChangeTitle, setTitle] = useInput('')
-  const [content, onChangeContent, setContent] = useInput('')
-  const [files, setFiles] = useState<FileList | null>(null)
+  const [boardTitle, onChangeBoardTitle, setBoardTitle] = useInput('')
+  const [boardContents, onChangeBoardContents, setBoardContents] = useInput('')
+  const [files, setFiles] = useState<FileObj[] | null>(null)
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setFiles(e.target.files)
+    //파일 이존재하면서
+    if (e.target.files && e.target.files.length > 0) {
+      const arrfileObj: FileObj[] = []
+      Array.prototype.forEach.call(e.target.files, async (file) => {
+        //암호화 된 파일인지 확인
+        const isEncrypted = await isEncryptedFile(file)
+        if (isEncrypted) {
+          onChangeModelVisible({
+            isVisible: true,
+            msg: '암호화된 파일은 업로드 불가능합니다.',
+          })
+          return
+        }
+        arrfileObj.push({
+          file: file,
+          fileName: file.name,
+          fileSize: file.size,
+        })
+      })
+      setFiles(arrfileObj)
+    } else {
+      setFiles(null)
+    }
+    // setFiles((state) => (e.target?.files ? state.push(e.target.files) : state))
   }
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('제목:', title)
-    console.log('내용:', content)
+    console.log('제목:', boardTitle)
+    console.log('내용:', boardContents)
     console.log('첨부 파일:', files)
     console.log(files)
-    if (!title) {
+    if (!boardTitle) {
       onChangeModelVisible({ isVisible: true, msg: '제목을 입력해주세요.' })
       return
     }
-    if (!content) {
+    if (!boardContents) {
       onChangeModelVisible({ isVisible: true, msg: '내용을 입력해주세요.' })
       return
     }
@@ -36,6 +60,33 @@ const WritePage = () => {
       onChangeModelVisible({ isVisible: true, msg: '첨부파일은 필수입니다.' })
       return
     }
+    const formData = new FormData()
+    // ✅ 게시글 데이터 추가 (JSON으로 변환 후 Blob으로 추가)
+    const boardData = JSON.stringify({
+      boardTitle: boardTitle,
+      boardContents: boardContents,
+    })
+    formData.append(
+      'boardData',
+      new Blob([boardData], { type: 'application/json' })
+    )
+
+    // ✅ 파일 데이터 추가
+    files.forEach((fileObj, index) => {
+      if (fileObj.file) {
+        formData.append('files', fileObj.file) // files[] 배열로 추가
+      }
+    })
+
+    const { data, error, status } = await useFetchApi(
+      '/bulletin-board/registration',
+      {
+        method: 'post',
+        data: formData,
+        headers: 'multipart/form-data',
+      },
+      { isAuth: true }
+    )
     alert('게시글이 등록되었습니다!')
   }
   return (
@@ -47,23 +98,29 @@ const WritePage = () => {
             label="제목"
             placeholder="제목을 입력해주세요."
             type="text"
-            value={title}
-            onChange={onChangeTitle}
+            value={boardTitle}
+            onChange={onChangeBoardTitle}
           />
         </FormGroup>
         <br />
         <br />
         <FormGroup>
           <CommonEditor
-            defaultValue={content}
-            onChange={onChangeContent}
+            defaultValue={boardContents}
+            onChange={onChangeBoardContents}
             placeholder="내용을 입력해주세요."
           ></CommonEditor>
         </FormGroup>
 
         <FileUploadContainer>
           <label htmlFor="files">파일 첨부</label>
-          <input id="files" type="file" multiple onChange={handleFileChange} />
+          <input
+            id="files"
+            type="file"
+            multiple={true}
+            accept="image/jpeg, image/png, image/gif, application/pdf, application/msword, application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            onChange={handleFileChange}
+          />
         </FileUploadContainer>
         <FormGroup>
           <SubmitButton type="submit">등록하기</SubmitButton>

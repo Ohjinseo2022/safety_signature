@@ -85,6 +85,7 @@ const useFetchApi = async <T>(
     method: opts.method,
     url: apiUrl,
     data: opts.data,
+
     params: opts.params,
     headers: etc?.isAuth
       ? {
