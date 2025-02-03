@@ -3,6 +3,8 @@ package com.safety_signature.safety_signature_back.security;
 
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
+import com.safety_signature.safety_signature_back.config.Constants;
+import com.safety_signature.safety_signature_back.utils.SecurityUtils;
 import com.safety_signature.safety_signature_back.utils.jwt.TokenValues;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,19 +29,6 @@ public class SpringSecurityAuditorAware implements AuditorAware<String> {
     @Override
     public Optional<String> getCurrentAuditor() {
         //createdBy lastModifiedBy 를 자동으로 입력시켜주는 코드
-        try {
-            HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-            String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-            if(authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-                return  Optional.of("anonymoususer");
-            }
-            UserMasterDTO userMasterDTO = userMasterService.isValidTokenCheckToGetUserMaster(request, tokenValues.secretKey());
-            if (userMasterDTO == null) {
-                Optional.of("anonymoususer");
-            }
-            return Optional.of(userMasterDTO.getName());
-        } catch (JwtException jwtException) {
-           return  Optional.of("anonymoususer");
-        }
+        return Optional.of(SecurityUtils.getCurrentUserLogin().orElse(Constants.ANONYMOUSUSER));
     }
 }

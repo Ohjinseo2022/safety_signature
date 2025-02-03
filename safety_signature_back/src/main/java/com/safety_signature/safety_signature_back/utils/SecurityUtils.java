@@ -1,5 +1,6 @@
 package com.safety_signature.safety_signature_back.utils;
 
+import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -24,9 +25,9 @@ public class SecurityUtils {
     private static String extractPrincipal(Authentication authentication) {
         if (authentication == null) {
             return null;
-        } else if (authentication.getPrincipal() instanceof UserDetails) {
-            UserDetails springSecurityUser = (UserDetails) authentication.getPrincipal();
-            return springSecurityUser.getUsername();
+        } else if (authentication.getPrincipal() instanceof UserMasterDTO) {
+            UserMasterDTO springSecurityUser = (UserMasterDTO) authentication.getPrincipal();
+            return springSecurityUser.getEmail();
         } else if (authentication instanceof JwtAuthenticationToken) {
             return (String) ((JwtAuthenticationToken) authentication).getToken().getClaims().get("preferred_username");
         } else if (authentication.getPrincipal() instanceof DefaultOidcUser) {

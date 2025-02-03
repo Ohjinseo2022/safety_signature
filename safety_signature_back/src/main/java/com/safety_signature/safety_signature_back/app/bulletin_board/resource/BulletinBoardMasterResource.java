@@ -26,6 +26,7 @@ public class BulletinBoardMasterResource {
         public ResponseEntity<?> registration(@RequestPart("boardData") BulletinBoardRegistrationRequestDTO bulletinBoardRegistrationRequestDTO,
                                               @RequestPart(value = "files", required = false) List<MultipartFile> files) throws Exception{
         String userId = SecurityUtils.getCurrentUserLogin().orElse(Constants.SYSTEM);
+        log.info("userId:{}", userId);
         log.info("bulletinBoardRegistrationRequestDTO:{}", bulletinBoardRegistrationRequestDTO);
         log.info("files:{}", files);
         BulletinBoardMasterDTO bulletinBoardMasterDTO = new BulletinBoardMasterDTO();
