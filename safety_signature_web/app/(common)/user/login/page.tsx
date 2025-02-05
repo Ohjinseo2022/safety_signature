@@ -25,18 +25,18 @@ const UserLogin: React.FC<UserLoginProps> = ({}) => {
   const [btnDisabled, onChangeBtnDisabled, setBtnDisabled] = useInput(false)
   const { userProfile: userInfo } = useUserProfile()
   const { isLoading } = useLoadingStore()
-  const { isModalVisible, onChangeModelVisible } = useAlertStore()
+  const { isModalVisible, onChangeModalVisible } = useAlertStore()
   const router = useRouter()
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     setBtnDisabled(true)
     if (!btnDisabled) {
       if (!userId) {
-        onChangeModelVisible({ isVisible: true, msg: '아이디를 입력해주세요' })
+        onChangeModalVisible({ isVisible: true, msg: '아이디를 입력해주세요' })
         return
       }
       if (!password) {
-        onChangeModelVisible({
+        onChangeModalVisible({
           isVisible: true,
           msg: '비밀번호를 입력해주세요',
         })

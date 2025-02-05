@@ -48,6 +48,7 @@ instance.interceptors.response.use(
       return Promise.reject({ error: error.response })
     }
     if (status === 401) {
+      console.log('토튼 만료 에러 토큰 리프레시 시도')
       // 기존 토큰이 만료 상태라면
       const originalRequset = config
 

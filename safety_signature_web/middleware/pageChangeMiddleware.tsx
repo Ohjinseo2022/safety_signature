@@ -85,7 +85,7 @@ const PageChangeMiddleware = ({
           setItem({ key: TokenCode.accessToken, item: 'Expired' })
           setItem({ key: TokenCode.refreshToken, item: 'Expired' })
           alertStore.overlayClose = false
-          alertStore.onChangeModelVisible({
+          alertStore.onChangeModalVisible({
             msg: '접근권한이 없습니다.',
             isVisible: true,
           })
