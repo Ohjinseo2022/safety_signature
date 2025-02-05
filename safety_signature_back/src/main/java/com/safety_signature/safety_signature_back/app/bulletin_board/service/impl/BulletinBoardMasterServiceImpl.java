@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -15,16 +16,18 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
     /**
      * @param registrationRequestDTO
      * @param files
-     * @return 전자 결제 문서 저장 서비스
+     * @param userEmail
+     * @return 전자결제 문서 MinIo 저장 및 게시글 저장 처리 후 Optional<BulletinBoardMasterDTO> 리턴
      */
     @Override
-    public Optional<BulletinBoardMasterDTO> saveBulletinBoardMaster(BulletinBoardRegistrationRequestDTO registrationRequestDTO, MultipartFile files) {
+    public Optional<BulletinBoardMasterDTO> saveBulletinBoardMaster(BulletinBoardRegistrationRequestDTO registrationRequestDTO, List<MultipartFile> files , String userEmail) {
         /**
          * 1.회원 ID 정보 필요함
          * 2.권한체크
          * 3.첨부파일 저장 (리스트 형태)
          * 4.첨부파일 저장 성공시 게시글 저장 처리
          */
+
         return Optional.empty();
     }
 }

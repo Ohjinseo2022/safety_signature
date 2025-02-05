@@ -19,6 +19,7 @@ import org.springframework.data.domain.Pageable;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.*;
@@ -79,6 +80,11 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
         AttachDocMaster attachDocMaster = attachDocMasterMapper.toEntity(attachDocMasterDTO);
         attachDocMaster = attachDocMasterRepository.save(attachDocMaster);
         return attachDocMasterMapper.toDto(attachDocMaster);
+    }
+
+    @Override
+    public AttachDocMasterDTO attachDocMasterAndMinIoSave(List<MultipartFile> files, String userId) {
+        return null;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.safety_signature.safety_signature_back.app.common.service;
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,7 +21,7 @@ public interface AttachDocMasterService {
      */
     AttachDocMasterDTO save(AttachDocMasterDTO attachDocMasterDTO);
 
-
+    AttachDocMasterDTO attachDocMasterAndMinIoSave(List<MultipartFile> files, String userId);
     AttachDocMasterDTO base64StringSignatureImageSave(String base64StringSignatureImage , String userId);
     /**
      * Updates a attachDocMaster.

@@ -21,7 +21,7 @@ spring:
 #              - profile_image
 access-token:
   secret-key: ENC(M2o/g3PSJwzjB3wyuEVJx38we5yXOVN5gqBpa0gp6IAnq+NXS4FxxvvWItON8PzkSKgmLhKIk1A=)
-  expire-length: 60000 #3600000
+  expire-length: 3600000
 
 refresh-token:
   expire-length: 1209600000
