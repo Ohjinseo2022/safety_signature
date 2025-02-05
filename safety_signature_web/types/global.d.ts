@@ -11,4 +11,14 @@ declare global {
     fileSize?: string
     title?: string
   }
+  /**
+   * 네이버 맵 사용을 위한 타입 설정
+   */
+  type NaverMap = naver.maps.Map
+  type Lat = number
+  type Lng = number
+  type Coordinates = [Lat, Lng]
+  /**
+   * 네이버 맵 사용을 위한 타입 설정
+   */
 }
