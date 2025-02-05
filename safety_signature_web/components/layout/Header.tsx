@@ -34,7 +34,7 @@ export default function Header() {
       setProfile(undefined)
     }
   }, [userProfile.type])
-  const { isModalVisible, onChangeModelVisible, children, callBackFunction } =
+  const { isModalVisible, onChangeModalVisible, children, callBackFunction } =
     useAlertStore()
 
   const onLoginAndOutHandler = async (type: string) => {
@@ -103,7 +103,7 @@ export default function Header() {
           isVisible={isModalVisible}
           title=""
           setIsVisible={(e) => {
-            onChangeModelVisible({ isVisible: e })
+            onChangeModalVisible({ isVisible: e })
           }}
           callBackFunction={callBackFunction}
         >

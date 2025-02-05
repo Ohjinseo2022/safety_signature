@@ -3,7 +3,7 @@ package com.safety_signature.safety_signature_back.config;
 public class Constants {
 
     public static final String SYSTEM = "system";
-    public static final String ANONYMOUSUSER = "anonymoususer";
+    public static final String ANONYMOUSUSER = "anonymousUser";
     public static final String DEFAULT_LANGUAGE = "ko";
 
     public static final String SPRING_PROFILE_DEVELOPMENT = "dev";

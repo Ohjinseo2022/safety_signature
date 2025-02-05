@@ -13,6 +13,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,22 +33,21 @@ public class BulletinBoardMasterResource {
                 @RequestPart("boardData") BulletinBoardRegistrationRequestDTO bulletinBoardRegistrationRequestDTO,
                 @RequestPart(value = "files", required = false) List<MultipartFile> files) throws Exception{
 
-        String userId = SecurityUtils.getCurrentUserLogin().orElse(null);
+        String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
         // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
-        if (userId == null) {
+        if (Constants.ANONYMOUSUSER.equals(userEmail)) {
             BulletinBoardRegistrationResponseMessageDTO result = BulletinBoardRegistrationResponseMessageDTO.builder().httpStatus(HttpStatus.UNAUTHORIZED).message("UNAUTHORIZED").build();
             return ResponseEntity.status(result.getHttpStatus()).body(result);
         }
-        log.info("userId:{}", userId);
+        log.info("userEmail:{}", userEmail);
         log.info("bulletinBoardRegistrationRequestDTO:{}", bulletinBoardRegistrationRequestDTO);
         log.info("files:{}", files);
-        Optional<BulletinBoardMasterDTO> bulletinBoardMasterDTO = bulletinBoardMasterService.saveBulletinBoardMaster(bulletinBoardRegistrationRequestDTO , files , userId);
-        if(bulletinBoardMasterDTO.isPresent()){
+        BulletinBoardMasterDTO bulletinBoardMasterDTO = bulletinBoardMasterService.saveBulletinBoardMaster(bulletinBoardRegistrationRequestDTO , files , userEmail);
+        if(!ObjectUtils.isEmpty(bulletinBoardMasterDTO)){
             BulletinBoardRegistrationResponseMessageDTO result = BulletinBoardRegistrationResponseMessageDTO.builder().httpStatus(HttpStatus.OK).message("SUCCESSFUL").build();
             return ResponseEntity.status(result.getHttpStatus()).body(result);
         }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BulletinBoardRegistrationResponseMessageDTO.builder().httpStatus(HttpStatus.INTERNAL_SERVER_ERROR).build());
-
     }
 
 

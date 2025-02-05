@@ -4,17 +4,19 @@ import { useAlertStore } from '@/store/alertStore'
 import { isEncryptedFile } from '@/utils/fileUtils'
 import styled from 'styled-components'
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import useFetchApi from '@/hooks/useFetchApi'
 import { useInput } from '@/hooks/useInput'
 import CommonEditor from '@/components/common/CommonEditor'
 import CommonInput from '@/components/common/CommonInput'
 
 const WritePage = () => {
-  const { isModalVisible, onChangeModelVisible } = useAlertStore()
+  const { isModalVisible, onChangeModalVisible, callBackFunction } =
+    useAlertStore()
   const [boardTitle, onChangeBoardTitle, setBoardTitle] = useInput('')
   const [boardContents, onChangeBoardContents, setBoardContents] = useInput('')
   const [files, setFiles] = useState<FileObj[] | null>(null)
-
+  const router = useRouter()
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     //파일 이존재하면서
     if (e.target.files && e.target.files.length > 0) {
@@ -23,7 +25,7 @@ const WritePage = () => {
         //암호화 된 파일인지 확인
         const isEncrypted = await isEncryptedFile(file)
         if (isEncrypted) {
-          onChangeModelVisible({
+          onChangeModalVisible({
             isVisible: true,
             msg: '암호화된 파일은 업로드 불가능합니다.',
           })
@@ -47,17 +49,16 @@ const WritePage = () => {
     console.log('제목:', boardTitle)
     console.log('내용:', boardContents)
     console.log('첨부 파일:', files)
-    console.log(files)
     if (!boardTitle) {
-      onChangeModelVisible({ isVisible: true, msg: '제목을 입력해주세요.' })
+      onChangeModalVisible({ isVisible: true, msg: '제목을 입력해주세요.' })
       return
     }
     if (!boardContents) {
-      onChangeModelVisible({ isVisible: true, msg: '내용을 입력해주세요.' })
+      onChangeModalVisible({ isVisible: true, msg: '내용을 입력해주세요.' })
       return
     }
     if (!files) {
-      onChangeModelVisible({ isVisible: true, msg: '첨부파일은 필수입니다.' })
+      onChangeModalVisible({ isVisible: true, msg: '첨부파일은 필수입니다.' })
       return
     }
     const formData = new FormData()
@@ -87,7 +88,16 @@ const WritePage = () => {
       },
       { isAuth: true }
     )
-    alert('게시글이 등록되었습니다!')
+    if (status === 200) {
+      onChangeModalVisible({
+        isVisible: true,
+        msg: '등록 완료 됐습니다.',
+        callBackFunction: () => {
+          router.push('/bulletin')
+          return true
+        },
+      })
+    }
   }
   return (
     <WriteContainer>

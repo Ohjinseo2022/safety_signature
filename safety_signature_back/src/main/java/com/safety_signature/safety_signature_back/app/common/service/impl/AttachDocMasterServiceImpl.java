@@ -6,11 +6,16 @@ import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMaster
 import com.safety_signature.safety_signature_back.app.common.dto.util.MinIOUtilsReturnDTO;
 import com.safety_signature.safety_signature_back.app.common.enumeration.AttachDocOwnerClassCode;
 import com.safety_signature.safety_signature_back.app.common.enumeration.OperationTypeCode;
+import com.safety_signature.safety_signature_back.app.common.exception.AttachDocException;
+import com.safety_signature.safety_signature_back.app.common.exception.CommonException;
 import com.safety_signature.safety_signature_back.app.common.mapper.AttachDocMasterMapper;
 import com.safety_signature.safety_signature_back.app.common.repository.AttachDocMasterRepository;
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocHistService;
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocMasterService;
+import com.safety_signature.safety_signature_back.utils.FileUtil;
 import com.safety_signature.safety_signature_back.utils.MinioUtils;
+import org.apache.commons.compress.utils.FileNameUtils;
+import org.apache.commons.lang3.ObjectUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -23,6 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.regex.Pattern;
 
 
 /**
@@ -47,7 +53,6 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
         this.attachDocMasterRepository = attachDocMasterRepository;
         this.attachDocMasterMapper = attachDocMasterMapper;
         this.attachDocHistService = attachDocHistService;
-
         this.minioUtils = minioUtils;
     }
 
@@ -83,8 +88,44 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
     }
 
     @Override
-    public AttachDocMasterDTO attachDocMasterAndMinIoSave(List<MultipartFile> files, String userId) {
-        return null;
+    public List<AttachDocMasterDTO> attachDocMasterAndMinIoSave(List<MultipartFile> files, String attachDocOwnerId,String userId)  {
+        try{
+            if(ObjectUtils.isEmpty(files)){
+                throw new AttachDocException("Attach document upload files is empty");
+            }
+            log.info("attachDocMasterAndMinIoSave start ");
+            List<AttachDocMasterDTO> result = new ArrayList<>();
+            for(MultipartFile file : files ){
+                log.info("attachDocMasterAndMinIoSave file : {} ",file);
+                String extension = FileNameUtils.getExtension(file.getOriginalFilename());
+                String directory = String.format("signature/%s/", attachDocOwnerId);
+                if (Pattern.matches("(?i)(GIF|JPG|JPEG|PNG|PDF)$", extension)) {
+                    String storedFileName = minioUtils.upload(file, directory);
+                    AttachDocMasterDTO attachDocMasterDTO = AttachDocMasterDTO.builder()
+                            .attachDocName(file.getOriginalFilename())
+                            .attachDocExplain("")
+                            .attachDocId(userId) //등록자 ID
+                            .attachDocPosition(String.format("%s/%s", directory, storedFileName))
+                            .attachDocOwnerClassCode(AttachDocOwnerClassCode.USER_SIGNATURE)
+                            .attachDocOwnerId(attachDocOwnerId)//실제 저장시 연결된 테이블 고유 ID
+                            .attachDocSize(FileUtil.getFileSize(file.getSize()))
+                            .build();
+                    this.save(attachDocMasterDTO);
+
+                    AttachDocHistDTO attachDocHistDTO = AttachDocHistDTO.builder()
+                            .attachDocMaster(attachDocMasterDTO)
+                            .operationTypeCode(OperationTypeCode.UP_LOADING)
+                            .operationGoalExplain(attachDocMasterDTO.getAttachDocExplain())
+                            .operatorIpAddress("test중")
+                            .build();
+                    attachDocHistService.save(attachDocHistDTO);
+                    result.add(attachDocMasterDTO);
+                }
+            }
+            return result;
+        }catch (Exception e){
+            throw new AttachDocException(e.getMessage());
+        }
     }
 
     @Override

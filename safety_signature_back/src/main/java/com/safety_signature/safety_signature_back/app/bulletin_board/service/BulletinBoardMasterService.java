@@ -8,5 +8,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface BulletinBoardMasterService {
-    Optional<BulletinBoardMasterDTO> saveBulletinBoardMaster(BulletinBoardRegistrationRequestDTO registrationRequestDTO , List<MultipartFile> files, String userEmail);
+    BulletinBoardMasterDTO saveBulletinBoardMaster(BulletinBoardRegistrationRequestDTO registrationRequestDTO , List<MultipartFile> files, String userEmail);
+    BulletinBoardMasterDTO save(BulletinBoardMasterDTO bulletinBoardMasterDTO);
 }
