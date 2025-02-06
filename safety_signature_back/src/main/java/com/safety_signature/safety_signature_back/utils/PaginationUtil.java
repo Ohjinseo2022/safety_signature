@@ -1,4 +1,4 @@
-package net.lotte.marketplace.util;
+package com.safety_signature.safety_signature_back.utils;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpHeaders;

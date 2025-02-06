@@ -7,6 +7,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import org.hibernate.annotations.Comment;
 
 import java.io.Serializable;
 @Setter
@@ -41,4 +42,7 @@ public class BulletinBoardMasterDTO extends AbstractAuditingDTO<String> implemen
 
     @Schema(description = "게시글 오너 ID")
     private UserMasterDTO userMasterDTO;
+
+    @Schema(description = "결제완료 유무")
+    private Boolean completionYn = false;
 }

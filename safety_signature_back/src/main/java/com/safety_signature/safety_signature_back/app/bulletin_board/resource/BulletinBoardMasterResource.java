@@ -17,22 +17,22 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Optional;
 
 @Tag(name="전자결제 게시판 관련 API")
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/bulletin-board")
+@RequestMapping("/bulletin-board/registration")
 public class BulletinBoardMasterResource {
     private final Logger log = LoggerFactory.getLogger(BulletinBoardMasterResource.class);
     private final BulletinBoardMasterService bulletinBoardMasterService;
     @Operation(summary = "전자 결제 문서 등록")
-    @PostMapping("/registration")
+    @PostMapping("")
         public ResponseEntity<BulletinBoardRegistrationResponseMessageDTO> registration(
                 @RequestPart("boardData") BulletinBoardRegistrationRequestDTO bulletinBoardRegistrationRequestDTO,
                 @RequestPart(value = "files", required = false) List<MultipartFile> files) throws Exception{
-
         String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
         // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
         if (Constants.ANONYMOUSUSER.equals(userEmail)) {
@@ -50,5 +50,18 @@ public class BulletinBoardMasterResource {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BulletinBoardRegistrationResponseMessageDTO.builder().httpStatus(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
+    @Operation(summary = "전자 결제 문서 관리자 리스트 조회")
+    @GetMapping("/list-for-administrators")
+    public ResponseEntity<?> listForAdministrators(@RequestParam(name = "title") String title, Pageable pageable)throws Exception{
+        /**
+         * 1. 검색조건
+         *      - 게시글 제목
+         *      - 로그인한 권한 체크
+         *      - 페이지네이션
+         *      -
+         */
+        return null;
+
+    }
 
 }
