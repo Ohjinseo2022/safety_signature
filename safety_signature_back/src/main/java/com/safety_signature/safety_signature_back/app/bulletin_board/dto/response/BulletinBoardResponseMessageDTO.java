@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class BulletinBoardRegistrationResponseMessageDTO {
+public class BulletinBoardResponseMessageDTO extends BulletinBoardResponseBaseDTO{
     HttpStatus httpStatus;
     String message;
 }
