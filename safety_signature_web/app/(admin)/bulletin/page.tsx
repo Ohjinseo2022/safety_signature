@@ -5,11 +5,22 @@ import { useRouter } from 'next/navigation'
 import { useInput } from '@/hooks/useInput'
 import CommonBoard, { PostsType } from '@/components/common/CommonBoard'
 import CommonSearchBar from '@/components/common/CommonSearchBar'
+import { useBulletinBoardListQuery } from './_hooks/BulletinBoardQuery'
 
 interface BulletinPageProps {}
 
 const BulletinPage = ({}: BulletinPageProps) => {
   const router = useRouter()
+  const { data: bulletinBoardList = { data: [] }, refetch } =
+    useBulletinBoardListQuery({
+      boardTitle: '',
+      createdBy: '',
+      startDate: '2025-02-01',
+      endDate: '2025-02-10',
+      page: 0,
+      size: 10,
+      isOwner: false,
+    })
   const posts: PostsType[] = [
     {
       id: '0JGYVMZFRMVWG',

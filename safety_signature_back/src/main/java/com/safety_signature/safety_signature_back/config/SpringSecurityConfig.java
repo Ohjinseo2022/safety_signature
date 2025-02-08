@@ -56,10 +56,11 @@ public class SpringSecurityConfig {
                             .anyRequest().authenticated()// 허용된 url 이 아니면 권한 체크 필요함 !?
 //                            .anyRequest().permitAll()// 허용된 url 이 아니면 권한 체크 필요함 !?
             )
-                .addFilterBefore(new JwtAuthenticationFilter(tokenValues,jwtTokenProvider,userMasterService), UsernamePasswordAuthenticationFilter.class)
+
             .exceptionHandling((exceptionConfig) ->
                         exceptionConfig.authenticationEntryPoint(unauthorizedEntryPoint).accessDeniedHandler(accessDeniedHandler)
-            ); // 401 403 관련 예외처리
+            )// 401 403 관련 예외처리
+                .addFilterBefore(new JwtAuthenticationFilter(tokenValues,jwtTokenProvider,userMasterService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
 
     }

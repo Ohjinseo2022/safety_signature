@@ -13,6 +13,4 @@ import java.util.Optional;
 @Repository
 public interface BulletinBoardMasterRepository extends JpaRepository<BulletinBoardMaster, String> , JpaSpecificationExecutor<BulletinBoardMaster> {
     Optional<BulletinBoardMaster> findById(String id);
-
-    Optional<List<BulletinBoardMaster>> findAllByBoardTitleContainsIgnoreCaseAndUserMasterIdAndAndCreatedByAndGreaterThanEqualAndCreatedDateLessThanEqual(String boardTitle, String userId, String createdBy, LocalDate startDate, LocalDate endDate);
 }

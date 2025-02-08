@@ -11,6 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,21 +41,26 @@ public class BulletinBoardMasterServiceSpecification {
     private static List<Predicate> getPredicates(Map<BulletinBoardMasterSearchCondition,Object> condition, Root<BulletinBoardMaster> root, CriteriaBuilder builder, CriteriaQuery<?> query){
         List<Predicate> predicate = new ArrayList<>();
         for(BulletinBoardMasterSearchCondition key : condition.keySet()){
-
             switch (key){
                 case BOARD_TITLE:
-                    predicate.add(
-                            builder.like(root.get("boardTitle"),"%"+condition.get(key).toString()+"%"));
+                    predicate.add(builder.like(root.get("boardTitle"),"%"+condition.get(key).toString()+"%"));
                     break;
                 case CREATED_BY:
+                    predicate.add(builder.equal(root.get("createdBy"), condition.get(key)));
+                    break;
+                case USER_ID:
                     predicate.add(
-                             builder.equal(root.get("createdBy"),
-                                    condition.get(key))
+                            builder.equal(root.get("userMasterId"),condition.get(key).toString())
                     );
+                    break;
+                case START_DATE:
+                    predicate.add(builder.greaterThanOrEqualTo(root.get("createdDate"), LocalDate.parse(String.valueOf(condition.get(key)), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.of("Asia/Seoul")).toInstant()));
+                    break;
+                case END_DATE:
+                    predicate.add(builder.lessThan(root.get("createdDate"), LocalDate.parse(String.valueOf(condition.get(key)), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.of("Asia/Seoul")).toInstant()));
                     break;
                 default:
                    break;
-
             }
         }
 

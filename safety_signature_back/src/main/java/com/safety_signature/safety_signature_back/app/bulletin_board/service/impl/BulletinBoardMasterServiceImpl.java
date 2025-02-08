@@ -9,6 +9,7 @@ import com.safety_signature.safety_signature_back.app.bulletin_board.mapper.Bull
 import com.safety_signature.safety_signature_back.app.bulletin_board.repository.BulletinBoardMasterRepository;
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.BulletinBoardAttachInfoService;
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.BulletinBoardMasterService;
+import com.safety_signature.safety_signature_back.app.bulletin_board.service.specification.BulletinBoardMasterServiceSpecification;
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocMasterService;
 import com.safety_signature.safety_signature_back.app.common.service.impl.AttachDocMasterServiceImpl;
@@ -16,16 +17,20 @@ import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 /**
- * Service Implementation for managing {@link com.safety_signature.safety_signature_back.app.bulletin_board.domain.BulletinBoardMaster}.
+ * Service Implementation for managing {@link BulletinBoardMaster}.
  */
 
 @Service
@@ -91,5 +96,35 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
         log.debug("Request to save bulletinBoardMaster : {}", bulletinBoardMasterDTO);
         return bulletinBoardMasterMapper.toDto(bulletinBoardMasterRepository
                 .save(bulletinBoardMasterMapper.toEntity(bulletinBoardMasterDTO)));
+    }
+
+    @Override
+    public Page<BulletinBoardMasterDTO> getBulletinBoardMasterSearchConditionList(String boardTitle, String createdBy, String startDate, String endDate, String ownerId, Pageable pageable) {
+        Map<BulletinBoardMasterServiceSpecification.BulletinBoardMasterSearchCondition,Object> condition = new LinkedHashMap<>();
+        if(!ObjectUtils.isEmpty(boardTitle)){
+            condition.put(BulletinBoardMasterServiceSpecification.BulletinBoardMasterSearchCondition.BOARD_TITLE,boardTitle);
+        }
+        if(!ObjectUtils.isEmpty(createdBy)){
+            condition.put(BulletinBoardMasterServiceSpecification.BulletinBoardMasterSearchCondition.CREATED_BY,createdBy);
+        }
+        if(!ObjectUtils.isEmpty(startDate)){
+            condition.put(BulletinBoardMasterServiceSpecification.BulletinBoardMasterSearchCondition.START_DATE,startDate);
+        }
+        if(!ObjectUtils.isEmpty(endDate)){
+            condition.put(BulletinBoardMasterServiceSpecification.BulletinBoardMasterSearchCondition.END_DATE,endDate);
+        }
+        if(!ObjectUtils.isEmpty(ownerId)){
+            condition.put(BulletinBoardMasterServiceSpecification.BulletinBoardMasterSearchCondition.USER_ID,ownerId);
+        }
+        Specification<BulletinBoardMaster> specs =  BulletinBoardMasterServiceSpecification.getSpecification(condition);
+        List<BulletinBoardMasterDTO> list = new ArrayList<>();
+        Page<BulletinBoardMaster> bulletinBoardMasterList = bulletinBoardMasterRepository.findAll(specs, pageable);
+        for(BulletinBoardMaster entity : bulletinBoardMasterList){
+            list.add(bulletinBoardMasterMapper.toDto(entity));
+            //추가적인 조회나 데이터 조작을 여기다 하면될듯 싶음 !
+        }
+        Page<BulletinBoardMasterDTO> result =
+                new PageImpl<>(list ,pageable, bulletinBoardMasterRepository.count(specs));
+        return result;
     }
 }

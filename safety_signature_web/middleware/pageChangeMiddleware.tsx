@@ -77,10 +77,6 @@ const PageChangeMiddleware = ({
           !isLogin ||
           userProfile.userTypeCode === UserTypeCode.GENERAL_MEMBER
         ) {
-          alertStore.callBackFunction = () => {
-            originalPush('/user/login', args[1])
-            return true
-          }
           pathStore.useLastPath = true
           setItem({ key: TokenCode.accessToken, item: 'Expired' })
           setItem({ key: TokenCode.refreshToken, item: 'Expired' })
@@ -88,6 +84,10 @@ const PageChangeMiddleware = ({
           alertStore.onChangeModalVisible({
             msg: '접근권한이 없습니다.',
             isVisible: true,
+            callBackFunction: () => {
+              originalPush('/user/login', args[1])
+              return true
+            },
           })
         } else {
           userProfileStore.setProfile(userProfile as LoginResponseSuccess)
