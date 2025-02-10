@@ -20,7 +20,7 @@ class JasyptConfigTest {
         String text = "changeIt";//변경할 값
 
         StandardPBEStringEncryptor encryptor = new StandardPBEStringEncryptor();
-        encryptor.setPassword("password");
+        encryptor.setPassword("password");//암호화 시크릿키
         encryptor.setAlgorithm("PBEWithMD5AndDES");
 
 

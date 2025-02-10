@@ -1,14 +1,18 @@
 package com.safety_signature.safety_signature_back.app.bulletin_board.resource;
 
+import com.fasterxml.jackson.annotation.JsonView;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.BulletinBoardMasterDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.request.BulletinBoardRegistrationRequestDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardListResponseDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardResponseBaseDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardResponseMessageDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.BulletinBoardMasterService;
+import com.safety_signature.safety_signature_back.app.common.dto.View;
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
 import com.safety_signature.safety_signature_back.config.Constants;
+import com.safety_signature.safety_signature_back.config.FieldSelector;
+import com.safety_signature.safety_signature_back.config.Partial;
 import com.safety_signature.safety_signature_back.utils.PaginationUtil;
 import com.safety_signature.safety_signature_back.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -100,7 +104,12 @@ public class BulletinBoardMasterResource {
         }
         Page<BulletinBoardMasterDTO> result =  bulletinBoardMasterService.getBulletinBoardMasterSearchConditionList(boardTitle, createdBy, startDate, endDate, ownerId, pageable);
         HttpHeaders headers =  PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), result);
-        return ResponseEntity.ok().headers(headers).body(BulletinBoardListResponseDTO.builder().data(result.getContent()).totalCount(result.getSize()).build());
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(BulletinBoardListResponseDTO.builder()
+                        .data(result.getContent())
+                        .build()
+                );
 
     }
 

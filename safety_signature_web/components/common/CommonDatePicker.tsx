@@ -3,28 +3,29 @@
 import styled from 'styled-components'
 import { HTMLInputTypeAttribute, useEffect, useState } from 'react'
 
-interface CommonInputProps {
+interface CommonDatePickerProps {
   type?: HTMLInputTypeAttribute
   placeholder?: string
   htmlFor?: string
   value: any
   onChange: (e: any) => void
   label?: string
-  isEnter?: boolean
   readOnly?: boolean
   onKeydown?: (e: any) => void
 }
 
-const CommonInput = ({
-  type = 'string',
+const CommonDatePicker: React.FC<CommonDatePickerProps> = ({
+  type = 'date',
   placeholder,
   htmlFor,
   value,
   label,
-  isEnter = false,
   readOnly,
   onChange,
-}: CommonInputProps) => {
+}) => {
+  const onDateChange = (e: any) => {
+    onChange(e)
+  }
   return (
     <DefaultInputField>
       {label ? <Label htmlFor={htmlFor}>{label}</Label> : null}
@@ -33,18 +34,15 @@ const CommonInput = ({
         placeholder={placeholder}
         type={type}
         value={value}
-        onChange={onChange}
+        onChange={onDateChange}
         readOnly={readOnly}
-        // onKeyDown={(e) => {
-        //   isEnter && e.key.toLowerCase() === 'enter' ? onKeydown : null
-        // }}
+        onKeyDown={(e) => e.preventDefault()}
       ></Input>
     </DefaultInputField>
   )
 }
 
-export default CommonInput
-
+export default CommonDatePicker
 const Input = styled.input`
   padding: 10px;
   border-radius: 4px;

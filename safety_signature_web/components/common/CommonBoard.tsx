@@ -45,7 +45,7 @@ const CommonBoard = ({
         {posts.map((post) => (
           <li key={post.id}>
             {headers.map((header, idx) => {
-              if (header.columns === 'title' && post.path) {
+              if (header.columns === 'boardTitle' && post.path) {
                 return (
                   <CustomLink
                     $isNew={durationDay(post.createdDate, nowDate()) <= 1}

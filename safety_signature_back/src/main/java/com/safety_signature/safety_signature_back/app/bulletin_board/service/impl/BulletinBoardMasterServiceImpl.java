@@ -15,6 +15,7 @@ import com.safety_signature.safety_signature_back.app.common.service.AttachDocMa
 import com.safety_signature.safety_signature_back.app.common.service.impl.AttachDocMasterServiceImpl;
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
+import com.safety_signature.safety_signature_back.utils.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -120,7 +121,13 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
         List<BulletinBoardMasterDTO> list = new ArrayList<>();
         Page<BulletinBoardMaster> bulletinBoardMasterList = bulletinBoardMasterRepository.findAll(specs, pageable);
         for(BulletinBoardMaster entity : bulletinBoardMasterList){
-            list.add(bulletinBoardMasterMapper.toDto(entity));
+            log.info("bulletinBoardMaster : {}", entity);
+            //가릴정보 안보이게 처리
+            BulletinBoardMasterDTO dto = bulletinBoardMasterMapper.toDto(entity);
+            dto.getUserMasterDTO().setUserPassword(null);
+            //등록일시 //companyMasterDTO.getCreatedDateFormat();
+            dto.setCreatedDateFormat(DateUtil.instantToStringDate(dto.getCreatedDate(), "yyyy-MM-dd HH:mm"));
+            list.add(dto);
             //추가적인 조회나 데이터 조작을 여기다 하면될듯 싶음 !
         }
         Page<BulletinBoardMasterDTO> result =

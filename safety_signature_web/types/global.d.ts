@@ -21,4 +21,33 @@ declare global {
   /**
    * 네이버 맵 사용을 위한 타입 설정
    */
+  //회원정보 테이블
+  interface UserMasterType {
+    email: string
+    googleSignIn: boolean
+    id: string
+    kakaoSignIn: boolean
+    mobile: string
+    name: string
+    naverSignIn: boolean
+    profileImageUri?: string
+    signatureDocId?: string
+    userPassword?: string
+    userStatusCode: string
+    userTypeCode: string
+  }
+  interface BulletinBoardMasterType {
+    attachYn: boolean
+    boardContents: string
+    boardTitle: string
+    completionYn?: boolean
+    createdBy: string
+    createdDate: string
+    createdDateFormat: string
+    id: string
+    lastModifiedBy: string
+    lastModifiedDate: string
+    userMasterDTO: UserMasterType
+    userMasterId: string
+  }
 }

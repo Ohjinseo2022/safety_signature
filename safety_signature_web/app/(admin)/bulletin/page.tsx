@@ -1,130 +1,63 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { customDatePlus, dateFormat, nowDate } from '@/utils/utils'
+import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useInput } from '@/hooks/useInput'
 import CommonBoard, { PostsType } from '@/components/common/CommonBoard'
 import CommonSearchBar from '@/components/common/CommonSearchBar'
+import BulletinBoardMultiSearchBar from './_components/BulletinBoardMultiSearchBar'
 import { useBulletinBoardListQuery } from './_hooks/BulletinBoardQuery'
 
 interface BulletinPageProps {}
 
 const BulletinPage = ({}: BulletinPageProps) => {
   const router = useRouter()
-  const { data: bulletinBoardList = { data: [] }, refetch } =
+  const [searchInput, onChangeSearchInput] = useInput('')
+  const [startDate, onChangeStartDate, setStartDate] = useInput(
+    customDatePlus(nowDate('YYYY-MM-DD'), '-30')
+  )
+  const [endDate, onChangeEndDate, setEndDate] = useInput(nowDate('YYYY-MM-DD'))
+  const [isCreated, onChangeIsCreated, setIsCreated] = useInput(false)
+  const { data: bulletinBoardList = { data: [], count: 0 }, refetch } =
     useBulletinBoardListQuery({
-      boardTitle: '',
+      boardTitle: searchInput,
       createdBy: '',
-      startDate: '2025-02-01',
-      endDate: '2025-02-10',
+      startDate: startDate,
+      endDate: endDate,
       page: 0,
       size: 10,
-      isOwner: false,
+      isOwner: isCreated,
     })
-  const posts: PostsType[] = [
-    {
-      id: '0JGYVMZFRMVWG',
-      title: '게시글 제목 1',
-      site: '현장명 1',
-      author: '작성자 1',
-      createdDate: '2025-01-22',
-      path: '/bulletin/detail/',
-      signature: 5,
-    },
-    {
-      id: '게시글 제목2',
-      title: '게시글 제목 2',
-      site: '현장명 2',
-      author: '작성자 2',
-      createdDate: '2025-01-19',
-      path: '/bulletin/detail/',
-      signature: 2,
-    },
-    {
-      id: '게시글 제목3',
-      title: '게시글 제목 3',
-      site: '현장명 3',
-      author: '작성자 3',
-      createdDate: '2025-01-22',
-      path: '/bulletin/detail/',
-      signature: 0,
-    },
-    {
-      id: '게시글 제321목3',
-      title: '게시글 제목 3',
-      site: '현장명 3',
-      author: '작성자 3',
-      createdDate: '2025-01-18',
-      path: '/bulletin/detail/',
-      signature: 0,
-    },
-    {
-      id: '게시글 제ㄹㅁㄴ목3',
-      title: '게시글 제목 3',
-      site: '현장명 3',
-      author: '작성자 3',
-      createdDate: '2025-01-18',
-      path: '/bulletin/detail/',
-      signature: 0,
-    },
-    {
-      id: '게시글 제목ㄷ13',
-      title: '게시글 제목 3',
-      site: '현장명 3',
-      author: '작성자 3',
-      createdDate: '2025-01-18',
-      path: '/bulletin/detail/',
-      signature: 0,
-    },
-    {
-      id: '게시글 제목21ㅎ윤3',
-      title: '게시글 제목 3',
-      site: '현장명 3',
-      author: '작성자 3',
-      createdDate: '2025-01-18',
-      path: '/bulletin/detail/',
-      signature: 0,
-    },
-    {
-      id: '게시글 제ㅊ튜목3',
-      title: '게시글 제목 3',
-      site: '현장명 3',
-      author: '작성자 3',
-      createdDate: '2025-01-18',
-      path: '/bulletin/detail/',
-      signature: 0,
-    },
-    {
-      id: '게시글 ㄷㅈㅂ제목3',
-      title: '게시글 제목 3',
-      site: '현장명 3',
-      author: '작성자 3',
-      createdDate: '2025-01-18',
-      path: '/bulletin/detail/',
-      signature: 0,
-    },
-    {
-      id: '게시글 ㄷㅈㅂ제11ㅎㅎ목3',
-      title: '게시글 제목 3',
-      site: '현장명 3',
-      author: '작성자 3',
-      createdDate: '2025-01-18',
-      path: '/bulletin/detail/',
-      signature: 0,
-    },
-  ]
+  const boardList = useMemo(() => {
+    const result = bulletinBoardList.data.map(
+      (e: BulletinBoardMasterType, idx: number) => {
+        return {
+          id: e.id,
+          path: '/bulletin/detail/',
+          boardTitle: e.boardTitle,
+          createdBy: e.userMasterDTO.name,
+          createdDate: e.createdDateFormat,
+          site: '추가예정',
+          signature: '추가예정',
+        }
+      }
+    )
+    console.log(result)
+    return result
+  }, [bulletinBoardList])
   const headers = [
-    { label: '글제목', columns: 'title' },
+    { label: '글제목', columns: 'boardTitle' },
     { label: '현장명', columns: 'site' },
-    { label: '작성자', columns: 'author' },
+    { label: '작성자', columns: 'createdBy' },
     { label: '작성일자', columns: 'createdDate' },
     { label: '결제완료', columns: 'signature' },
   ]
-  const handleSearch = (e: any) => {
-    console.log(e)
-    alert('검색 실행')
+  const handleSearch = async (e: any) => {
+    // console.log(e)
+    // await refetch()
+    // alert('검색 실행')
   }
-  const [optionValue, onChangeOptionValue] = useInput('')
 
   return (
     <CommonBoard
@@ -133,12 +66,20 @@ const BulletinPage = ({}: BulletinPageProps) => {
       createBtn={() => {
         router.push('/bulletin/write')
       }}
-      posts={posts}
+      posts={boardList}
       children={
-        <CommonSearchBar
+        <BulletinBoardMultiSearchBar
           onSubmit={handleSearch}
           label="안전문서 제목"
           placeholder="검색 내용을 입력하세요"
+          startDate={startDate}
+          endDate={endDate}
+          searchInput={searchInput}
+          onChangeStartDate={onChangeStartDate}
+          onChangeEndDate={onChangeEndDate}
+          onChangeInput={onChangeSearchInput}
+          checked={isCreated}
+          onChangeChecked={(e) => setIsCreated(e.target.checked)}
         />
       }
     ></CommonBoard>

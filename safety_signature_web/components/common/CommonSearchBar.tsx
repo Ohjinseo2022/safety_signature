@@ -12,6 +12,7 @@ interface CommonSearchBarProps {
   placeholder?: string
   htmlFor?: string
   label?: string
+  onChange: (e: any) => void
   onSubmit: (e: any) => void
 }
 
@@ -21,6 +22,7 @@ const CommonSearchBar = ({
   placeholder,
   htmlFor,
   label,
+  onChange,
   onSubmit,
 }: CommonSearchBarProps) => {
   const handleSearch = (e: any) => {
@@ -28,20 +30,26 @@ const CommonSearchBar = ({
     onSubmit(inputValue)
   }
   const [inputValue, onChangeInput, setInputValue] = useInput('')
+  const onChangeFn = (e: any) => {
+    onChange(e)
+    onChangeInput(e)
+  }
   return (
     <SearchContainer>
       <form onSubmit={handleSearch}>
         <div className="search-fields">
           <CommonInput
             value={inputValue}
-            onChange={onChangeInput}
+            onChange={onChangeFn}
             label={label}
             type={inputType}
             htmlFor={htmlFor}
             placeholder={placeholder}
           />
           <div className="search-button">
-            <CommonButton type={type}>검색</CommonButton>
+            <CommonButton type={type} onClick={handleSearch}>
+              검색
+            </CommonButton>
           </div>
         </div>
       </form>
