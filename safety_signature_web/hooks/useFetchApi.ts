@@ -82,7 +82,7 @@ const useFetchApi = async <T>(
   const headers = opts.headers
     ? { ...opts.headers }
     : { 'Content-Type': 'application/json' }
-  return await instance({
+  return await instance<T>({
     method: opts.method,
     url: apiUrl,
     data: opts.data,

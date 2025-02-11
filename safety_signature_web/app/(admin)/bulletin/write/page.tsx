@@ -13,8 +13,9 @@ import CommonInput from '@/components/common/CommonInput'
 const WritePage = () => {
   const { isModalVisible, onChangeModalVisible, callBackFunction } =
     useAlertStore()
-  const [boardTitle, onChangeBoardTitle, setBoardTitle] = useInput('')
-  const [boardContents, onChangeBoardContents, setBoardContents] = useInput('')
+  const [boardTitle, onChangeBoardTitle, setBoardTitle] = useInput<string>('')
+  const [boardContents, onChangeBoardContents, setBoardContents] =
+    useInput<string>('')
   const [files, setFiles] = useState<FileObj[] | null>(null)
   const router = useRouter()
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {

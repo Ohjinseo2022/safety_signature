@@ -13,19 +13,24 @@ interface BulletinPageProps {}
 
 const BulletinPage = ({}: BulletinPageProps) => {
   const router = useRouter()
-  const [searchInput, onChangeSearchInput] = useInput('')
-  const [startDate, onChangeStartDate, setStartDate] = useInput(
+  const [searchInput, onChangeSearchInput] = useInput<string>('')
+  const [startDate, onChangeStartDate, setStartDate] = useInput<string>(
     customDatePlus(nowDate('YYYY-MM-DD'), '-30')
   )
-  const [endDate, onChangeEndDate, setEndDate] = useInput(nowDate('YYYY-MM-DD'))
-  const [isCreated, onChangeIsCreated, setIsCreated] = useInput(false)
+  const [endDate, onChangeEndDate, setEndDate] = useInput<string>(
+    nowDate('YYYY-MM-DD')
+  )
+  const [isCreated, onChangeIsCreated, setIsCreated] = useInput<boolean>(false)
+  const [createdBy, onChangeCreatedBy, setCreatedBy] = useInput<string>('')
+  const [page, onChangePage, setPage] = useInput<number>(0)
+
   const { data: bulletinBoardList = { data: [], count: 0 }, refetch } =
     useBulletinBoardListQuery({
       boardTitle: searchInput,
       createdBy: '',
       startDate: startDate,
       endDate: endDate,
-      page: 0,
+      page: page,
       size: 10,
       isOwner: isCreated,
     })

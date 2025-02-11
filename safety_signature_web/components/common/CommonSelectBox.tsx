@@ -20,7 +20,8 @@ const CommonSelectBox = ({
   options,
   onChange,
 }: CommonSelectBoxProps) => {
-  const [selectValue, onSelectChange, setSelectValue] = useInput(initialValue)
+  const [selectValue, onSelectChange, setSelectValue] =
+    useInput<any>(initialValue)
   const onOptionChangeHandler = (e: any) => {
     if (typeof onChange === 'function') {
       onChange(e)

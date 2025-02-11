@@ -64,6 +64,17 @@ const BulletinBoardMultiSearchBar: React.FC<
           htmlFor={htmlFor}
           placeholder={placeholder}
         />
+        {!checked ? (
+          <CommonInput
+            value={searchInput}
+            onChange={onChangeInput}
+            label={'작성자 명'}
+            type={inputType}
+            htmlFor={htmlFor}
+            placeholder={placeholder}
+          />
+        ) : null}
+
         <CommonInput
           value={searchInput}
           onChange={onChangeInput}
