@@ -2,10 +2,11 @@
 
 import { useAlertStore } from '@/store/alertStore'
 import { removeItem } from '@/store/localStorage'
+import { usePathParamStore } from '@/store/store'
 import styled, { css, keyframes } from 'styled-components'
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useParams, usePathname, useRouter } from 'next/navigation'
 import {
   isLoginResponceSuccess,
   LoginResponseCode,
@@ -18,6 +19,8 @@ import CommonModal from '../modal/CommonModal'
 
 export default function Header() {
   const router = useRouter()
+  const pathname = usePathname()
+  const pathStore = usePathParamStore()
   const [visibleSubMenu, setVisibleSubMenu] = useState<number | null>(null)
   const { userProfile, initProfile } = useUserProfile()
   const menuItems: { label: string; path: string; subMenu: string[] }[] = [
@@ -40,8 +43,11 @@ export default function Header() {
   const onLoginAndOutHandler = async (type: string) => {
     if (type === 'o') {
       //로그아웃 로직 추가해야함.
+      console.log(pathname)
       removeItem({ key: TokenCode.accessToken })
       removeItem({ key: TokenCode.refreshToken })
+      pathStore.setLastPath(pathname, {})
+      pathStore.setUseLastPath(true)
       initProfile()
     }
     router.push('/user/login')

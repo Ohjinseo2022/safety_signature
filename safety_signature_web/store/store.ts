@@ -55,6 +55,7 @@ interface PathParamStore {
   useLastPath: boolean
   setLastPath: (href: string, options?: any | undefined) => void
   resetLastPath: () => void
+  setUseLastPath: (b: boolean) => void
 }
 export const usePathParamStore = create<PathParamStore>()(
   logger<PathParamStore>(
@@ -62,7 +63,12 @@ export const usePathParamStore = create<PathParamStore>()(
       lastPath: [''],
       useLastPath: false,
       setLastPath: (args: any) => {
-        set(() => ({ lastPath: args }))
+        if (args) {
+          set(() => ({ lastPath: [args] }))
+        }
+      },
+      setUseLastPath: (b: boolean) => {
+        set(() => ({ useLastPath: b }))
       },
       resetLastPath: () => set(() => ({ lastPath: [''] })),
     }),

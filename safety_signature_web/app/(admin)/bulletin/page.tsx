@@ -1,11 +1,12 @@
 'use client'
 
-import { customDatePlus, dateFormat, nowDate } from '@/utils/utils'
+import { customDatePlus, dateFormat, nowDate, pagerSet } from '@/utils/utils'
+import styled from 'styled-components'
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useInput } from '@/hooks/useInput'
 import CommonBoard, { PostsType } from '@/components/common/CommonBoard'
-import CommonSearchBar from '@/components/common/CommonSearchBar'
+import CommonPagination from '@/components/common/CommonPagination'
 import BulletinBoardMultiSearchBar from './_components/BulletinBoardMultiSearchBar'
 import { useBulletinBoardListQuery } from './_hooks/BulletinBoardQuery'
 
@@ -22,18 +23,21 @@ const BulletinPage = ({}: BulletinPageProps) => {
   )
   const [isCreated, onChangeIsCreated, setIsCreated] = useInput<boolean>(false)
   const [createdBy, onChangeCreatedBy, setCreatedBy] = useInput<string>('')
-  const [page, onChangePage, setPage] = useInput<number>(0)
+  const [page, onChangePage, setPage] = useInput<number>(1)
 
   const { data: bulletinBoardList = { data: [], count: 0 }, refetch } =
     useBulletinBoardListQuery({
       boardTitle: searchInput,
-      createdBy: '',
+      createdBy: createdBy,
       startDate: startDate,
       endDate: endDate,
-      page: page,
+      page: page - 1,
       size: 10,
       isOwner: isCreated,
     })
+  const paginationSet = useMemo(() => {
+    return pagerSet(page, '10')
+  }, [bulletinBoardList])
   const boardList = useMemo(() => {
     const result = bulletinBoardList.data.map(
       (e: BulletinBoardMasterType, idx: number) => {
@@ -65,29 +69,39 @@ const BulletinPage = ({}: BulletinPageProps) => {
   }
 
   return (
-    <CommonBoard
-      title={'안전문서 게시판'}
-      headers={headers}
-      createBtn={() => {
-        router.push('/bulletin/write')
-      }}
-      posts={boardList}
-      children={
-        <BulletinBoardMultiSearchBar
-          onSubmit={handleSearch}
-          label="안전문서 제목"
-          placeholder="검색 내용을 입력하세요"
-          startDate={startDate}
-          endDate={endDate}
-          searchInput={searchInput}
-          onChangeStartDate={onChangeStartDate}
-          onChangeEndDate={onChangeEndDate}
-          onChangeInput={onChangeSearchInput}
-          checked={isCreated}
-          onChangeChecked={(e) => setIsCreated(e.target.checked)}
-        />
-      }
-    ></CommonBoard>
+    <BulleitnBoardContainar>
+      <CommonBoard
+        title={'안전문서 게시판'}
+        headers={headers}
+        createBtn={() => {
+          router.push('/bulletin/write')
+        }}
+        posts={boardList}
+        children={
+          <BulletinBoardMultiSearchBar
+            onSubmit={handleSearch}
+            startDate={startDate}
+            endDate={endDate}
+            searchInput={searchInput}
+            createdBy={createdBy}
+            onChangeStartDate={onChangeStartDate}
+            onChangeEndDate={onChangeEndDate}
+            onChangeInput={onChangeSearchInput}
+            checked={isCreated}
+            onChangeCreatedBy={onChangeCreatedBy}
+            onChangeChecked={(e) => setIsCreated(e.target.checked)}
+          />
+        }
+      ></CommonBoard>
+      <CommonPagination
+        currentPage={page}
+        onPageChange={onChangePage}
+        totalPages={paginationSet.length}
+      />
+    </BulleitnBoardContainar>
   )
 }
 export default BulletinPage
+const BulleitnBoardContainar = styled.div`
+  width: 100%;
+`

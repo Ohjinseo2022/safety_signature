@@ -29,14 +29,11 @@ const PageChangeMiddleware = ({
   const loading = useLoadingStore()
   // `router.push`와 같은 메서드 호출 감지 가능
   const handleRouteStart = async () => {
-    console.log('페이지 이동 시작')
-
     NProgress.start()
   }
 
   // 페이지 이동 완료 감지
   const handleRouteComplete = () => {
-    console.log('페이지 이동 완료')
     loading.offLoading()
     NProgress.done()
   }
@@ -56,31 +53,31 @@ const PageChangeMiddleware = ({
     const handleNavigation = async (method: Function, ...args: any) => {
       const userProfile = await getUserProfile()
       const isLogin = isLoginResponceSuccess(userProfile)
-      console.log(window.history)
       if (isLogin && pathname?.includes('login')) {
         if (window.history.length > 1) {
           // 📌 이전 페이지가 존재하면 뒤로 가기
           router.back()
         } else {
           // 📌 이전 페이지가 없으면 메인 페이지로 이동
-          router.replace('/main')
+          router.push('/main')
         }
       }
       await handleRouteStart()
 
       const lastUrl: string = args[0]
 
-      if (!pathStore.useLastPath) pathStore.setLastPath(args[0], args[1] || {})
+      if (!pathStore.useLastPath) {
+        pathStore.setLastPath(args[0], args[1] || {})
+      }
 
       if (!pathname?.includes('login')) {
         if (
           !isLogin ||
           userProfile.userTypeCode === UserTypeCode.GENERAL_MEMBER
         ) {
-          pathStore.useLastPath = true
+          pathStore.setUseLastPath(true)
           setItem({ key: TokenCode.accessToken, item: 'Expired' })
           setItem({ key: TokenCode.refreshToken, item: 'Expired' })
-          alertStore.overlayClose = false
           alertStore.onChangeModalVisible({
             msg: '접근권한이 없습니다.',
             isVisible: true,
@@ -88,6 +85,7 @@ const PageChangeMiddleware = ({
               originalPush('/user/login', args[1])
               return true
             },
+            overlayClose: false,
           })
         } else {
           userProfileStore.setProfile(userProfile as LoginResponseSuccess)

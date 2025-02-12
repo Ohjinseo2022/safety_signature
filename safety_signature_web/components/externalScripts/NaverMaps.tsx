@@ -51,19 +51,20 @@ const NaverMaps: React.FC<NaverMapsProps> = ({
       }
     )
   }
-  useEffect(() => {
-    if (address) {
-      window.naver.maps.Service.geocode(
-        {
-          query: '중구',
-        },
-        (status: any, response: any) => {
-          console.log(status)
-          console.log(response)
-        }
-      )
-    }
-  }, [address])
+  // useEffect(() => {
+  //   if (address) {
+  //     // window.naver.maps.
+  //     window.naver.maps.searchKeyword(
+  //       {
+  //         query: '편의점',
+  //       },
+  //       (status: any, response: any) => {
+  //         console.log(status)
+  //         console.log(response)
+  //       }
+  //     )
+  //   }
+  // }, [address])
   useEffect(() => {
     const scriptId = 'naver-map-script'
     if (document.getElementById(scriptId)) {
