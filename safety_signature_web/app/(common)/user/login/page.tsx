@@ -20,9 +20,10 @@ import { useUserProfile } from './_userState/userStore'
 interface UserLoginProps {}
 
 const UserLogin: React.FC<UserLoginProps> = ({}) => {
-  const [userId, onChangeUserId, setUserId] = useInput('')
-  const [password, onChangePassword, setPassword] = useInput('')
-  const [btnDisabled, onChangeBtnDisabled, setBtnDisabled] = useInput(false)
+  const [userId, onChangeUserId, setUserId] = useInput<string>('')
+  const [password, onChangePassword, setPassword] = useInput<string>('')
+  const [btnDisabled, onChangeBtnDisabled, setBtnDisabled] =
+    useInput<boolean>(false)
   const { userProfile: userInfo } = useUserProfile()
   const { isLoading } = useLoadingStore()
   const { isModalVisible, onChangeModalVisible } = useAlertStore()
@@ -48,6 +49,11 @@ const UserLogin: React.FC<UserLoginProps> = ({}) => {
       })
       if (isLoginResponceSuccess(userProfile)) {
         router.push('/main')
+      } else {
+        onChangeModalVisible({
+          isVisible: true,
+          msg: userProfile.msg,
+        })
       }
     }
     //// 서버통신 완료 이후
@@ -61,7 +67,6 @@ const UserLogin: React.FC<UserLoginProps> = ({}) => {
   if (isLoginResponceSuccess(userInfo)) {
     return <></>
   } else {
-    console.log(userInfo)
     return (
       <LoginContainer>
         <LoginBox>

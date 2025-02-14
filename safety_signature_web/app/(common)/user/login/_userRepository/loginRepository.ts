@@ -28,7 +28,10 @@ export const postLogin = async (props: LoginRequestType) => {
       type: LoginResponseCode.LoginResponseFailed,
     }
   }
-  return error
+  return {
+    msg: error.toString(),
+    type: LoginResponseCode.LoginResponseFailed,
+  }
 }
 export const getUserProfile = async () => {
   const { data, status, error } = await useFetchApi(
