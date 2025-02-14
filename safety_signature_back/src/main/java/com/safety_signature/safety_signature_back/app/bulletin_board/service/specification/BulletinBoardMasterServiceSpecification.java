@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.Specification;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,10 +55,12 @@ public class BulletinBoardMasterServiceSpecification {
                     );
                     break;
                 case START_DATE:
-                    predicate.add(builder.greaterThanOrEqualTo(root.get("createdDate"), LocalDate.parse(String.valueOf(condition.get(key)), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.of("Asia/Seoul")).toInstant()));
+//                    predicate.add(builder.greaterThanOrEqualTo(root.get("createdDate"), LocalDate.parse(String.valueOf(condition.get(key)), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.of("Asia/Seoul")).toInstant()));
+                    predicate.add(builder.greaterThanOrEqualTo(root.get("createdDate"), LocalDate.parse(String.valueOf(condition.get(key)), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay(ZoneOffset.UTC).toInstant()));
                     break;
                 case END_DATE:
-                    predicate.add(builder.lessThan(root.get("createdDate"), LocalDate.parse(String.valueOf(condition.get(key)), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.of("Asia/Seoul")).toInstant()));
+//                    predicate.add(builder.lessThanOrEqualTo(root.get("createdDate"), LocalDate.parse(String.valueOf(condition.get(key)), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay().atZone(ZoneId.of("Asia/Seoul")).toInstant()));
+                    predicate.add(builder.lessThan(root.get("createdDate"), LocalDate.parse(String.valueOf(condition.get(key)), DateTimeFormatter.ofPattern("yyyy-MM-dd")).atStartOfDay(ZoneOffset.UTC).toInstant()));
                     break;
                 default:
                    break;

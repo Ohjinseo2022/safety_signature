@@ -82,18 +82,20 @@ const useFetchApi = async <T>(
   const headers = opts.headers
     ? { ...opts.headers }
     : { 'Content-Type': 'application/json' }
+
   return await instance<T>({
     method: opts.method,
     url: apiUrl,
     data: opts.data,
 
     params: opts.params,
-    headers: etc?.isAuth
-      ? {
-          ...headers,
-          authorization: `Bearer ${getItem({ key: TokenCode.accessToken })}`,
-        }
-      : headers,
+    headers:
+      etc?.isAuth && getItem({ key: TokenCode.accessToken })
+        ? {
+            ...headers,
+            authorization: `Bearer ${getItem({ key: TokenCode.accessToken })}`,
+          }
+        : headers,
   })
     .then((res) => {
       return res

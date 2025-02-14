@@ -20,6 +20,8 @@ spring:
       ddl-auto: update        # DB 초기화 전략 (none, create, create-drop, update, validate)
     open-in-view: false
     properties:
+      jdbc:
+        time_zone: Asia/Seoul
       hibernate:
         #        dialect: org.hibernate.dialect.H2Dialect
         dialect: org.hibernate.dialect.PostgreSQLDialect

@@ -1,7 +1,7 @@
 'use client'
 
 import { useAlertStore } from '@/store/alertStore'
-import { setItem } from '@/store/localStorage'
+import { removeItem, setItem } from '@/store/localStorage'
 import { useLoadingStore, usePathParamStore } from '@/store/store'
 import NProgress from 'nprogress'
 import { useEffect } from 'react'
@@ -76,8 +76,8 @@ const PageChangeMiddleware = ({
           userProfile.userTypeCode === UserTypeCode.GENERAL_MEMBER
         ) {
           pathStore.setUseLastPath(true)
-          setItem({ key: TokenCode.accessToken, item: 'Expired' })
-          setItem({ key: TokenCode.refreshToken, item: 'Expired' })
+          removeItem({ key: TokenCode.accessToken })
+          removeItem({ key: TokenCode.refreshToken })
           alertStore.onChangeModalVisible({
             msg: '접근권한이 없습니다.',
             isVisible: true,

@@ -1,6 +1,12 @@
 'use client'
 
-import { customDatePlus, dateFormat, nowDate, pagerSet } from '@/utils/utils'
+import {
+  customDatePlus,
+  dateFormat,
+  datePlus,
+  nowDate,
+  pagerSet,
+} from '@/utils/utils'
 import styled from 'styled-components'
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -30,7 +36,7 @@ const BulletinPage = ({}: BulletinPageProps) => {
       boardTitle: searchInput,
       createdBy: createdBy,
       startDate: startDate,
-      endDate: endDate,
+      endDate: datePlus(endDate, '1'),
       page: page - 1,
       size: 10,
       isOwner: isCreated,
@@ -39,21 +45,29 @@ const BulletinPage = ({}: BulletinPageProps) => {
     return pagerSet(page, '10')
   }, [bulletinBoardList])
   const boardList = useMemo(() => {
-    const result = bulletinBoardList.data.map(
-      (e: BulletinBoardMasterType, idx: number) => {
-        return {
-          id: e.id,
-          path: '/bulletin/detail/',
-          boardTitle: e.boardTitle,
-          createdBy: e.userMasterDTO.name,
-          createdDate: e.createdDateFormat,
-          site: '추가예정',
-          signature: '추가예정',
+    if (
+      bulletinBoardList &&
+      bulletinBoardList.data &&
+      bulletinBoardList.data.length > 0
+    ) {
+      const result = bulletinBoardList.data.map(
+        (e: BulletinBoardMasterType, idx: number) => {
+          return {
+            id: e.id,
+            path: '/bulletin/detail/',
+            boardTitle: e.boardTitle,
+            createdBy: e.userMasterDTO.name,
+            createdDate: e.createdDateFormat,
+            site: '추가예정',
+            signature: '추가예정',
+          }
         }
-      }
-    )
-    console.log(result)
-    return result
+      )
+      console.log(result)
+      return result
+    } else {
+      return []
+    }
   }, [bulletinBoardList])
   const headers = [
     { label: '글제목', columns: 'boardTitle' },
