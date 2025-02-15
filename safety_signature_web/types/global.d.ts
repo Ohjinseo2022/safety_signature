@@ -49,5 +49,6 @@ declare global {
     lastModifiedDate: string
     userMasterDTO: UserMasterType
     userMasterId: string
+    signatureCount: number
   }
 }

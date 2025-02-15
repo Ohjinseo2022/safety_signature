@@ -54,8 +54,6 @@ public class BulletinBoardMasterDTO extends AbstractAuditingDTO<String> implemen
     @Schema(description = "최소 생성 일시")
     private Instant createdDate;
 
-    @Schema(description = "최소 생성 일시 문자열 포멧")
-    private String createdDateFormat;
 
     @Schema(description = "최소 생성자")
     private String createdBy;

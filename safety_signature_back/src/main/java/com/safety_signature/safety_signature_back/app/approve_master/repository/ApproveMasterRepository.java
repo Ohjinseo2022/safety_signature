@@ -5,4 +5,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 public interface ApproveMasterRepository extends JpaRepository<ApproveMaster, String> , JpaSpecificationExecutor<ApproveMaster> {
+    long countByBulletinBoardId(String bulletinBoardId);
 }

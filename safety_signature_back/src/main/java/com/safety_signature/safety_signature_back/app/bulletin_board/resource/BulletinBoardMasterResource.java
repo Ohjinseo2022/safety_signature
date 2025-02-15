@@ -102,7 +102,7 @@ public class BulletinBoardMasterResource {
             UserMasterDTO userMasterDTO = userMasterService.getUserMasterByEmail(userEmail);
             ownerId = userMasterDTO.getId();
         }
-        Page<BulletinBoardMasterDTO> result =  bulletinBoardMasterService.getBulletinBoardMasterSearchConditionList(boardTitle, createdBy, startDate, endDate, ownerId, pageable);
+        Page<BulletinBoardListResponseDTO.BulletinBoardMasterCustomDTO> result =  bulletinBoardMasterService.getBulletinBoardMasterSearchConditionList(boardTitle, createdBy, startDate, endDate, ownerId, pageable);
         HttpHeaders headers =  PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), result);
         return ResponseEntity.ok()
                 .headers(headers)

@@ -59,7 +59,7 @@ const BulletinPage = ({}: BulletinPageProps) => {
             createdBy: e.userMasterDTO.name,
             createdDate: e.createdDateFormat,
             site: '추가예정',
-            signature: '추가예정',
+            signature: e.signatureCount,
           }
         }
       )
