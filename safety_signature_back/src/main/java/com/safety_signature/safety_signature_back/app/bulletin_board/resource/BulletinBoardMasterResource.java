@@ -2,8 +2,10 @@ package com.safety_signature.safety_signature_back.app.bulletin_board.resource;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.BulletinBoardMasterDTO;
+import com.safety_signature.safety_signature_back.app.bulletin_board.dto.custom.BulletinBoardMasterCustomDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.request.BulletinBoardRegistrationRequestDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardListResponseDTO;
+import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardOneResponseDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardResponseBaseDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardResponseMessageDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.BulletinBoardMasterService;
@@ -102,7 +104,7 @@ public class BulletinBoardMasterResource {
             UserMasterDTO userMasterDTO = userMasterService.getUserMasterByEmail(userEmail);
             ownerId = userMasterDTO.getId();
         }
-        Page<BulletinBoardListResponseDTO.BulletinBoardMasterCustomDTO> result =  bulletinBoardMasterService.getBulletinBoardMasterSearchConditionList(boardTitle, createdBy, startDate, endDate, ownerId, pageable);
+        Page<BulletinBoardMasterCustomDTO> result =  bulletinBoardMasterService.getBulletinBoardMasterSearchConditionList(boardTitle, createdBy, startDate, endDate, ownerId, pageable);
         HttpHeaders headers =  PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), result);
         return ResponseEntity.ok()
                 .headers(headers)
@@ -111,6 +113,25 @@ public class BulletinBoardMasterResource {
                         .build()
                 );
 
+    }
+
+    @Operation(summary = "전자 결제 문서 단건 조회")
+    @GetMapping("/{id}")
+    //리턴 타입을 정확히 명시해주어야 하지만 우선 ? 형태로 지정
+    public ResponseEntity<BulletinBoardResponseBaseDTO> getBulletinBoardMaster(@PathVariable("id") String id) throws Exception{
+        String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
+        // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
+        if (Constants.ANONYMOUSUSER.equals(userEmail)|| userEmail ==null) {
+            BulletinBoardResponseMessageDTO result = BulletinBoardResponseMessageDTO.builder().httpStatus(HttpStatus.UNAUTHORIZED).message("UNAUTHORIZED").build();
+            return ResponseEntity.status(result.getHttpStatus()).body(result);
+        }
+        BulletinBoardMasterCustomDTO result = bulletinBoardMasterService.getBulletinBoardMaster(id);
+
+        if(!ObjectUtils.isEmpty(result)){
+            return ResponseEntity.ok().body(BulletinBoardOneResponseDTO.builder().data(result).build());
+        }
+        BulletinBoardResponseMessageDTO failed = BulletinBoardResponseMessageDTO.builder().httpStatus(HttpStatus.INTERNAL_SERVER_ERROR).message("INTERNAL_SERVER_ERROR").build();
+        return ResponseEntity.status(failed.getHttpStatus()).body(failed);
     }
 
 }

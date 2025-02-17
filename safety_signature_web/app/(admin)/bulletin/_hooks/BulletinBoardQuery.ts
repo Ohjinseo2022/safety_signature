@@ -33,9 +33,27 @@ const getBulletinBoardList = async (props: BulletinBoardSearchProps) => {
 
 export const useBulletinBoardListQuery = (props: BulletinBoardSearchProps) => {
   return useQuery({
-    queryKey: ['bulletinBoard', props], // 쿼리키에 들어있는 변수의 값들이 바뀔때마다 리패칭 기능 동작함
+    queryKey: ['bulletinBoardList', props], // 쿼리키에 들어있는 변수의 값들이 바뀔때마다 리패칭 기능 동작함
     // enabled:
     queryFn: async () => getBulletinBoardList(props),
     gcTime: 30 * 60 * 1000, // 30분
+  })
+}
+//단건 조회
+const getBulletinBoard = async (id: string) => {
+  const { data, error, count } = await useFetchApi<{
+    data: BulletinBoardMasterType
+  }>(`/bulletin-board/registration/${id}`, { method: 'get' }, { isAuth: true })
+  if (!error && data) {
+    return { ...data }
+  } else {
+    return error
+  }
+}
+export const useBulletinBoardQuery = (props: string) => {
+  return useQuery({
+    queryKey: ['bulletinBoardOne', props],
+    queryFn: async () => getBulletinBoard(props),
+    gcTime: 30 * 60 * 1000,
   })
 }

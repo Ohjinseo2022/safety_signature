@@ -117,7 +117,7 @@ public class MinioUtils {
     public MinIOUtilsReturnDTO base64StringImageUpload(String base64StringSignatureImage , String uuId) throws Exception{
         byte[] decodedBytes = Base64.getDecoder().decode(base64StringSignatureImage);
         InputStream inputStream = new ByteArrayInputStream(decodedBytes);
-        String directory = String.format("signature/%s/", uuId);
+        String directory = String.format("signature/%s", uuId);
         LocalDateTime date = LocalDateTime.now();
         String formatedFileNow = date.format(DateTimeFormatter.ofPattern("yyyyMMdd'T'HHmmss"));
         String uploadFileFullName = String.format("%s_%s.png", uuId, formatedFileNow);

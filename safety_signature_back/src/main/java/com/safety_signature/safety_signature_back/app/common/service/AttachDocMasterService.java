@@ -40,6 +40,7 @@ public interface AttachDocMasterService {
      */
     Optional<AttachDocMasterDTO> partialUpdate(AttachDocMasterDTO attachDocMasterDTO);
 
+    List<AttachDocMasterDTO> findByAttachDocOwnerId(String attachDocOwnerId);
     /**
      * Get all the attachDocMasters.
      *

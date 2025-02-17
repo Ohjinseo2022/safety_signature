@@ -29,6 +29,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 
 /**
@@ -172,6 +173,11 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
             })
             .map(attachDocMasterRepository::save)
             .map(attachDocMasterMapper::toDto);
+    }
+
+    @Override
+    public List<AttachDocMasterDTO> findByAttachDocOwnerId(String attachDocOwnerId) {
+        return attachDocMasterRepository.findByAttachDocOwnerId(attachDocOwnerId).stream().map(attachDocMasterMapper::toDto).collect(Collectors.toList());
     }
 
     @Override

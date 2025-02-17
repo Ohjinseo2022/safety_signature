@@ -1,7 +1,122 @@
 'use client'
 
 import styled from 'styled-components'
-import { use, useEffect, useState } from 'react'
+import { use, useEffect, useMemo, useState } from 'react'
+import CustomDownloadButton from '@/components/custom/CustomDownloadButton'
+import { LoginResponseSuccess } from '@/app/(common)/user/login/_userRepository/types'
+import { useUserProfile } from '@/app/(common)/user/login/_userState/userStore'
+import { useBulletinBoardQuery } from '../../_hooks/BulletinBoardQuery'
+
+interface BulletinDetailPageProps {
+  params: Promise<{ id: string }>
+}
+
+const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
+  const unwrappedParams = use(params) // params를 언래핑
+  const userProfile = useUserProfile().userProfile as LoginResponseSuccess
+  const { data, error, isFetched } = useBulletinBoardQuery(unwrappedParams.id)
+  const detailData: BulletinBoardMasterType = useMemo(() => {
+    if (isFetched && data) {
+      return data.data
+    }
+    return undefined
+  }, [isFetched, data])
+  console.log('unwrappedParams : ', unwrappedParams)
+  const post = {
+    title: '게시글 제목',
+    content: '게시글 내용입니다. 관리자가 작성한 내용을 포함합니다.',
+    documents: [
+      { id: 1, name: '문서1.pdf', url: '/downloads/doc1.pdf' },
+      { id: 2, name: '문서2.pdf', url: '/downloads/doc2.pdf' },
+    ],
+  }
+
+  const comments = [
+    {
+      id: 1,
+      docName: '문서1.pdf',
+      name: '홍길동',
+      signature: '✔️',
+      time: '2025-01-22 10:00',
+      site: '현장1',
+    },
+    {
+      id: 2,
+      docName: '문서2.pdf',
+      name: '김철수',
+      signature: '✔️',
+      time: '2025-01-20 11:00',
+      site: '현장2',
+    },
+  ]
+
+  const downloadExcel = () => {
+    alert('댓글 데이터를 엑셀로 다운로드합니다.')
+  }
+
+  return detailData ? (
+    <DetailContainer>
+      <PostInfo>
+        <h2>{detailData.boardTitle}</h2>
+        <div
+          className="content"
+          dangerouslySetInnerHTML={{ __html: detailData.boardContents }}
+        ></div>
+      </PostInfo>
+
+      <DownloadSection>
+        <h3>첨부된 문서</h3>
+        <div>
+          {detailData.attachDocList && detailData.attachDocList.length > 0 ? (
+            detailData.attachDocList.map((doc: AttachDocMasterType, idx) => (
+              <CustomDownloadButton key={doc.id} fileName={doc.attachDocName} />
+            ))
+          ) : (
+            <span>첨부된 문서가 없습니다.</span>
+          )}
+        </div>
+      </DownloadSection>
+
+      <CommentsContainer>
+        <CommentsHeader>
+          <h3>결제완료 리스트</h3>
+          <button onClick={downloadExcel}>
+            {detailData.userMasterId === userProfile.id
+              ? `엑셀 다운로드`
+              : '전자결제'}
+          </button>
+        </CommentsHeader>
+
+        <CommentsTable>
+          <thead>
+            <tr>
+              <th>문서명</th>
+              <th>이름</th>
+              <th>서명</th>
+              <th>시간</th>
+              <th>현장명</th>
+            </tr>
+          </thead>
+          <tbody>
+            {comments.map((comment) => (
+              <tr key={comment.id}>
+                <td>{comment.docName}</td>
+                <td>{comment.name}</td>
+                <td>{comment.signature}</td>
+                <td>{comment.time}</td>
+                <td>{comment.site}</td>
+              </tr>
+            ))}
+          </tbody>
+        </CommentsTable>
+      </CommentsContainer>
+    </DetailContainer>
+  ) : (
+    <></>
+  )
+}
+
+export default BulletinDetailPage
 
 // 스타일드 컴포넌트 정의
 const DetailContainer = styled.div`
@@ -129,98 +244,3 @@ const CommentsTable = styled.table`
     }
   }
 `
-interface BulletinDetailPageProps {
-  params: Promise<{ id: string }>
-}
-
-const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
-  const unwrappedParams = use(params) // params를 언래핑
-  const post = {
-    title: '게시글 제목',
-    content: '게시글 내용입니다. 관리자가 작성한 내용을 포함합니다.',
-    documents: [
-      { id: 1, name: '문서1.pdf', url: '/downloads/doc1.pdf' },
-      { id: 2, name: '문서2.pdf', url: '/downloads/doc2.pdf' },
-    ],
-  }
-
-  const comments = [
-    {
-      id: 1,
-      docName: '문서1.pdf',
-      name: '홍길동',
-      signature: '✔️',
-      time: '2025-01-22 10:00',
-      site: '현장1',
-    },
-    {
-      id: 2,
-      docName: '문서2.pdf',
-      name: '김철수',
-      signature: '✔️',
-      time: '2025-01-20 11:00',
-      site: '현장2',
-    },
-  ]
-
-  const downloadExcel = () => {
-    alert('댓글 데이터를 엑셀로 다운로드합니다.')
-  }
-
-  return (
-    <DetailContainer>
-      <PostInfo>
-        <h2>{post.title}</h2>
-        <div className="content">{post.content}</div>
-      </PostInfo>
-
-      <DownloadSection>
-        <h3>첨부된 문서</h3>
-        <div>
-          {post.documents.map((doc) => (
-            <a
-              key={doc.id}
-              href={doc.url}
-              download
-              style={{ marginRight: '10px', color: '#60a5fa' }}
-            >
-              {doc.name}
-            </a>
-          ))}
-        </div>
-      </DownloadSection>
-
-      <CommentsContainer>
-        <CommentsHeader>
-          <h3>댓글 목록</h3>
-          <button onClick={downloadExcel}>엑셀 다운로드</button>
-        </CommentsHeader>
-
-        <CommentsTable>
-          <thead>
-            <tr>
-              <th>문서명</th>
-              <th>이름</th>
-              <th>서명</th>
-              <th>시간</th>
-              <th>현장명</th>
-            </tr>
-          </thead>
-          <tbody>
-            {comments.map((comment) => (
-              <tr key={comment.id}>
-                <td>{comment.docName}</td>
-                <td>{comment.name}</td>
-                <td>{comment.signature}</td>
-                <td>{comment.time}</td>
-                <td>{comment.site}</td>
-              </tr>
-            ))}
-          </tbody>
-        </CommentsTable>
-      </CommentsContainer>
-    </DetailContainer>
-  )
-}
-
-export default BulletinDetailPage

@@ -50,5 +50,26 @@ declare global {
     userMasterDTO: UserMasterType
     userMasterId: string
     signatureCount: number
+    attachDocList: AttachDocMasterType[]
+  }
+
+  interface AttachDocMasterType {
+    id: string
+    attachDocOwnerId: string
+    attachDocName: string
+    attachFileType: any
+    attachDocExplain: string
+    attachDocId: string
+    attachDocPosition: string
+    attachDocOwnerClassCode: string
+    classValue: any
+    attachDocReader: any
+    attachDocReaderXlsx: any
+    attachDocPositionFilename: any
+    attachDocSize: number
+    attachDocPartitionDTO: any
+    attachDownloadLimitDtime: any
+    attachStorageLimitDtime: any
+    minioDeleteYn: any
   }
 }

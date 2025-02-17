@@ -4,6 +4,7 @@ import com.safety_signature.safety_signature_back.app.approve_master.repository.
 import com.safety_signature.safety_signature_back.app.bulletin_board.domain.BulletinBoardMaster;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.BulletinBoardAttachInfoDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.BulletinBoardMasterDTO;
+import com.safety_signature.safety_signature_back.app.bulletin_board.dto.custom.BulletinBoardMasterCustomDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.request.BulletinBoardRegistrationRequestDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardListResponseDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.mapper.BulletinBoardAttachInfoMapper;
@@ -12,6 +13,7 @@ import com.safety_signature.safety_signature_back.app.bulletin_board.repository.
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.BulletinBoardAttachInfoService;
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.BulletinBoardMasterService;
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.specification.BulletinBoardMasterServiceSpecification;
+import com.safety_signature.safety_signature_back.app.common.domain.AttachDocMaster;
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocMasterService;
 import com.safety_signature.safety_signature_back.app.common.service.impl.AttachDocMasterServiceImpl;
@@ -105,7 +107,7 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
     }
 
     @Override
-    public Page<BulletinBoardListResponseDTO.BulletinBoardMasterCustomDTO> getBulletinBoardMasterSearchConditionList(String boardTitle, String createdBy, String startDate, String endDate, String ownerId, Pageable pageable) {
+    public Page<BulletinBoardMasterCustomDTO> getBulletinBoardMasterSearchConditionList(String boardTitle, String createdBy, String startDate, String endDate, String ownerId, Pageable pageable) {
         Map<BulletinBoardMasterServiceSpecification.BulletinBoardMasterSearchCondition,Object> condition = new LinkedHashMap<>();
         if(!ObjectUtils.isEmpty(boardTitle)){
             condition.put(BulletinBoardMasterServiceSpecification.BulletinBoardMasterSearchCondition.BOARD_TITLE,boardTitle);
@@ -123,7 +125,7 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
             condition.put(BulletinBoardMasterServiceSpecification.BulletinBoardMasterSearchCondition.USER_ID,ownerId);
         }
         Specification<BulletinBoardMaster> specs =  BulletinBoardMasterServiceSpecification.getSpecification(condition);
-        List<BulletinBoardListResponseDTO.BulletinBoardMasterCustomDTO> list = new ArrayList<>();
+        List<BulletinBoardMasterCustomDTO> list = new ArrayList<>();
         Page<BulletinBoardMaster> bulletinBoardMasterList = bulletinBoardMasterRepository.findAll(specs, pageable);
         for(BulletinBoardMaster entity : bulletinBoardMasterList){
             log.info("bulletinBoardMaster : {}", entity);
@@ -131,7 +133,7 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
             BulletinBoardMasterDTO dto = bulletinBoardMasterMapper.toDto(entity);
             dto.getUserMasterDTO().setUserPassword(null);
             //등록일시 //companyMasterDTO.getCreatedDateFormat();
-            BulletinBoardListResponseDTO.BulletinBoardMasterCustomDTO customDTO = BulletinBoardListResponseDTO.BulletinBoardMasterCustomDTO.from(dto);
+            BulletinBoardMasterCustomDTO customDTO = BulletinBoardMasterCustomDTO.from(dto);
             //서명 완료 횟수 카운트 정보 추가해야함!!!!
             Long approveCount = approveMasterRepository.countByBulletinBoardId(customDTO.getId());
             log.info("approveCount : {}", approveCount);
@@ -140,8 +142,20 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
             list.add(customDTO);
             //추가적인 조회나 데이터 조작을 여기다 하면될듯 싶음 !
         }
-        Page<BulletinBoardListResponseDTO.BulletinBoardMasterCustomDTO> result =
+        Page<BulletinBoardMasterCustomDTO> result =
                 new PageImpl<>(list ,pageable, bulletinBoardMasterRepository.count(specs));
         return result;
+    }
+
+    @Override
+    public BulletinBoardMasterCustomDTO getBulletinBoardMaster(String id) {
+        BulletinBoardMasterDTO bulletinBoardMasterDTO = bulletinBoardMasterMapper.toDto(bulletinBoardMasterRepository.findById(id).orElse(null));
+        if(bulletinBoardMasterDTO != null){
+            List<AttachDocMasterDTO> attachDocMasterDTOList = attachDocMasterService.findByAttachDocOwnerId(bulletinBoardMasterDTO.getId());
+            BulletinBoardMasterCustomDTO result =BulletinBoardMasterCustomDTO.from(bulletinBoardMasterDTO);
+            result.setAttachDocList(attachDocMasterDTOList);
+            return result;
+        }
+        return null;
     }
 }
