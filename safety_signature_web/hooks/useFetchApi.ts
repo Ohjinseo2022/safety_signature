@@ -3,7 +3,7 @@
 import { getItem } from '@/store/localStorage'
 import { extractQuotes } from '@/utils/regexpUtil'
 // import { useLoadingStore } from '@/store/store'
-import axios, { Method } from 'axios'
+import axios, { Method, ResponseType } from 'axios'
 import { postTokenRefresh } from '@/app/(common)/user/login/_userRepository/tokenRepository'
 import { TokenCode } from '@/app/(common)/user/login/_userRepository/types'
 
@@ -80,7 +80,7 @@ const useFetchApi = async <T>(
     params?: any
     headers?: any
   },
-  etc?: { isAuth: boolean }
+  etc?: { isAuth?: boolean; responseType?: ResponseType }
 ) => {
   // const { onLoading, offLoading } = useLoadingStore() // 반드시 컴포넌트 내부에서 호출
 
@@ -93,7 +93,7 @@ const useFetchApi = async <T>(
     method: opts.method,
     url: apiUrl,
     data: opts.data,
-
+    responseType: etc?.responseType ? etc?.responseType : 'json',
     params: opts.params,
     headers:
       etc?.isAuth && getItem({ key: TokenCode.accessToken })

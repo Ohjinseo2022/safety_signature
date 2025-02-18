@@ -4,6 +4,7 @@ import com.safety_signature.safety_signature_back.app.auth.dto.requestDTO.Social
 import com.safety_signature.safety_signature_back.app.auth.service.AuthTransactionalService;
 import com.safety_signature.safety_signature_back.app.common.enumeration.SocialTypeCode;
 import com.safety_signature.safety_signature_back.app.common.enumeration.UserStatusCode;
+import com.safety_signature.safety_signature_back.app.common.enumeration.UserTypeCode;
 import com.safety_signature.safety_signature_back.app.user.domain.UserMaster;
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.mapper.UserMaterMapper;
@@ -61,6 +62,7 @@ public class UserMasterServiceImpl implements UserMasterService {
             }).map(userMasterRepository::save).map(userMaterMapper::toDto).get();
         }else{
             newUserDTO.setEmail(profileResponse.email());
+            newUserDTO.setUserTypeCode(UserTypeCode.GENERAL_MEMBER);
             newUserDTO.setUserStatusCode(UserStatusCode.PENDING);
             return userMaterMapper.toDto(userMasterRepository.save(userMaterMapper.toEntity(newUserDTO)));
         }

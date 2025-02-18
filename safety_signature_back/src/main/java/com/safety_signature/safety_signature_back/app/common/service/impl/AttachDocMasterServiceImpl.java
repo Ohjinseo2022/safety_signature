@@ -14,6 +14,7 @@ import com.safety_signature.safety_signature_back.app.common.repository.AttachDo
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocHistService;
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocMasterService;
 import com.safety_signature.safety_signature_back.utils.FileUtil;
+import com.safety_signature.safety_signature_back.utils.HttpServletRequestUtil;
 import com.safety_signature.safety_signature_back.utils.MinioUtils;
 import org.apache.commons.compress.utils.FileNameUtils;
 import org.apache.commons.lang3.ObjectUtils;
@@ -100,7 +101,7 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
             for(MultipartFile file : files ){
                 log.info("attachDocMasterAndMinIoSave file : {} ",file);
                 String extension = FileNameUtils.getExtension(file.getOriginalFilename());
-                String directory = String.format("signature/%s/", attachDocOwnerId);
+                String directory = String.format("signature/%s", attachDocOwnerId);
                 if (Pattern.matches("(?i)(GIF|JPG|JPEG|PNG|PDF)$", extension)) {
                     String storedFileName = minioUtils.upload(file, directory);
                     AttachDocMasterDTO attachDocMasterDTO = AttachDocMasterDTO.builder()
@@ -118,7 +119,7 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
                             .attachDocMaster(attachDocMasterDTO)
                             .operationTypeCode(OperationTypeCode.UP_LOADING)
                             .operationGoalExplain(attachDocMasterDTO.getAttachDocExplain())
-                            .operatorIpAddress("test중")
+                            .operatorIpAddress(HttpServletRequestUtil.clientIpAddr())
                             .build();
                     attachDocHistService.save(attachDocHistDTO);
                     result.add(attachDocMasterDTO);

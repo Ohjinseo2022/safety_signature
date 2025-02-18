@@ -34,7 +34,7 @@ const getBulletinBoardList = async (props: BulletinBoardSearchProps) => {
 export const useBulletinBoardListQuery = (props: BulletinBoardSearchProps) => {
   return useQuery({
     queryKey: ['bulletinBoardList', props], // 쿼리키에 들어있는 변수의 값들이 바뀔때마다 리패칭 기능 동작함
-    // enabled:
+    // enabled: false
     queryFn: async () => getBulletinBoardList(props),
     gcTime: 30 * 60 * 1000, // 30분
   })

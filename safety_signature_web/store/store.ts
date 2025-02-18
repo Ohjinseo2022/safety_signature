@@ -68,6 +68,7 @@ export const usePathParamStore = create<PathParamStore>()(
         }
       },
       setUseLastPath: (b: boolean) => {
+        console.log('왜이러죠오')
         set(() => ({ useLastPath: b }))
       },
       resetLastPath: () => set(() => ({ lastPath: [''] })),

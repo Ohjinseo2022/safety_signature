@@ -53,24 +53,25 @@ const PageChangeMiddleware = ({
     const handleNavigation = async (method: Function, ...args: any) => {
       const userProfile = await getUserProfile()
       const isLogin = isLoginResponceSuccess(userProfile)
-      if (isLogin && pathname?.includes('login')) {
-        if (window.history.length > 1) {
-          // 📌 이전 페이지가 존재하면 뒤로 가기
-          router.back()
-        } else {
-          // 📌 이전 페이지가 없으면 메인 페이지로 이동
-          router.push('/main')
-        }
-      }
+      // if (isLogin && pathname?.includes('login')) {
+      //   if (window.history.length > 1) {
+      //     // 📌 이전 페이지가 존재하면 뒤로 가기
+      //     router.back()
+      //   } else {
+      //     // 📌 이전 페이지가 없으면 메인 페이지로 이동
+      //     router.replace('/main')
+      //   }
+      // }
       await handleRouteStart()
 
       const lastUrl: string = args[0]
 
       if (!pathStore.useLastPath) {
-        pathStore.setLastPath(args[0], args[1] || {})
+        pathStore.setLastPath(pathname, args[1] || {})
       }
-
-      if (!pathname?.includes('login')) {
+      if (lastUrl && !lastUrl?.includes('login')) {
+        //lastUrl 이 존재해야하고
+        //path
         if (
           !isLogin ||
           userProfile.userTypeCode === UserTypeCode.GENERAL_MEMBER
@@ -90,27 +91,30 @@ const PageChangeMiddleware = ({
         } else {
           userProfileStore.setProfile(userProfile as LoginResponseSuccess)
           if (pathStore.useLastPath) {
-            pathStore.useLastPath = false
+            pathStore.setUseLastPath(false)
             originalPush(
               pathStore.lastPath[0],
               pathStore.lastPath[1] as NavigateOptions
             )
           } else {
-            method(...args) // 📌 원래의 메서드를 실행
+            method(...(args as any)) // 📌 원래의 메서드를 실행
           }
         }
       } else {
-        method(...args) // 📌 원래의 메서드를 실행
+        method(...(args as any)) // 📌 원래의 메서드를 실행
       }
-      handleRouteComplete()
+      await handleRouteComplete()
     }
     // 📌 `router.push`, `router.replace`, `router.back`, `router.forward`, `router.refresh`, `router.prefetch` 오버라이드
-    router.push = (...args) => handleNavigation(originalPush, ...args)
-    router.replace = (...args) => handleNavigation(originalReplace, ...args)
-    router.back = () => handleNavigation(originalBack)
-    router.forward = () => handleNavigation(originalForward)
-    router.refresh = () => handleNavigation(originalRefresh)
-    router.prefetch = (...args) => handleNavigation(originalPrefetch, ...args)
+    router.push = async (...args) =>
+      await handleNavigation(originalPush, ...args)
+    router.replace = async (...args) =>
+      await handleNavigation(originalReplace, ...args)
+    router.back = async () => await handleNavigation(originalBack)
+    router.forward = async () => await handleNavigation(originalForward)
+    router.refresh = async () => await handleNavigation(originalRefresh)
+    router.prefetch = async (...args) =>
+      await handleNavigation(originalPrefetch, ...args)
 
     handleNavigation(() => originalPush)
     // ✅ 이벤트 중복 등록 방지

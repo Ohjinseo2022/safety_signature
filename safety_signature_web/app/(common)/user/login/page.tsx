@@ -1,7 +1,7 @@
 'use client'
 
 import { useAlertStore } from '@/store/alertStore'
-import { useLoadingStore } from '@/store/store'
+import { useLoadingStore, usePathParamStore } from '@/store/store'
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
@@ -25,6 +25,7 @@ const UserLogin: React.FC<UserLoginProps> = ({}) => {
   const [btnDisabled, onChangeBtnDisabled, setBtnDisabled] =
     useInput<boolean>(false)
   const { userProfile: userInfo } = useUserProfile()
+  const { lastPath } = usePathParamStore()
   const { isLoading } = useLoadingStore()
   const { isModalVisible, onChangeModalVisible } = useAlertStore()
   const router = useRouter()
@@ -48,7 +49,14 @@ const UserLogin: React.FC<UserLoginProps> = ({}) => {
         password: password,
       })
       if (isLoginResponceSuccess(userProfile)) {
-        router.push('/main')
+        if (lastPath && lastPath[0]) {
+          console.log('로그인후 라스트 패스', lastPath)
+          router.push(
+            ...(lastPath as [href: string, options?: any | undefined])
+          )
+        } else {
+          router.push('/main')
+        }
       } else {
         onChangeModalVisible({
           isVisible: true,

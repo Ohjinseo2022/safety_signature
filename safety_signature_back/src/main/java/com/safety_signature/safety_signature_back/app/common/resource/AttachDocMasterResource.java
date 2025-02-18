@@ -82,7 +82,7 @@ public class AttachDocMasterResource {
                     .attachDocMaster(attachDocMasterDTO)
                     .operationTypeCode(OperationTypeCode.UP_LOADING)
                     .operationGoalExplain(attachDocMasterDTO.getAttachDocExplain())
-                    .operatorIpAddress("test중")
+                    .operatorIpAddress(HttpServletRequestUtil.clientIpAddr())
                     .build();
             attachDocHistService.save(attachDocHistDTO);
         }

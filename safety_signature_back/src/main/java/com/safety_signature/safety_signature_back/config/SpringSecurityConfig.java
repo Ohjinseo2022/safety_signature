@@ -49,6 +49,7 @@ public class SpringSecurityConfig {
                             .requestMatchers("/**").permitAll()// 필요에 따라 허용할 url 설정
                             .requestMatchers("/login/**").permitAll()
                             .requestMatchers("/user/join").permitAll()
+                            .requestMatchers("/user/profile").permitAll()
                             .requestMatchers("/swagger/**").permitAll()
                             .requestMatchers("/v3/api-docs/**").permitAll()
                             .requestMatchers("/auth/**").permitAll()

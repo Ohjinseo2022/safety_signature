@@ -6,9 +6,13 @@ export const getMinIoFileDownload = async (attachDocId: string) => {
     `/attach/download/${attachDocId}?${Math.random() * 100000}`,
     {
       method: 'get',
+    },
+    {
+      responseType: 'blob',
     }
   )
   if (status === 200) {
+    console.log(data)
     let deCodefileName = decodeURIComponent(filename)
     blobFileDownload(data as Blob, deCodefileName)
   }

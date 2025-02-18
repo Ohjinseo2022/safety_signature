@@ -96,7 +96,7 @@ public class UserMaster extends AbstractAuditingEntity<String> implements Serial
     @Enumerated(value = EnumType.STRING)
     @Comment("회원 타입")
     @Column(name="user_type")
-    private UserTypeCode userTypeCode;
+    private UserTypeCode userTypeCode ;
 
     @Enumerated(value = EnumType.STRING)
     @Comment("계정 상태")
