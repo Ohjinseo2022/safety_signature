@@ -2,30 +2,32 @@
 
 import styled from 'styled-components'
 import { useCallback } from 'react'
+import { getMinIoFileDownload } from '@/hooks/common/useDownLoad'
 
 interface CustomDownloadButtonProps {
-  fileName: string
   fileUrl?: string
   disabled?: boolean
+  file: AttachDocMasterType
   onClick?: (e: any) => void
 }
 
 const CustomDownloadButton = ({
-  fileName,
   fileUrl,
   disabled = false,
+  file,
   onClick,
 }: CustomDownloadButtonProps) => {
   const handleDownload = useCallback(
     (e: any) => {
       onClick?.(e)
+      getMinIoFileDownload(file.id)
     },
     [onClick]
   )
 
   return (
     <DownloadButton onClick={handleDownload} disabled={disabled}>
-      📥 {fileName}
+      📥 {file?.attachDocName}
     </DownloadButton>
   )
 }

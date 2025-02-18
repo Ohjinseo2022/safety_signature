@@ -2,6 +2,7 @@ package com.safety_signature.safety_signature_back.app.common.resource;
 
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocHistDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
+import com.safety_signature.safety_signature_back.app.common.dto.DownloadResourceDTO;
 import com.safety_signature.safety_signature_back.app.common.enumeration.AttachDocOwnerClassCode;
 import com.safety_signature.safety_signature_back.app.common.enumeration.OperationTypeCode;
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocHistService;
@@ -10,6 +11,7 @@ import com.safety_signature.safety_signature_back.app.common.service.impl.Attach
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
 import com.safety_signature.safety_signature_back.utils.FileUtil;
+import com.safety_signature.safety_signature_back.utils.HttpServletRequestUtil;
 import com.safety_signature.safety_signature_back.utils.MinioUtils;
 import com.safety_signature.safety_signature_back.utils.jwt.TokenValues;
 import io.swagger.v3.oas.annotations.Operation;
@@ -19,13 +21,18 @@ import lombok.RequiredArgsConstructor;
 import org.apache.commons.compress.utils.FileNameUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.Resource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.ObjectUtils;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.regex.Pattern;
 
 @Tag(name = "첨부파일 공통 API")
@@ -40,6 +47,7 @@ public class AttachDocMasterResource {
     private final MinioUtils minioUtils;
     private final AttachDocMasterService attachDocMasterService;
     private final AttachDocHistService attachDocHistService;
+
     @Operation(summary = "첨부 파일 업로드")
     @PutMapping(value ="/save-signature" , consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public void saveImage(HttpServletRequest request ,
@@ -79,6 +87,24 @@ public class AttachDocMasterResource {
             attachDocHistService.save(attachDocHistDTO);
         }
 
+    }
+    @Operation(summary = "첨부 파일 다운로드")
+    @GetMapping(value="/download/{id}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<Resource> download(HttpServletRequest request, @PathVariable String id) throws Exception {
+        log.debug("REST request to get attachDocMaster : attachDocId {}", id);
+        DownloadResourceDTO downloadResourceDTO = attachDocMasterService.downloadAttachDocMasterById(id, HttpServletRequestUtil.clientIpAddr());
+        if(!ObjectUtils.isEmpty(downloadResourceDTO)) {
+            return ResponseEntity.ok() .header("Content-type", "application/octet-stream")
+                    .header(
+                            HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\""
+                                    + URLEncoder.encode(downloadResourceDTO.getFileName(), StandardCharsets.UTF_8)
+                                    + "\""
+                    )
+                    .body(downloadResourceDTO.getResource());
+        }else{
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 
 }

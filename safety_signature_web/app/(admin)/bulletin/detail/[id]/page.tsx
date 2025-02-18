@@ -22,14 +22,6 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
     return undefined
   }, [isFetched, data])
   console.log('unwrappedParams : ', unwrappedParams)
-  const post = {
-    title: '게시글 제목',
-    content: '게시글 내용입니다. 관리자가 작성한 내용을 포함합니다.',
-    documents: [
-      { id: 1, name: '문서1.pdf', url: '/downloads/doc1.pdf' },
-      { id: 2, name: '문서2.pdf', url: '/downloads/doc2.pdf' },
-    ],
-  }
 
   const comments = [
     {
@@ -69,7 +61,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
         <div>
           {detailData.attachDocList && detailData.attachDocList.length > 0 ? (
             detailData.attachDocList.map((doc: AttachDocMasterType, idx) => (
-              <CustomDownloadButton key={doc.id} fileName={doc.attachDocName} />
+              <CustomDownloadButton key={doc.id} file={doc} />
             ))
           ) : (
             <span>첨부된 문서가 없습니다.</span>

@@ -1,6 +1,7 @@
 'use client'
 
 import { getItem } from '@/store/localStorage'
+import { extractQuotes } from '@/utils/regexpUtil'
 // import { useLoadingStore } from '@/store/store'
 import axios, { Method } from 'axios'
 import { postTokenRefresh } from '@/app/(common)/user/login/_userRepository/tokenRepository'
@@ -24,11 +25,16 @@ instance.interceptors.request.use(
 instance.interceptors.response.use(
   (response) => {
     //응답에 대한 로직 작성
+    const etcObj: any = {}
     if (response.headers['x-total-count']) {
-      return { ...response, count: response.headers['x-total-count'] }
+      etcObj.count = response.headers['x-total-count']
+    }
+    if (response.headers['content-disposition']) {
+      const str = response.headers['content-disposition'] || ''
+      etcObj.filename = extractQuotes(str) || ''
     }
 
-    return response
+    return { ...response, ...etcObj }
   },
   async (error) => {
     const {

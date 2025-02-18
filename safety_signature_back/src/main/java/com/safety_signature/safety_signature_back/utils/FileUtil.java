@@ -19,7 +19,7 @@ public class FileUtil {
     public static long PiB = TiB << 10;
     public static long EiB = PiB << 10;
 
-    private static DecimalFormat DEC_FORMAT = new DecimalFormat("#.##");
+    private static final DecimalFormat DEC_FORMAT = new DecimalFormat("#.##");
 
     public static String formatSize(long size, long divider, String unitName) {
         return DEC_FORMAT.format((double) size / divider) + " " + unitName;

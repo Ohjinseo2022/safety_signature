@@ -3,6 +3,7 @@ package com.safety_signature.safety_signature_back.app.common.service.impl;
 import com.safety_signature.safety_signature_back.app.common.domain.AttachDocMaster;
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocHistDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
+import com.safety_signature.safety_signature_back.app.common.dto.DownloadResourceDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.util.MinIOUtilsReturnDTO;
 import com.safety_signature.safety_signature_back.app.common.enumeration.AttachDocOwnerClassCode;
 import com.safety_signature.safety_signature_back.app.common.enumeration.OperationTypeCode;
@@ -240,39 +241,39 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
 
 
 
-//    @Override
-//    public DownloadResourceDTO downloadAttachDocMasterById(
-//            String attachDocId,
-//            String clientIpAddr
-//    ) throws Exception {
-//
-//        DownloadResourceDTO downloadResourceDTO = new DownloadResourceDTO();
-//
-//        Optional<AttachDocMaster> entity = attachDocMasterRepository.findById(attachDocId);
-//
-//        if(entity.isPresent()) {
-//
-//            downloadResourceDTO.setResource(minioUtils.download(entity.get().getAttachDocPosition()));
-//            downloadResourceDTO.setFileName(entity.get().getAttachDocName());
-//
-//            if (!downloadResourceDTO.getResource().exists() && !downloadResourceDTO.getResource().isReadable()) {
-//                throw new RuntimeException("파일을 읽을 수 없습니다. : ");
-//            }
-//
-//            // =========================================================================================================
-//            // 첨부문서이력 추가 처리
-//            // =========================================================================================================
-//            AttachDocHistDTO attachDocHistDTO = AttachDocHistDTO.builder()
-//                    .attachDocMaster(attachDocMasterMapper.toDto(entity.get()))
-//                    .operationTypeCode(OperationTypeCode.DOWN_LOADING)
-//                    .operatorIpAddress(clientIpAddr)
-//                    .build();
-//
-//            attachDocHistService.save(attachDocHistDTO);
-//        }
-//
-//        return downloadResourceDTO;
-//    }
+    @Override
+    public DownloadResourceDTO downloadAttachDocMasterById(
+            String attachDocMasterId,
+            String clientIpAddr
+    ) throws Exception {
+
+        DownloadResourceDTO downloadResourceDTO = new DownloadResourceDTO();
+
+        Optional<AttachDocMaster> entity = attachDocMasterRepository.findById(attachDocMasterId);
+
+        if(entity.isPresent()) {
+
+            downloadResourceDTO.setResource(minioUtils.download(entity.get().getAttachDocPosition()));
+            downloadResourceDTO.setFileName(entity.get().getAttachDocName());
+
+            if (!downloadResourceDTO.getResource().exists() && !downloadResourceDTO.getResource().isReadable()) {
+                throw new RuntimeException("파일을 읽을 수 없습니다. : ");
+            }
+
+            // =========================================================================================================
+            // 첨부문서이력 추가 처리
+            // =========================================================================================================
+            AttachDocHistDTO attachDocHistDTO = AttachDocHistDTO.builder()
+                    .attachDocMaster(attachDocMasterMapper.toDto(entity.get()))
+                    .operationTypeCode(OperationTypeCode.DOWN_LOADING)
+                    .operatorIpAddress(clientIpAddr)
+                    .build();
+
+            attachDocHistService.save(attachDocHistDTO);
+        }
+
+        return downloadResourceDTO;
+    }
 
     @Override
     @Transactional(readOnly = true)

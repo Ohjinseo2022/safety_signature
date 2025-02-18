@@ -1,6 +1,7 @@
 package com.safety_signature.safety_signature_back.app.common.service;
 
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
+import com.safety_signature.safety_signature_back.app.common.dto.DownloadResourceDTO;
 import com.safety_signature.safety_signature_back.app.common.exception.CommonException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +22,10 @@ public interface AttachDocMasterService {
      * @return the persisted entity.
      */
     AttachDocMasterDTO save(AttachDocMasterDTO attachDocMasterDTO);
-
+    DownloadResourceDTO downloadAttachDocMasterById(
+            String attachDocMasterId,
+            String clientIpAddr
+    )throws Exception;
     List<AttachDocMasterDTO> attachDocMasterAndMinIoSave(List<MultipartFile> files, String attachDocOwnerId,String userId) ;
     AttachDocMasterDTO base64StringSignatureImageSave(String base64StringSignatureImage , String userId);
     /**
