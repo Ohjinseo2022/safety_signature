@@ -96,6 +96,7 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
   }
 
   Future<void> getProfile() async {
+    print("동작하죠 ?");
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
     state = UserModelLoading();
@@ -104,8 +105,10 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
       return;
     }
     try {
+      print("자");
       final response = await userMasterRepository.userProfile();
       if (response == null) {
+        print("요기");
         state = UserModelGuest();
         return;
       }
