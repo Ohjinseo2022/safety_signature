@@ -1,5 +1,5 @@
-import { QueryClient } from '@tanstack/react-query';
+import { QueryClient, useMutation } from '@tanstack/react-query'
 
-const queryClient = new QueryClient();
-
-export default queryClient;
+const queryClient = new QueryClient()
+// const mutation = useMutation()
+export default queryClient

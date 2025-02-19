@@ -5,9 +5,9 @@
  */
 export const validateBusinessNumber = (businessNumber: string): boolean => {
   if (businessNumber.length !== 10) {
-    return false;
+    return false
   }
-  return true;
+  return true
 
   // const keyArr = [1,3,7,1,3,7,1,3,5]
   // const checkDigit = Number(businessNumber[9])
@@ -21,7 +21,7 @@ export const validateBusinessNumber = (businessNumber: string): boolean => {
   // const calculatedCheckDigit = (10 - (sum % 10)) % 10
 
   // return checkDigit === calculatedCheckDigit;
-};
+}
 
 /**
  * 법인번호 유효성 체크
@@ -31,11 +31,11 @@ export const validateBusinessNumber = (businessNumber: string): boolean => {
 export const validateCorporationNumber = (
   corporationNumber: string
 ): boolean => {
-  if (corporationNumber !== "" && corporationNumber.length !== 13) {
-    return false;
+  if (corporationNumber !== '' && corporationNumber.length !== 13) {
+    return false
   }
-  return true;
-};
+  return true
+}
 
 /**
  * 파일 확장자 체크
@@ -48,26 +48,26 @@ export const isAllowedExtension = (
   isLogo: boolean,
   isXlsx: boolean = false
 ): boolean => {
-  if (filename !== "") {
-    let allowedExtensions: string[] = [];
+  if (filename !== '') {
+    let allowedExtensions: string[] = []
     if (isLogo) {
-      allowedExtensions = ["gif", "jpg", "png"];
+      allowedExtensions = ['gif', 'jpg', 'png']
     } else {
       if (!isXlsx) {
-        allowedExtensions = ["gif", "jpg", "png", "pdf"];
+        allowedExtensions = ['gif', 'jpg', 'png', 'pdf']
       } else {
-        allowedExtensions = ["gif", "jpg", "png", "pdf", "xlsx"];
+        allowedExtensions = ['gif', 'jpg', 'png', 'pdf', 'xlsx']
       }
     }
-    const parts: string[] = filename.split(".");
+    const parts: string[] = filename.split('.')
     if (parts.length > 1) {
-      const extension: string = parts.pop()!.toLowerCase();
-      return allowedExtensions.includes(extension);
+      const extension: string = parts.pop()!.toLowerCase()
+      return allowedExtensions.includes(extension)
     }
   }
 
-  return false;
-};
+  return false
+}
 
 /**
  * 파일 확장자 체크
@@ -80,35 +80,35 @@ export const isAllowedMimeType = (
   isLogo: boolean,
   isXlsx: boolean = false
 ): boolean => {
-  if (mimeType !== "") {
-    let allowedMimeType: string[] = [];
+  if (mimeType !== '') {
+    let allowedMimeType: string[] = []
     if (isLogo) {
-      allowedMimeType = ["image/gif", "image/jpg", "image/png"];
+      allowedMimeType = ['image/gif', 'image/jpg', 'image/png']
     } else {
       if (!isXlsx) {
         allowedMimeType = [
-          "image/gif",
-          "image/jpg",
-          "image/png",
-          "application/pdf",
-        ];
+          'image/gif',
+          'image/jpg',
+          'image/png',
+          'application/pdf',
+        ]
       } else {
         allowedMimeType = [
-          "image/gif",
-          "image/jpg",
-          "image/png",
-          "application/pdf",
-          "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        ];
+          'image/gif',
+          'image/jpg',
+          'image/png',
+          'application/pdf',
+          'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]
       }
     }
 
-    console.log("mimeType : " + mimeType);
-    console.log(allowedMimeType);
-    return allowedMimeType.includes(mimeType);
+    console.log('mimeType : ' + mimeType)
+    console.log(allowedMimeType)
+    return allowedMimeType.includes(mimeType)
   }
-  return false;
-};
+  return false
+}
 
 // export const isAllowedFileSize = (
 //   fileName: string, fileSize: number
@@ -141,29 +141,29 @@ export const isAllowedMimeType = (
  * 파일 확장자 체크
  * @param filename
  * @param allowedFE
- * @returns boolean
+ * @returns {Promise<boolean> 허용된 확장자면 true 반환}
  */
-export const checkFileNameExtension = (
+export const checkFileNameExtension = async (
   fileName: string,
   allowedFE: string[]
-): boolean => {
-  if (fileName === "") {
-    return false;
-  }
+): Promise<boolean> => {
+  return new Promise((resolve, _reject) => {
+    if (!fileName) {
+      return resolve(false)
+    }
+    if (!(allowedFE.length > 0)) {
+      return resolve(false)
+    }
+    const parts: string[] = fileName.split('.')
 
-  if (allowedFE.length <= 0) {
-    return false;
-  }
+    if (parts.length > 1) {
+      const extension: string = parts.pop()!.toLowerCase()
+      return resolve(allowedFE.includes(extension))
+    }
 
-  const parts: string[] = fileName.split(".");
-
-  if (parts.length > 1) {
-    const extension: string = parts.pop()!.toLowerCase();
-    return allowedFE.includes(extension);
-  }
-
-  return false;
-};
+    return resolve(false)
+  })
+}
 
 // /**
 //  * 첨부파일 SIZE 체크

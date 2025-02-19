@@ -8,7 +8,7 @@ declare global {
     attachId?: string
     file?: File
     fileName: string
-    fileSize?: string
+    fileSize?: string | number
     title?: string
   }
   /**

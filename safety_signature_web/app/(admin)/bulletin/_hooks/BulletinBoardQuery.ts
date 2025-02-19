@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import useFetchApi from '@/hooks/useFetchApi'
 
-interface BulletinBoardSearchProps {
+export interface BulletinBoardSearchProps {
   boardTitle: string
   createdBy: string
   startDate: string
@@ -37,6 +37,7 @@ export const useBulletinBoardListQuery = (props: BulletinBoardSearchProps) => {
     // enabled: false
     queryFn: async () => getBulletinBoardList(props),
     gcTime: 30 * 60 * 1000, // 30분
+    // initialData,
   })
 }
 //단건 조회

@@ -2,13 +2,15 @@
 
 import { useAlertStore } from '@/store/alertStore'
 import { isEncryptedFile } from '@/utils/fileUtils'
+import { checkFileNameExtension } from '@/utils/joinUtils'
 import styled from 'styled-components'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import useFetchApi from '@/hooks/useFetchApi'
 import { useInput } from '@/hooks/useInput'
 import CommonEditor from '@/components/common/CommonEditor'
 import CommonInput from '@/components/common/CommonInput'
+import queryClient from '@/app/queryClient'
 
 const WritePage = () => {
   const { isModalVisible, onChangeModalVisible, callBackFunction } =
@@ -16,33 +18,50 @@ const WritePage = () => {
   const [boardTitle, onChangeBoardTitle, setBoardTitle] = useInput<string>('')
   const [boardContents, onChangeBoardContents, setBoardContents] =
     useInput<string>('')
+  const inputFiles = useRef<HTMLInputElement>(null)
   const [files, setFiles] = useState<FileObj[] | null>(null)
   const router = useRouter()
-  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     //파일 이존재하면서
-    if (e.target.files && e.target.files.length > 0) {
+    if (inputFiles.current) {
+      const fileTemp = Array.from(inputFiles.current?.files || [])
       const arrfileObj: FileObj[] = []
-      Array.prototype.forEach.call(e.target.files, async (file) => {
-        //암호화 된 파일인지 확인
+      for (let file of fileTemp) {
         const isEncrypted = await isEncryptedFile(file)
         if (isEncrypted) {
           onChangeModalVisible({
             isVisible: true,
             msg: '암호화된 파일은 업로드 불가능합니다.',
           })
-          return
+          break
+        }
+        const isExtension = await checkFileNameExtension(file.name, [
+          'pdf',
+          'png',
+          'gif',
+          'jpeg',
+        ])
+        if (!isExtension) {
+          onChangeModalVisible({
+            isVisible: true,
+            msg: '확장자 pdf, png, jpeg, gif 을/를 제외한 파일은 업로드 불가능합니다.',
+          })
+          break
         }
         arrfileObj.push({
           file: file,
           fileName: file.name,
           fileSize: file.size,
         })
-      })
-      setFiles(arrfileObj)
+      }
+      if (fileTemp.length === arrfileObj.length) {
+        setFiles(arrfileObj)
+      } else {
+        inputFiles.current.value = ''
+      }
     } else {
       setFiles(null)
     }
-    // setFiles((state) => (e.target?.files ? state.push(e.target.files) : state))
   }
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -90,6 +109,7 @@ const WritePage = () => {
       { isAuth: true }
     )
     if (status === 200) {
+      queryClient.invalidateQueries({ queryKey: ['bulletinBoardList'] })
       onChangeModalVisible({
         isVisible: true,
         msg: '등록 완료 됐습니다.',
@@ -126,6 +146,7 @@ const WritePage = () => {
         <FileUploadContainer>
           <label htmlFor="files">파일 첨부</label>
           <input
+            ref={inputFiles}
             id="files"
             type="file"
             multiple={true}
