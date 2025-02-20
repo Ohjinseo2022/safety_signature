@@ -2,6 +2,7 @@
 
 import styled from 'styled-components'
 import { use, useEffect, useMemo, useState } from 'react'
+import CommonDataTable from '@/components/common/CommonDataTable'
 import CustomDownloadButton from '@/components/custom/CustomDownloadButton'
 import { LoginResponseSuccess } from '@/app/(common)/user/login/_userRepository/types'
 import { useUserProfile } from '@/app/(common)/user/login/_userState/userStore'
@@ -22,7 +23,13 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
     return undefined
   }, [isFetched, data])
   console.log('unwrappedParams : ', unwrappedParams)
-
+  const headers = [
+    { label: '문서명', columns: 'docName' },
+    { label: '이름', columns: 'name' },
+    { label: '서명', columns: 'signature' },
+    { label: '시간', columns: 'time' },
+    { label: '현장명', columns: 'site' },
+  ]
   const comments = [
     {
       id: 1,
@@ -45,7 +52,11 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
   const downloadExcel = () => {
     alert('댓글 데이터를 엑셀로 다운로드합니다.')
   }
-
+  const onSignatureHandler = () => {
+    /**
+     * 로그인한 유저의 권한 정보를 읽고 해당 계정의 사인정보기반으로 결제처리
+     */
+  }
   return detailData ? (
     <DetailContainer>
       <PostInfo>
@@ -68,40 +79,13 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
           )}
         </div>
       </DownloadSection>
-
-      <CommentsContainer>
-        <CommentsHeader>
-          <h3>결제완료 리스트</h3>
-          <button onClick={downloadExcel}>
-            {detailData.userMasterId === userProfile.id
-              ? `엑셀 다운로드`
-              : '전자결제'}
-          </button>
-        </CommentsHeader>
-
-        <CommentsTable>
-          <thead>
-            <tr>
-              <th>문서명</th>
-              <th>이름</th>
-              <th>서명</th>
-              <th>시간</th>
-              <th>현장명</th>
-            </tr>
-          </thead>
-          <tbody>
-            {comments.map((comment) => (
-              <tr key={comment.id}>
-                <td>{comment.docName}</td>
-                <td>{comment.name}</td>
-                <td>{comment.signature}</td>
-                <td>{comment.time}</td>
-                <td>{comment.site}</td>
-              </tr>
-            ))}
-          </tbody>
-        </CommentsTable>
-      </CommentsContainer>
+      <CommonDataTable
+        title={'결제완료 리스트'}
+        topBtnLable={'결제하기'}
+        onTopButtonClick={onSignatureHandler}
+        headers={headers}
+        dataItem={comments}
+      />
     </DetailContainer>
   ) : (
     <></>
@@ -170,69 +154,6 @@ const DownloadSection = styled.div`
 
     &:hover {
       background-color: #3b82f6;
-    }
-  }
-`
-
-const CommentsContainer = styled.div`
-  background-color: #1e1e1e;
-  padding: 20px;
-  border-radius: 8px;
-`
-
-const CommentsHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-
-  h3 {
-    margin: 0;
-    font-size: 20px;
-  }
-
-  button {
-    background-color: #60a5fa;
-    color: #ffffff;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #3b82f6;
-    }
-  }
-`
-
-const CommentsTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 14px;
-
-  thead {
-    background-color: #333333;
-
-    th {
-      padding: 10px;
-      border: 1px solid #444444;
-      color: #ffffff;
-    }
-  }
-
-  tbody {
-    tr {
-      &:hover {
-        background-color: #2a2a2a;
-      }
-
-      td {
-        padding: 10px;
-        border: 1px solid #444444;
-        color: #b0b0b0;
-      }
     }
   }
 `

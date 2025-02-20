@@ -130,7 +130,6 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
             throw new AttachDocException(e.getMessage());
         }
     }
-
     @Override
     public AttachDocMasterDTO base64StringSignatureImageSave(String base64StringSignatureImage,  String userId) {
         try{

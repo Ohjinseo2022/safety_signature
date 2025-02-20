@@ -85,8 +85,11 @@ public class BulletinBoardMasterResource {
          *      - 로그인한 권한 체크
          *      - 페이지네이션
          */
+
         String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
+
         // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
+        //현재는 스프링 시큐리티에 jwt 필터를 적용하여 토큰 만료 나 문제발생시 401 에러 처리
         if (Constants.ANONYMOUSUSER.equals(userEmail)|| userEmail ==null) {
             BulletinBoardResponseMessageDTO result = BulletinBoardResponseMessageDTO.builder().httpStatus(HttpStatus.UNAUTHORIZED).message("UNAUTHORIZED").build();
             return ResponseEntity.status(result.getHttpStatus()).body(result);

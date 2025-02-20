@@ -62,18 +62,6 @@ public class MinioUtils {
 
     /**
      *  버킷 하위에 디렉토리 생성 규칙
-     * 스마트리온 일반 문서 : 7개의 카테고리를 디렉토리로 생성하고, 그 하위에 YYYYMM 형식의 디렉토리를 만든다
-     * mp_attach_lotte_doc : 롯데그룹사 문서 파일을 담을 경로
-     * mp_attach_comp_doc : 일반기업(공급사)의 문서 파일을 담을 경로
-     * mp_attach_inquiry : 문의내역의 첨부 파일을 담을 경로
-     * mp_attach_notice : 공지사항의 첨부 파일을 담을 경로
-     * mp_attach_contents_doc(상품의 문서 파일을 담을 경로)
-     * mp_attach_contents_data(상품의 DB 파일[CSV, XML, JSON]을 담을 경로)
-     * mp_attach_trend : 트렌드모니터 정보의 첨부 파일을 담을 경로
-     * 스마트리온 이미지 첨부 : 3개의 카테고리를 디렉토리로 생성한다.
-     * mp_attach_lotte_img : 롯데그룹사 이미지 파일을 담을 경로
-     * mp_attach_comp_img : 일반기업(공급사)의 이미지 파일을 담을 경로
-     * mp_attach_contents_img(상품의 상세 이미지 파일을 담을 경로)
      *
      * 디렉토리 예제) mp_attach_lotte_doc/202306/
      *
