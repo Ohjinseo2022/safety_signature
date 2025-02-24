@@ -1,13 +1,19 @@
 package com.safety_signature.safety_signature_back.app.approve_master.resource;
 
+import com.safety_signature.safety_signature_back.app.approve_master.dto.ApproveMasterDTO;
+import com.safety_signature.safety_signature_back.app.approve_master.dto.response.ApproveMasterMessageDTO;
 import com.safety_signature.safety_signature_back.app.approve_master.service.ApproveMasterService;
+import com.safety_signature.safety_signature_back.app.bulletin_board.dto.BulletinBoardMasterDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardResponseMessageDTO;
+import com.safety_signature.safety_signature_back.app.bulletin_board.service.BulletinBoardMasterService;
+import com.safety_signature.safety_signature_back.app.common.dto.ResponseDTO;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
 import com.safety_signature.safety_signature_back.config.Constants;
 import com.safety_signature.safety_signature_back.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -26,12 +32,18 @@ import org.springframework.web.bind.annotation.*;
 public class ApproveMasterResource {
     private final Logger log = LoggerFactory.getLogger(ApproveMasterResource.class);
     private final ApproveMasterService approveMasterService;
+    private final BulletinBoardMasterService bulletinBoardMasterService;
     private final UserMasterService userMasterService;
 
     @Operation(summary = "전자 결제 내역 조회")
     @GetMapping(value = "/completed-list/{bulletinBoardId}")
     public ResponseEntity<?> getCompletedList(HttpServletRequest request, @PathVariable String bulletinBoardId, Pageable pageable) {
         String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
+        // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
+        if (Constants.ANONYMOUSUSER.equals(userEmail)|| userEmail ==null) {
+            ApproveMasterMessageDTO result = ApproveMasterMessageDTO.builder().httpStatus(HttpStatus.UNAUTHORIZED).message("UNAUTHORIZED").build();
+            return ResponseEntity.status(result.getHttpStatus()).body(result);
+        }
         // =========================================================================================================
         // 페이징 설정
         // =========================================================================================================
@@ -46,13 +58,24 @@ public class ApproveMasterResource {
 
     @Operation(summary = "전자 결제 사인 처리")
     @PostMapping(value = "/completed-signature")
-    public ResponseEntity<?> postCompletedSignature(HttpServletRequest request){
+    public ResponseEntity<ResponseDTO> postCompletedSignature(HttpServletRequest request , @RequestBody @Valid String bulletinBoardId){
         String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
         /**
          * 1. 기존 게시글 조회
          * 2. 서명 가능한 상태 체크
          * 3. 저장
          */
+        // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
+        if (Constants.ANONYMOUSUSER.equals(userEmail)|| userEmail ==null) {
+            ApproveMasterMessageDTO result = ApproveMasterMessageDTO.builder().httpStatus(HttpStatus.UNAUTHORIZED).message("UNAUTHORIZED").build();
+            return ResponseEntity.status(result.getHttpStatus()).body(result);
+        }
+        BulletinBoardMasterDTO bulletinBoardMasterDTO =  bulletinBoardMasterService.getBulletinBoardMasterDTO(bulletinBoardId);
+        if(ObjectUtils.isEmpty(bulletinBoardMasterDTO)){
+            ApproveMasterMessageDTO result = ApproveMasterMessageDTO.builder().message("존재하지 않는 전자 결제 게시글 입니다.").httpStatus(HttpStatus.NO_CONTENT).build();
+            return ResponseEntity.status(result.getHttpStatus()).body(result);
+        }
+//        ApproveMasterDTO result = approveMasterService
         return null;
     }
 }

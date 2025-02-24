@@ -36,6 +36,6 @@ public class ApproveMasterDTO extends AbstractAuditingDTO<String> implements Ser
     private String attachDocId;
 
     @Size(max =11)
-    @Schema(description = "첨부문서 ID" )
+    @Schema(description = "결제 상태 코드" )
     private String approveStatus;
 }

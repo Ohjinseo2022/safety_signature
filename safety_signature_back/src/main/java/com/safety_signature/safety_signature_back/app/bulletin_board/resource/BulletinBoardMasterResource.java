@@ -128,7 +128,7 @@ public class BulletinBoardMasterResource {
             BulletinBoardResponseMessageDTO result = BulletinBoardResponseMessageDTO.builder().httpStatus(HttpStatus.UNAUTHORIZED).message("UNAUTHORIZED").build();
             return ResponseEntity.status(result.getHttpStatus()).body(result);
         }
-        BulletinBoardMasterCustomDTO result = bulletinBoardMasterService.getBulletinBoardMaster(id);
+        BulletinBoardMasterCustomDTO result = bulletinBoardMasterService.getBulletinBoardMasterCustomDTO(id);
 
         if(!ObjectUtils.isEmpty(result)){
             return ResponseEntity.ok().body(BulletinBoardOneResponseDTO.builder().data(result).build());

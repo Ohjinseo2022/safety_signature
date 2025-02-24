@@ -42,7 +42,7 @@ const BulletinPage = ({}: BulletinPageProps) => {
       isOwner: isCreated,
     })
   const paginationSet = useMemo(() => {
-    return pagerSet(page, '10')
+    return pagerSet(bulletinBoardList.count, '10')
   }, [bulletinBoardList])
   const boardList = useMemo(() => {
     if (
@@ -69,6 +69,7 @@ const BulletinPage = ({}: BulletinPageProps) => {
       return []
     }
   }, [bulletinBoardList])
+
   const headers = [
     { label: '글제목', columns: 'boardTitle' },
     { label: '현장명', columns: 'site' },
