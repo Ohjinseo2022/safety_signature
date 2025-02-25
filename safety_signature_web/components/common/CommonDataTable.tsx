@@ -37,13 +37,28 @@ const CommonDataTable: React.FC<CommonDataTableProps> = ({
           </tr>
         </thead>
         <tbody>
-          {dataItem.map((item: any) => (
-            <tr key={item.id}>
-              {headers.map((header, index) => (
-                <td key={`${header.columns}-${item.id}`}>
-                  {item[header.columns]}
-                </td>
-              ))}
+          {dataItem.map((item: any, idx: number) => (
+            <tr key={`${item.id}-${idx}`}>
+              {headers.map((header, index) => {
+                if (header.columns === 'attachDocId') {
+                  return (
+                    <td
+                      className="signature-cell"
+                      key={`${header.columns}-${item.id}`}
+                    >
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_DOMAIN}/${process.env.NEXT_PUBLIC_BASE_URL}/attach/download/${item[header.columns]}`}
+                      ></img>
+                    </td>
+                  )
+                }
+
+                return (
+                  <td key={`${header.columns}-${item.id}`}>
+                    {item[header.columns]}
+                  </td>
+                )
+              })}
             </tr>
           ))}
         </tbody>
@@ -86,32 +101,94 @@ const DataTableHeader = styled.div`
   }
 `
 
+// const DataTable = styled.table`
+//   width: 100%;
+//   border-collapse: collapse;
+//   text-align: left;
+//   font-size: 14px;
+
+//   thead {
+//     background-color: #333333;
+
+//     th {
+//       padding: 10px;
+//       border: 1px solid #444444;
+//       color: #ffffff;
+//     }
+//   }
+
+//   tbody {
+//     tr {
+//       &:hover {
+//         background-color: #2a2a2a !important;
+//       }
+//       img {
+//         height: 50px;
+//         object-fit: scale-down;
+//       }
+//       td {
+//         &:hover {
+//           background-color: #2a2a2a !important;
+//         }
+//         padding: 10px;
+//         border: 1px solid #444444;
+//         color: #b0b0b0;
+//       }
+//     }
+//   }
+// `
+
 const DataTable = styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  text-align: left;
-  font-size: 14px;
+  width: 100% !important;
+  border-collapse: collapse !important;
+  text-align: left !important;
+  font-size: 14px !important;
+  background-color: #ffffff !important; /* ✅ 테이블 전체 배경 흰색 */
 
   thead {
     background-color: #333333;
+    color: #ffffff !important;
 
     th {
-      padding: 10px;
+      padding: 12px !important;
       border: 1px solid #444444;
-      color: #ffffff;
+      font-weight: bold !important;
+      text-align: center !important;
     }
   }
 
   tbody {
-    tr {
-      &:hover {
-        background-color: #2a2a2a;
-      }
+    tr:nth-child(even) {
+      background-color: #f9f9f9 !important; /* ✅ 짝수 행 배경 */
+    }
 
-      td {
-        padding: 10px;
-        border: 1px solid #444444;
-        color: #b0b0b0;
+    tr:nth-child(odd) {
+      background-color: #e6e6e6 !important; /* ✅ 홀수 행 배경 */
+    }
+
+    tr:hover {
+      background-color: #d0d0d0 !important; /* ✅ 호버 시 색상 */
+    }
+
+    td {
+      padding: 12px !important;
+      border: 1px solid #dddddd !important; /* ✅ 테두리 색상 */
+      color: #333333 !important; /* ✅ 텍스트 색상 */
+      text-align: center !important;
+      background-color: transparent !important;
+    }
+
+    /* 서명 이미지 스타일 */
+    td.signature-cell {
+      background-color: transparent !important;
+      padding: 0 !important;
+      text-align: center !important;
+
+      img {
+        width: 50px !important;
+        height: auto !important;
+        display: block !important;
+        margin: auto !important;
       }
     }
   }

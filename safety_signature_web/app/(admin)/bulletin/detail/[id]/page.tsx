@@ -1,12 +1,19 @@
 'use client'
 
+import { useAlertStore } from '@/store/alertStore'
 import styled from 'styled-components'
 import { use, useEffect, useMemo, useState } from 'react'
+import { useInput } from '@/hooks/useInput'
 import CommonDataTable from '@/components/common/CommonDataTable'
 import CustomDownloadButton from '@/components/custom/CustomDownloadButton'
 import { LoginResponseSuccess } from '@/app/(common)/user/login/_userRepository/types'
 import { useUserProfile } from '@/app/(common)/user/login/_userState/userStore'
-import { useBulletinBoardQuery } from '../../_hooks/BulletinBoardQuery'
+import {
+  ApproveMasterType,
+  approveSignature,
+  useApproveListQuery,
+  useBulletinBoardQuery,
+} from '../../_hooks/BulletinBoardQuery'
 
 interface BulletinDetailPageProps {
   params: Promise<{ id: string }>
@@ -14,48 +21,68 @@ interface BulletinDetailPageProps {
 
 const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
   const unwrappedParams = use(params) // params를 언래핑
+  const { isModalVisible, onChangeModalVisible, callBackFunction } =
+    useAlertStore()
   const userProfile = useUserProfile().userProfile as LoginResponseSuccess
-  const { data, error, isFetched } = useBulletinBoardQuery(unwrappedParams.id)
+  const {
+    data: bulletinBoardDetail,
+    error,
+    isFetched,
+  } = useBulletinBoardQuery(unwrappedParams.id)
+  const [page, onChangePage, setPage] = useInput<number>(1)
+  // 결제 완료 리스트
+  const {
+    data: approveList,
+    error: approveListError,
+    isFetched: approveListIsFetched,
+    refetch: approveListRefetch,
+  } = useApproveListQuery({
+    bulletinBoardId: unwrappedParams.id,
+    page: page - 1,
+    size: 10,
+  })
   const detailData: BulletinBoardMasterType = useMemo(() => {
-    if (isFetched && data) {
-      return data.data
+    if (isFetched && bulletinBoardDetail) {
+      return bulletinBoardDetail.data
     }
     return undefined
-  }, [isFetched, data])
+  }, [isFetched, bulletinBoardDetail])
+
+  const approveDataList: ApproveMasterType[] = useMemo(() => {
+    if (approveListIsFetched && approveList) {
+      //    {
+      //   id: 1,
+      //   docName: '문서1.pdf',
+      //   name: '홍길동',
+      //   signature: '✔️',
+      //   time: '2025-01-22 10:00',
+      //   site: '현장1',
+      // },
+      return approveList.data
+    }
+    return []
+  }, [approveList, approveListIsFetched])
   console.log('unwrappedParams : ', unwrappedParams)
   const headers = [
-    { label: '문서명', columns: 'docName' },
-    { label: '이름', columns: 'name' },
-    { label: '서명', columns: 'signature' },
-    { label: '시간', columns: 'time' },
-    { label: '현장명', columns: 'site' },
-  ]
-  const comments = [
-    {
-      id: 1,
-      docName: '문서1.pdf',
-      name: '홍길동',
-      signature: '✔️',
-      time: '2025-01-22 10:00',
-      site: '현장1',
-    },
-    {
-      id: 2,
-      docName: '문서2.pdf',
-      name: '김철수',
-      signature: '✔️',
-      time: '2025-01-20 11:00',
-      site: '현장2',
-    },
+    { label: '문서명', columns: 'bulletinBoardTitle' },
+    { label: '이름', columns: 'userName' },
+    { label: '서명', columns: 'attachDocId' },
+    { label: '시간', columns: 'createdDateFormat' },
+    { label: '현장명', columns: 'siteName' },
   ]
 
   const downloadExcel = () => {
     alert('댓글 데이터를 엑셀로 다운로드합니다.')
   }
-  const onSignatureHandler = () => {
+  const onSignatureHandler = async () => {
     /**
      * 로그인한 유저의 권한 정보를 읽고 해당 계정의 사인정보기반으로 결제처리
      */
+    const result = await approveSignature(unwrappedParams.id)
+    if (result) {
+      onChangeModalVisible({ isVisible: true, msg: result.message })
+      result.status === 200 ? approveListRefetch() : undefined
+    }
   }
   return detailData ? (
     <DetailContainer>
@@ -84,7 +111,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
         topBtnLable={'결제하기'}
         onTopButtonClick={onSignatureHandler}
         headers={headers}
-        dataItem={comments}
+        dataItem={approveDataList}
       />
     </DetailContainer>
   ) : (

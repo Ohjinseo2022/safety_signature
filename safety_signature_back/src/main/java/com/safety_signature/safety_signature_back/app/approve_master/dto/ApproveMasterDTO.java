@@ -6,6 +6,8 @@ import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
+import java.time.Instant;
+
 @Setter
 @Getter
 @Schema(description = "전자결제 명단 테이블")
@@ -38,4 +40,17 @@ public class ApproveMasterDTO extends AbstractAuditingDTO<String> implements Ser
     @Size(max =11)
     @Schema(description = "결제 상태 코드" )
     private String approveStatus;
+
+    @Schema(description = "최소 생성 일시")
+    private Instant createdDate;
+
+
+    @Schema(description = "최소 생성자")
+    private String createdBy;
+
+    @Schema(description = "마지막 변경자")
+    private String lastModifiedBy;
+
+    @Schema(description = "마지막 변경 일시")
+    private Instant lastModifiedDate;
 }

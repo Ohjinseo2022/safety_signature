@@ -1,14 +1,13 @@
+import { channel } from 'diagnostics_channel'
 import { useQuery } from '@tanstack/react-query'
 import useFetchApi from '@/hooks/useFetchApi'
 
-export interface BulletinBoardSearchProps {
+export interface BulletinBoardSearchProps extends Pageable {
   boardTitle: string
   createdBy: string
   startDate: string
   endDate: string
   isOwner: boolean
-  page?: number
-  size?: number
 }
 const getBulletinBoardList = async (props: BulletinBoardSearchProps) => {
   const { data, error, count } = await useFetchApi<{
@@ -55,6 +54,77 @@ export const useBulletinBoardQuery = (props: string) => {
   return useQuery({
     queryKey: ['bulletinBoardOne', props],
     queryFn: async () => getBulletinBoard(props),
+    gcTime: 30 * 60 * 1000,
+  })
+}
+
+export const approveSignature = async (
+  bulletinBoardId: string
+): Promise<{ message: string; httpStatus: string; status: number }> => {
+  try {
+    const { data, status, error } = await useFetchApi(
+      '/approve/completed-signature',
+      { method: 'post', data: { bulletinBoardId: bulletinBoardId } },
+      {
+        isAuth: true,
+      }
+    )
+    if (!error) {
+      return { ...data, status: status }
+    } else {
+      return { ...error, status: status }
+    }
+  } catch (e) {
+    return {
+      message: '승인 처리중 알수 없는 오류가 발생했습니다.',
+      httpStatus: 'failed',
+      status: 400,
+    }
+  }
+}
+export interface ApproveSignatureSearchProps extends Pageable {
+  bulletinBoardId: string
+}
+export interface ApproveMasterType {
+  id: string
+  bulletinBoardId: string
+  userMasterId: string
+  userName: string
+  attachDocId: string
+  approveStatus: string
+  createdDate: Date
+  createdBy: string
+  lastModifiedBy: string
+  lastModifiedDate: Date
+  createdDateFormat: string
+  siteName: string
+  bulletinBoardTitle: string
+}
+const getApproveList = async (props: ApproveSignatureSearchProps) => {
+  const { data, status, error, count } = await useFetchApi<{
+    data: ApproveMasterType[]
+    count: number
+  }>(
+    `/approve/completed-list/${props.bulletinBoardId}`,
+    {
+      method: 'get',
+      params: props,
+    },
+    { isAuth: true }
+  )
+  if (!error && data) {
+    console.log(data)
+    console.log('count : ', count)
+    return { ...data, count: count }
+  } else {
+    return error
+  }
+}
+
+export const useApproveListQuery = (props: ApproveSignatureSearchProps) => {
+  return useQuery({
+    queryKey: ['approveList', props],
+    queryFn: async () => getApproveList(props),
     gcTime: 30 * 60 * 1000,
   })
 }

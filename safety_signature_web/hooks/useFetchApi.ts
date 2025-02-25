@@ -76,7 +76,7 @@ const useFetchApi = async <T>(
   apiUrl: string,
   opts: {
     method: Method
-    data?: { [key: string]: any }
+    data?: { [key: string]: any } | any
     params?: any
     headers?: any
   },

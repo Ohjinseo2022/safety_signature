@@ -3,6 +3,10 @@
 export {}
 
 declare global {
+  interface Pageable {
+    page?: number
+    size?: number
+  }
   //파일 업로드,업데이트시 필요한 객체 값
   interface FileObj {
     attachId?: string

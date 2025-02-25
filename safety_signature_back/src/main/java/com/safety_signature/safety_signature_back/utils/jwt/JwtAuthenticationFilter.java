@@ -23,7 +23,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
    private final UserMasterService userMasterService;// 사용자 정보 조회
     // ✅ JWT 필터를 적용하지 않을 URL 목록
     private final List<String> excludeUrls = List.of(
-            "/services/backend/login/social","/services/backend/login/normal", "/services/backend/user/join", "/swagger/**", "/v3/api-docs/**"
+            "/services/backend/attach/download","/services/backend/login/social","/services/backend/login/normal", "/services/backend/user/join", "/swagger/**", "/v3/api-docs/**"
     );
 
     @Override
