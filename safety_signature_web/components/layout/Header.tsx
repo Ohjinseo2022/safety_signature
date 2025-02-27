@@ -4,7 +4,7 @@ import { useAlertStore } from '@/store/alertStore'
 import { removeItem } from '@/store/localStorage'
 import { usePathParamStore } from '@/store/store'
 import styled, { css, keyframes } from 'styled-components'
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Link from 'next/link'
 import { useParams, usePathname, useRouter } from 'next/navigation'
 import {
@@ -29,14 +29,13 @@ export default function Header() {
     { label: '현장 관리', path: '/site', subMenu: [] },
     // { label: '네이버 지도 API', path: '/navermaps', subMenu: [] },
   ]
-  const [profile, setProfile] = useState<LoginResponseSuccess>()
+  const [profile, setProfile] = useState<boolean>(false)
   useEffect(() => {
-    if (isLoginResponceSuccess(userProfile)) {
-      setProfile((state) => (state = userProfile as LoginResponseSuccess))
-    } else {
-      setProfile(undefined)
-    }
-  }, [userProfile.type])
+    console.log(userProfile)
+    console.log('얍', isLoginResponceSuccess(userProfile))
+    setProfile(isLoginResponceSuccess(userProfile))
+  }, [pathname, userProfile])
+
   const { isModalVisible, onChangeModalVisible, children, callBackFunction } =
     useAlertStore()
 

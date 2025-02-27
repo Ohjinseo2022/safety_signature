@@ -1,6 +1,8 @@
 package com.safety_signature.safety_signature_back.app.bulletin_board.repository;
 
 import com.safety_signature.safety_signature_back.app.bulletin_board.domain.BulletinBoardMaster;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
@@ -13,4 +15,13 @@ import java.util.Optional;
 @Repository
 public interface BulletinBoardMasterRepository extends JpaRepository<BulletinBoardMaster, String> , JpaSpecificationExecutor<BulletinBoardMaster> {
     Optional<BulletinBoardMaster> findById(String id);
+    /**
+     * 커서 이후의 데이터를 조회
+     */
+    Page<BulletinBoardMaster> findByIdLessThanOrderByCreatedDateDesc(String cursor, Pageable pageable);
+
+    /**
+     * 첫 페이지 데이터 조회
+     */
+    Page<BulletinBoardMaster> findAll(Pageable pageable);
 }

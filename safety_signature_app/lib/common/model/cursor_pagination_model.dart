@@ -45,16 +45,21 @@ class CursorPagination<T> extends CursorPaginationBase {
 class CursorPaginationMeta {
   final int count;
   final bool hasMore;
+  final String nextCursor;
   CursorPaginationMeta({
     required this.count,
     required this.hasMore,
+    required this.nextCursor,
   });
   CursorPaginationMeta copyWith({
-    int? count,
+    int? count, //토탈 카운트
     bool? hasMore,
+    String? nextCursor,
   }) {
     return CursorPaginationMeta(
-        count: count ?? this.count, hasMore: hasMore ?? this.hasMore);
+        count: count ?? this.count,
+        hasMore: hasMore ?? this.hasMore,
+        nextCursor: nextCursor ?? this.nextCursor);
   }
 
   factory CursorPaginationMeta.fromJson(Map<String, dynamic> json) =>

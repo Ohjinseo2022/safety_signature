@@ -52,6 +52,7 @@ const PageChangeMiddleware = ({
     // 🔹 모든 네비게이션 메서드를 감싸는 공통 핸들러
     const handleNavigation = async (method: Function, ...args: any) => {
       const userProfile = await getUserProfile()
+      userProfileStore.setProfile(userProfile as LoginResponseSuccess)
       const isLogin = isLoginResponceSuccess(userProfile)
       // if (isLogin && pathname?.includes('login')) {
       //   if (window.history.length > 1) {
@@ -89,7 +90,6 @@ const PageChangeMiddleware = ({
             overlayClose: false,
           })
         } else {
-          userProfileStore.setProfile(userProfile as LoginResponseSuccess)
           if (pathStore.useLastPath) {
             pathStore.setUseLastPath(false)
             originalPush(

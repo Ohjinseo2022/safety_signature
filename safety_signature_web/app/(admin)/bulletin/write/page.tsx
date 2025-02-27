@@ -109,7 +109,11 @@ const WritePage = () => {
       { isAuth: true }
     )
     if (status === 200) {
-      queryClient.invalidateQueries({ queryKey: ['bulletinBoardList'] })
+      // queryClient.
+      await queryClient.invalidateQueries({
+        queryKey: ['bulletinBoardList'],
+        exact: false,
+      })
       onChangeModalVisible({
         isVisible: true,
         msg: '등록 완료 됐습니다.',

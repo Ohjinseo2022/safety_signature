@@ -12,6 +12,7 @@ import com.safety_signature.safety_signature_back.app.bulletin_board.service.Bul
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.BulletinBoardMasterService;
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.specification.BulletinBoardMasterServiceSpecification;
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
+import com.safety_signature.safety_signature_back.app.common.dto.util.InfiniteScrollResponseDTO;
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocMasterService;
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
@@ -147,6 +148,7 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
         if(bulletinBoardMasterDTO != null){
             List<AttachDocMasterDTO> attachDocMasterDTOList = attachDocMasterService.findByAttachDocOwnerId(bulletinBoardMasterDTO.getId());
             BulletinBoardMasterCustomDTO result =BulletinBoardMasterCustomDTO.from(bulletinBoardMasterDTO);
+            result.setSignatureCount(approveMasterRepository.countByBulletinBoardId(result.getId()));
             result.setAttachDocList(attachDocMasterDTOList);
             return result;
         }
@@ -156,5 +158,37 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
     @Override
     public BulletinBoardMasterDTO getBulletinBoardMasterDTO(String bulletinBoardId) {
         return bulletinBoardMasterMapper.toDto(bulletinBoardMasterRepository.findById(bulletinBoardId).orElse(null));
+    }
+
+    @Override
+    public InfiniteScrollResponseDTO<BulletinBoardMasterCustomDTO> getInfiniteScrollData(Optional<String> cursor, Pageable pageable) {
+        Page<BulletinBoardMaster> page;
+
+        if (cursor.isPresent()) {
+            page = bulletinBoardMasterRepository.findByIdLessThanOrderByCreatedDateDesc(cursor.get(), pageable);
+        } else {
+            page = bulletinBoardMasterRepository.findAll(pageable);
+        }
+        // 다음 커서 값 설정 (있으면 마지막 데이터의 ID)
+        String nextCursor = page.hasNext() ? page.getContent().get(page.getContent().size() - 1).getId().toString() : null;
+        List<BulletinBoardMasterCustomDTO> list = new ArrayList<>();
+        for(BulletinBoardMaster entity : page){
+            log.info("InfiniteScroll bulletinBoardMaster : {}", entity);
+            //가릴정보 안보이게 처리
+            BulletinBoardMasterDTO dto = bulletinBoardMasterMapper.toDto(entity);
+            dto.getUserMasterDTO().setUserPassword(null);
+            //등록일시 //companyMasterDTO.getCreatedDateFormat();
+            BulletinBoardMasterCustomDTO customDTO = BulletinBoardMasterCustomDTO.from(dto);
+            //서명 완료 횟수 카운트 정보 추가해야함!!!!
+            Long approveCount = approveMasterRepository.countByBulletinBoardId(customDTO.getId());
+            log.info("approveCount : {}", approveCount);
+            //서명 완료 횟수 조회가 안되면 0L 입력
+            customDTO.setSignatureCount(Optional.ofNullable(approveCount).orElse(0L));
+            list.add(customDTO);
+            //추가적인 조회나 데이터 조작을 여기다 하면될듯 싶음 !
+        }
+        Page<BulletinBoardMasterCustomDTO> result =
+                new PageImpl<>(list ,pageable, bulletinBoardMasterRepository.count());
+        return InfiniteScrollResponseDTO.from(result, nextCursor,page.hasNext());
     }
 }

@@ -10,6 +10,7 @@ import {
 import styled from 'styled-components'
 import { useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import useFetchApi from '@/hooks/useFetchApi'
 import { useInput } from '@/hooks/useInput'
 import CommonBoard, { PostsType } from '@/components/common/CommonBoard'
 import CommonPagination from '@/components/common/CommonPagination'
@@ -19,6 +20,22 @@ import { useBulletinBoardListQuery } from './_hooks/BulletinBoardQuery'
 interface BulletinPageProps {}
 
 const BulletinPage = ({}: BulletinPageProps) => {
+  useEffect(() => {
+    const test = async () => {
+      const tt = await useFetchApi(
+        `/bulletin-board/registration/list-for-user?${Math.random()}`,
+        {
+          method: 'get',
+          params: {
+            nextCursor: '0JQDHACBKCPTC',
+            size: 20,
+          },
+        },
+        { isAuth: true }
+      )
+    }
+    test()
+  }, [])
   const router = useRouter()
   const [searchInput, onChangeSearchInput] = useInput<string>('')
   const [startDate, onChangeStartDate, setStartDate] = useInput<string>(

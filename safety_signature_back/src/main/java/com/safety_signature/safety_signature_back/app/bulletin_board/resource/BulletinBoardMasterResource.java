@@ -1,6 +1,6 @@
 package com.safety_signature.safety_signature_back.app.bulletin_board.resource;
 
-import com.fasterxml.jackson.annotation.JsonView;
+import com.safety_signature.safety_signature_back.app.bulletin_board.domain.BulletinBoardMaster;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.BulletinBoardMasterDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.custom.BulletinBoardMasterCustomDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.request.BulletinBoardRegistrationRequestDTO;
@@ -9,12 +9,10 @@ import com.safety_signature.safety_signature_back.app.bulletin_board.dto.respons
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardResponseBaseDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardResponseMessageDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.BulletinBoardMasterService;
-import com.safety_signature.safety_signature_back.app.common.dto.View;
+import com.safety_signature.safety_signature_back.app.common.dto.util.InfiniteScrollResponseDTO;
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
 import com.safety_signature.safety_signature_back.config.Constants;
-import com.safety_signature.safety_signature_back.config.FieldSelector;
-import com.safety_signature.safety_signature_back.config.Partial;
 import com.safety_signature.safety_signature_back.utils.PaginationUtil;
 import com.safety_signature.safety_signature_back.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
@@ -137,4 +135,11 @@ public class BulletinBoardMasterResource {
         return ResponseEntity.status(failed.getHttpStatus()).body(failed);
     }
 
+    @Operation(summary = "전자결제 문서 유저용 리스트 조회")
+    @GetMapping("/list-for-user")
+    public ResponseEntity<InfiniteScrollResponseDTO<BulletinBoardMasterCustomDTO>> listForUser( @RequestParam Optional<String> nextCursor,
+                                                                                                @RequestParam(defaultValue = "20") int size){
+        InfiniteScrollResponseDTO<BulletinBoardMasterCustomDTO> result = bulletinBoardMasterService.getInfiniteScrollData(nextCursor,  PageRequest.of(0, size, Sort.by(Sort.Order.desc("createdDate"))));
+        return ResponseEntity.ok().body(result);
+    }
 }

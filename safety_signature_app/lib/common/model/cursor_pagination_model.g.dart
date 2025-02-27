@@ -29,6 +29,7 @@ CursorPaginationMeta _$CursorPaginationMetaFromJson(
     CursorPaginationMeta(
       count: (json['count'] as num).toInt(),
       hasMore: json['hasMore'] as bool,
+      nextCursor: json['nextCursor'] as String,
     );
 
 Map<String, dynamic> _$CursorPaginationMetaToJson(
@@ -36,4 +37,5 @@ Map<String, dynamic> _$CursorPaginationMetaToJson(
     <String, dynamic>{
       'count': instance.count,
       'hasMore': instance.hasMore,
+      'nextCursor': instance.nextCursor,
     };

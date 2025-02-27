@@ -75,7 +75,7 @@ class PaginationProvider<T extends IModelWithId,
           meta: pState.meta,
         );
         paginationParams = paginationParams.copyWith(
-          after: pState.data.last.id,
+          nextCursor: pState.meta.nextCursor,
         );
         // ㄷㅔ이터를 처음부터 가져오는 상황
       } else {

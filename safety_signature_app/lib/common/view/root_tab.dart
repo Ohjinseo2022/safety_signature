@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:safety_signature_app/bulletin_board/view/bulletin_board_list_screen.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
@@ -71,7 +72,7 @@ class _RootTabState extends ConsumerState<RootTab>
 
   Widget _rootTab({required UserModelBase? state}) {
     List<dynamic> tabList = [
-      {"title": "전자결제 게시판", "child": MyPageScreen()},
+      {"title": "전자결제 게시판", "child": BulletinBoardListScreen()},
       // {"title": "테스트중", "child": MyPageScreen()},
       {
         "title": state is UserMinModel ? "메이페이지" : null,

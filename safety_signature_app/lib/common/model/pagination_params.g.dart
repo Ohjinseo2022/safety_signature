@@ -8,12 +8,12 @@ part of 'pagination_params.dart';
 
 PaginationParams _$PaginationParamsFromJson(Map<String, dynamic> json) =>
     PaginationParams(
-      after: json['after'] as String?,
+      nextCursor: json['nextCursor'] as String?,
       count: (json['count'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$PaginationParamsToJson(PaginationParams instance) =>
     <String, dynamic>{
-      'after': instance.after,
+      'nextCursor': instance.nextCursor,
       'count': instance.count,
     };
