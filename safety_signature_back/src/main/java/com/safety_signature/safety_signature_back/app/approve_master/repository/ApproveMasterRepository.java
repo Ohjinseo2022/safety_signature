@@ -12,4 +12,5 @@ public interface ApproveMasterRepository extends JpaRepository<ApproveMaster, St
     long countByBulletinBoardId(String bulletinBoardId);
     Page<ApproveMaster> findByBulletinBoardId(String bulletinBoardId, Pageable page);
     List<ApproveMaster> findAllByBulletinBoardId(String bulletinBoardId);
+    List<ApproveMaster> findAllByBulletinBoardIdAndUserMasterId(String bulletinBoardId, String userMasterId);
 }

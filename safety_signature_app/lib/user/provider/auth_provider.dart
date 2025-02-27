@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:safety_signature_app/bulletin_board/view/bulletin_board_detail_screen.dart';
 import 'package:safety_signature_app/bulletin_board/view/bulletin_board_list_screen.dart';
 import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
@@ -40,10 +41,17 @@ class AuthProvider extends ChangeNotifier {
                 builder: (_, state) => EmailLoginScreen(),
               ),
               GoRoute(
-                path: "bulletin-board",
-                name: BulletinBoardListScreen.routeName,
-                builder: (_, state) => BulletinBoardListScreen(),
-              )
+                  path: "bulletin-board",
+                  name: BulletinBoardListScreen.routeName,
+                  builder: (_, state) => BulletinBoardListScreen(),
+                  routes: [
+                    GoRoute(
+                      path: 'detail/:rid',
+                      name: BulletinBoardDetailScreen.routeName,
+                      builder: (_, state) => BulletinBoardDetailScreen(
+                          bulletinBoardId: state.pathParameters['rid']!),
+                    )
+                  ])
               // GoRoute(
               //   path: "chat-room/:id",
               //   name: ChatRoomDetail.routeName,

@@ -1,5 +1,6 @@
 package com.safety_signature.safety_signature_back.app.bulletin_board.service.impl;
 
+import com.safety_signature.safety_signature_back.app.approve_master.domain.ApproveMaster;
 import com.safety_signature.safety_signature_back.app.approve_master.repository.ApproveMasterRepository;
 import com.safety_signature.safety_signature_back.app.bulletin_board.domain.BulletinBoardMaster;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.BulletinBoardAttachInfoDTO;
@@ -16,6 +17,7 @@ import com.safety_signature.safety_signature_back.app.common.dto.util.InfiniteSc
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocMasterService;
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
+import com.safety_signature.safety_signature_back.utils.SecurityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
@@ -172,6 +174,11 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
         // 다음 커서 값 설정 (있으면 마지막 데이터의 ID)
         String nextCursor = page.hasNext() ? page.getContent().get(page.getContent().size() - 1).getId().toString() : null;
         List<BulletinBoardMasterCustomDTO> list = new ArrayList<>();
+        //로그인된 사용자의 이메일 정보
+        String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
+        // 무조건 있긴함. 처음 리소스 호출시 검증로직 선 실행 후 해당 로직에 도달됨
+        UserMasterDTO userMasterDTO = userMasterService.getUserMasterByEmail(userEmail);
+
         for(BulletinBoardMaster entity : page){
             log.info("InfiniteScroll bulletinBoardMaster : {}", entity);
             //가릴정보 안보이게 처리
@@ -180,10 +187,20 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
             //등록일시 //companyMasterDTO.getCreatedDateFormat();
             BulletinBoardMasterCustomDTO customDTO = BulletinBoardMasterCustomDTO.from(dto);
             //서명 완료 횟수 카운트 정보 추가해야함!!!!
-            Long approveCount = approveMasterRepository.countByBulletinBoardId(customDTO.getId());
+            Long approveCount = Optional.ofNullable(approveMasterRepository.countByBulletinBoardId(customDTO.getId())).orElse(0L);
+            if(approveCount ==  0){
+                customDTO.setCompletionYn(false);
+            }else{
+               List<ApproveMaster> approveMaster = approveMasterRepository.findAllByBulletinBoardIdAndUserMasterId(customDTO.getId(), userMasterDTO.getId());
+                if (ObjectUtils.isEmpty(approveMaster)) {
+                    customDTO.setCompletionYn(false);
+                } else {
+                    customDTO.setCompletionYn(true);
+                }
+            }
             log.info("approveCount : {}", approveCount);
             //서명 완료 횟수 조회가 안되면 0L 입력
-            customDTO.setSignatureCount(Optional.ofNullable(approveCount).orElse(0L));
+            customDTO.setSignatureCount(approveCount);
             list.add(customDTO);
             //추가적인 조회나 데이터 조작을 여기다 하면될듯 싶음 !
         }

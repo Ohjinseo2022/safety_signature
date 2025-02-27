@@ -24,11 +24,6 @@ import 'package:flutter/material.dart';
 // Accent: #FFD700 (밝은 골드)
 // Background: #1B1D26 (어두운 블루-블랙)
 // Text: #FFFFFF (밝은 화이트)
-const PRIMARY_COLOR = Color(0xff3C4359);
-const BACK_GROUND_COLOR = Color(0xffA1B3C9);
-const ACCENT_COLOR = Color(0xffE63946);
-const SECONDARY_COLOR = Color(0xffFFFFFF);
-const TEXT_COLOR = Color(0xff2E2E2E);
 
 const GOOGLE_PRIMARY_COLOR = Color(0xffF2F2F2);
 const NAVER_PRIMARY_COLOR = Color(0xff03c75a);
@@ -36,6 +31,17 @@ const KAKAO_CONTAINER_COLOR = Color(0xffFEE500);
 const KAKAO_SYMBOL_COLOR = Color.fromRGBO(0, 0, 0, 0.9);
 const KAKAO_LABEL_COLOR = Color(0xff191919);
 
+// Next.js 웹 테마 색상 적용
+const PRIMARY_COLOR = Color(0xff2563eb); // 기본 강조 색상
+const HOVER_COLOR = Color(0xff3b82f6); // 호버 시 강조 색상
+const LIGHT_BLUE_COLOR = Color(0xff60a5fa); // 밝은 강조 색상
+const TEAL_BLUE_COLOR = Color(0xff0ea5e9); // 청록 계열 파란색
+const BACK_GROUND_COLOR = Color(0xff121212); // 다크 배경색
+const TEXT_COLOR = Color(0xffffffff); // 기본 텍스트 (흰색)
+const SECONDARY_COLOR = Color(0xffe0e0e0);
+const SUBTEXT_COLOR = Color(0xffb0bec5); // 서브 텍스트 색상// 서브 텍스트 색상 (회색)
+const CARD_COLOR = Color(0xff1e1e1e); // 카드 배경색
+const BORDER_COLOR = Color(0xff333333);
 const defaultTextStyle = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w500,

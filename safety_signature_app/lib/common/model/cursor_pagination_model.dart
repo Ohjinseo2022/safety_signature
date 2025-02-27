@@ -45,11 +45,11 @@ class CursorPagination<T> extends CursorPaginationBase {
 class CursorPaginationMeta {
   final int count;
   final bool hasMore;
-  final String nextCursor;
+  final String? nextCursor;
   CursorPaginationMeta({
     required this.count,
     required this.hasMore,
-    required this.nextCursor,
+    this.nextCursor,
   });
   CursorPaginationMeta copyWith({
     int? count, //토탈 카운트

@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart' hide Headers;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:retrofit/http.dart';
+import 'package:safety_signature_app/bulletin_board/model/bulletin_board_detail_model.dart';
 import 'package:safety_signature_app/bulletin_board/model/bulletin_board_model.dart';
 import 'package:safety_signature_app/common/const/data.dart';
 import 'package:safety_signature_app/common/dio/dio.dart';
@@ -34,4 +35,11 @@ abstract class BulletinBoardRepository
   Future<CursorPagination<BulletinBoardModel>> paginate(
       {@Queries()
       PaginationParams? paginationParams = const PaginationParams()});
+
+  @GET('/{id}')
+  @Headers({
+    'accessToken': 'true',
+  })
+  Future<BulletinBoardDetailModel> getBulletinBoardDetail(
+      {@Path() required String id});
 }
