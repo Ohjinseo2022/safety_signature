@@ -19,118 +19,161 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
   Widget build(BuildContext context) {
     final state = ref.watch(userAuthProvider);
     if (state is! UserMinModel) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ElevatedButton(
-              onPressed: () {
-                // ref.read(userAuthProvider.notifier).userLogout();
-              },
-              child: Text(
-                "로그인 후 이용 해주세요",
-                style: defaultTextStyle,
-              )),
-        ],
-      );
+      if (state is! UserMinModel) {
+        return Center(
+          child: ElevatedButton(
+            onPressed: () {},
+            child: Text(
+              "로그인 후 이용 해주세요",
+              style: TextStyle(fontSize: 16),
+            ),
+          ),
+        );
+      }
     }
-    return Padding(
-      padding: const EdgeInsets.all(24.0),
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(20),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _profile(model: state),
-          Text("회원 활성 상태코드 : ${state.userStatusCode}" as String),
-          Text("전자서명 ID : ${state.signatureDocId}" as String),
-          Text("회원 고유 번호 : ${state.id}" as String),
-          ElevatedButton(
-              onPressed: () {
-                ref.read(userAuthProvider.notifier).userLogout();
-              },
-              child: Text(
-                "로그아웃",
-                style: defaultTextStyle,
-              )),
+          _buildProfileCard(state),
+          SizedBox(height: 20),
+          _buildInfoCard(state),
+          SizedBox(height: 20),
+          _buildMenuList(context, ref),
         ],
       ),
     );
   }
 
-  Row _profile({required UserMinModel model}) {
-    return Row(
-      children: [
-        ClipRRect(
-          borderRadius: BorderRadius.circular(50),
-          child: model.profileImageUri != null
-              ? Image.network(
-                  model.profileImageUri.toString(),
-                  height: 70,
-                  width: 70,
-                  fit: BoxFit.cover,
-                )
-              : _noImageWidget(),
-        ),
-        SizedBox(
-          width: 16,
-        ),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                model.name,
-                style: defaultTextStyle,
-              ),
-              SizedBox(
-                height: 8,
-              ),
-              Text(
-                model.email,
-                style: defaultTextStyle.copyWith(fontSize: 12),
-              )
-            ],
+  /// ✅ 프로필 카드 (사용자 정보)
+  Widget _buildProfileCard(UserMinModel model) {
+    return Container(
+      padding: EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: PRIMARY_COLOR,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(color: Colors.black26, blurRadius: 5, offset: Offset(0, 2))
+        ],
+      ),
+      child: Row(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(50),
+            child: model.profileImageUri != null
+                ? Image.network(
+                    model.profileImageUri!,
+                    height: 70,
+                    width: 70,
+                    fit: BoxFit.cover,
+                  )
+                : Icon(Icons.person, size: 70, color: SECONDARY_COLOR),
           ),
+          SizedBox(width: 16),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  model.name,
+                  style: TextStyle(
+                    color: SECONDARY_COLOR,
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                SizedBox(height: 4),
+                Text(
+                  model.email,
+                  style: TextStyle(color: SECONDARY_COLOR.withOpacity(0.8)),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  /// ✅ 사용자 정보 카드 (회원 ID, 상태 등)
+  Widget _buildInfoCard(UserMinModel model) {
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      elevation: 4,
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          children: [
+            _infoRow("회원 유형", model.userTypeCode!),
+            Divider(),
+            _infoRow("전자서명 ID", model.signatureDocId ?? "N/A"),
+            Divider(),
+            _infoRow("회원 고유 번호", model.id),
+          ],
+        ),
+      ),
+    );
+  }
+
+  /// ✅ 설정 & 로그아웃 메뉴
+  Widget _buildMenuList(BuildContext context, WidgetRef ref) {
+    return Column(
+      children: [
+        ListTile(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          leading: Icon(Icons.settings, color: PRIMARY_COLOR),
+          title: Text(
+            "설정",
+            style: defaultTextStyle,
+          ),
+          onTap: () {},
+          tileColor: CARD_COLOR,
         ),
         SizedBox(
-          width: 16,
+          height: 3,
         ),
-        // ElevatedButton(
-        //     onPressed: () {
-        //       ref.read(userAuthProvider.notifier).userLogout();
-        //     },
-        //     style: ElevatedButton.styleFrom(
-        //       elevation: 0,
-        //     ),
-        //     child: Text(
-        //       "로그아웃",
-        //       style: defaultTextStyle,
-        //     )),
+        ListTile(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          leading: Icon(Icons.lock, color: PRIMARY_COLOR),
+          title: Text(
+            "비밀번호 변경",
+            style: defaultTextStyle,
+          ),
+          onTap: () {},
+          tileColor: CARD_COLOR,
+        ),
+        SizedBox(
+          height: 3,
+        ),
+        ListTile(
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          leading: Icon(Icons.logout, color: Colors.red),
+          title: Text(
+            "로그아웃",
+            style: defaultTextStyle,
+          ),
+          onTap: () {
+            ref.read(userAuthProvider.notifier).userLogout();
+          },
+          tileColor: CARD_COLOR,
+        ),
       ],
     );
   }
 
-  Widget _noImageWidget() {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
-        color: BACK_GROUND_COLOR,
-        border: Border.all(
-          color: SECONDARY_COLOR.withOpacity(0.3),
-          width: 1,
+  /// ✅ 정보 표시용 위젯
+  Widget _infoRow(String label, String value) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
+        Text(
+          value,
         ),
-        boxShadow: [
-          BoxShadow(
-            color: SECONDARY_COLOR.withOpacity(0.5),
-            spreadRadius: 1,
-            blurRadius: 1,
-            offset: Offset(1, 2),
-          )
-        ],
-      ),
-      width: 70,
-      height: 70,
-      child: Icon(Icons.person, size: 60, color: SECONDARY_COLOR),
+      ],
     );
   }
 }

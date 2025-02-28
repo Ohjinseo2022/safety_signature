@@ -14,7 +14,7 @@ UserMinModel _$UserMinModelFromJson(Map<String, dynamic> json) => UserMinModel(
       signatureDocId: json['signatureDocId'] as String?,
       mobile: json['mobile'] as String?,
       userStatusCode: json['userStatusCode'] as String,
-      userTypeCode: json['userTypeCode'] as String?,
+      userTypeCode: json['userTypeCode'] as String,
     );
 
 Map<String, dynamic> _$UserMinModelToJson(UserMinModel instance) =>
@@ -38,7 +38,7 @@ UserSummaryModel _$UserSummaryModelFromJson(Map<String, dynamic> json) =>
       profileImageUri: json['profileImageUri'] as String?,
       signatureDocId: json['signatureDocId'] as String?,
       mobile: json['mobile'] as String?,
-      userTypeCode: json['userTypeCode'] as String?,
+      userTypeCode: json['userTypeCode'] as String,
     );
 
 Map<String, dynamic> _$UserSummaryModelToJson(UserSummaryModel instance) =>
@@ -59,7 +59,7 @@ UserDetailModel _$UserDetailModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       email: json['email'] as String,
       userStatusCode: json['userStatusCode'] as String,
-      userTypeCode: json['userTypeCode'] as String?,
+      userTypeCode: json['userTypeCode'] as String,
       profileImageUri: json['profileImageUri'] as String?,
       mobile: json['mobile'] as String?,
       signatureDocId: json['signatureDocId'] as String?,
@@ -89,7 +89,7 @@ UserHiddenModel _$UserHiddenModelFromJson(Map<String, dynamic> json) =>
       name: json['name'] as String,
       email: json['email'] as String,
       userStatusCode: json['userStatusCode'] as String,
-      userTypeCode: json['userTypeCode'] as String?,
+      userTypeCode: json['userTypeCode'] as String,
       profileImageUri: json['profileImageUri'] as String?,
       signatureDocId: json['signatureDocId'] as String?,
       mobile: json['mobile'] as String?,

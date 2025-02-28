@@ -15,7 +15,7 @@ class BulletinBoardDetailModel extends BulletinBoardModel {
       required super.boardContents,
       required super.boardTitle,
       required super.createdBy,
-      super.completionYn,
+      required super.completionYn,
       required super.createdDate,
       required super.createdDateFormat,
       required super.lastModifiedBy,

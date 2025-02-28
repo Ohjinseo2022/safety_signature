@@ -151,6 +151,15 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
             List<AttachDocMasterDTO> attachDocMasterDTOList = attachDocMasterService.findByAttachDocOwnerId(bulletinBoardMasterDTO.getId());
             BulletinBoardMasterCustomDTO result =BulletinBoardMasterCustomDTO.from(bulletinBoardMasterDTO);
             result.setSignatureCount(approveMasterRepository.countByBulletinBoardId(result.getId()));
+            String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
+            // 무조건 있긴함. 처음 리소스 호출시 검증로직 선 실행 후 해당 로직에 도달됨
+            UserMasterDTO userMasterDTO = userMasterService.getUserMasterByEmail(userEmail);
+            List<ApproveMaster> approveMaster = approveMasterRepository.findAllByBulletinBoardIdAndUserMasterId(result.getId(), userMasterDTO.getId());
+            if (ObjectUtils.isEmpty(approveMaster)) {
+                result.setCompletionYn(false);
+            } else {
+                result.setCompletionYn(true);
+            }
             result.setAttachDocList(attachDocMasterDTOList);
             return result;
         }

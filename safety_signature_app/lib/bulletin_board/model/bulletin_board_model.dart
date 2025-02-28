@@ -10,7 +10,7 @@ class BulletinBoardModel implements IModelWithId {
   final bool attachYn;
   final String boardContents;
   final String boardTitle;
-  final bool? completionYn;
+  final bool completionYn;
   final String createdBy;
   final String createdDate;
   final String createdDateFormat;
@@ -25,7 +25,7 @@ class BulletinBoardModel implements IModelWithId {
     required this.boardContents,
     required this.boardTitle,
     required this.createdBy,
-    this.completionYn,
+    required this.completionYn,
     required this.createdDate,
     required this.createdDateFormat,
     required this.lastModifiedBy,

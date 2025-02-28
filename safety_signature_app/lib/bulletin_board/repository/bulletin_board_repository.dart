@@ -5,6 +5,7 @@ import 'package:safety_signature_app/bulletin_board/model/bulletin_board_detail_
 import 'package:safety_signature_app/bulletin_board/model/bulletin_board_model.dart';
 import 'package:safety_signature_app/common/const/data.dart';
 import 'package:safety_signature_app/common/dio/dio.dart';
+import 'package:safety_signature_app/common/model/common_detail_model.dart';
 import 'package:safety_signature_app/common/model/cursor_pagination_model.dart';
 import 'package:safety_signature_app/common/model/pagination_params.dart';
 import 'package:safety_signature_app/common/repository/base_pagination_repository.dart';
@@ -40,6 +41,6 @@ abstract class BulletinBoardRepository
   @Headers({
     'accessToken': 'true',
   })
-  Future<BulletinBoardDetailModel> getBulletinBoardDetail(
+  Future<CommonDetailModel<BulletinBoardDetailModel>> getBulletinBoardDetail(
       {@Path() required String id});
 }

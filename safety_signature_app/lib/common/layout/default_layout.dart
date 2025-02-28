@@ -49,14 +49,15 @@ class DefaultLayout extends StatelessWidget {
         backgroundColor: backgroundColor,
         //튀어나옴 효과
         elevation: 0,
+
         actions: topAppBarBtn == true
             ? [
-                IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.search,
-                      color: TEXT_COLOR,
-                    )),
+                // IconButton(
+                //     onPressed: () {},
+                //     icon: Icon(
+                //       Icons.search,
+                //       color: TEXT_COLOR,
+                //     )),
                 IconButton(
                     onPressed: () {},
                     icon: Icon(
@@ -82,7 +83,7 @@ class DefaultLayout extends StatelessWidget {
             ),
           ),
         ),
-        foregroundColor: Colors.black,
+        foregroundColor: TEXT_COLOR,
       );
     }
   }

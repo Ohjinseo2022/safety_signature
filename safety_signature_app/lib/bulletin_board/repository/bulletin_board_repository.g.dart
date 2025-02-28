@@ -53,7 +53,7 @@ class _BulletinBoardRepository implements BulletinBoardRepository {
   }
 
   @override
-  Future<BulletinBoardDetailModel> getBulletinBoardDetail(
+  Future<CommonDetailModel<BulletinBoardDetailModel>> getBulletinBoardDetail(
       {required String id}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -61,7 +61,7 @@ class _BulletinBoardRepository implements BulletinBoardRepository {
     _headers.removeWhere((k, v) => v == null);
     final Map<String, dynamic>? _data = null;
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<BulletinBoardDetailModel>(Options(
+        _setStreamType<CommonDetailModel<BulletinBoardDetailModel>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -77,7 +77,10 @@ class _BulletinBoardRepository implements BulletinBoardRepository {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = BulletinBoardDetailModel.fromJson(_result.data!);
+    final value = CommonDetailModel<BulletinBoardDetailModel>.fromJson(
+      _result.data!,
+      (json) => BulletinBoardDetailModel.fromJson(json as Map<String, dynamic>),
+    );
     return value;
   }
 

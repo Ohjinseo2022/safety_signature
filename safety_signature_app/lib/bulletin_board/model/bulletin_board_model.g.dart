@@ -13,7 +13,7 @@ BulletinBoardModel _$BulletinBoardModelFromJson(Map<String, dynamic> json) =>
       boardContents: json['boardContents'] as String,
       boardTitle: json['boardTitle'] as String,
       createdBy: json['createdBy'] as String,
-      completionYn: json['completionYn'] as bool?,
+      completionYn: json['completionYn'] as bool,
       createdDate: json['createdDate'] as String,
       createdDateFormat: json['createdDateFormat'] as String,
       lastModifiedBy: json['lastModifiedBy'] as String,

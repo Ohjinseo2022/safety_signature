@@ -1,8 +1,19 @@
+import 'package:encrypt/encrypt.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safety_signature_app/bulletin_board/model/bulletin_board_model.dart';
 import 'package:safety_signature_app/bulletin_board/repository/bulletin_board_repository.dart';
 import 'package:safety_signature_app/common/model/cursor_pagination_model.dart';
 import 'package:safety_signature_app/common/provider/pagination_provider.dart';
+import 'package:collection/collection.dart';
+
+final bulletinBoardDetailProvider =
+    Provider.family<BulletinBoardModel?, String>((ref, id) {
+  final state = ref.watch(bulletinBoardProvider);
+  if (state is! CursorPagination) {
+    return null;
+  }
+  return state.data.firstWhereOrNull((e) => e.id == id);
+});
 
 final bulletinBoardProvider =
     StateNotifierProvider<BulletinBoardStateNotifier, CursorPaginationBase>(
@@ -35,9 +46,14 @@ class BulletinBoardStateNotifier
     final pState = state as CursorPagination;
 
     final response = await repository.getBulletinBoardDetail(id: id);
-    // if (pState.data.where((e) => e.id == id).isEmpty) {
-    //   state = pState
-    //       .copyWith(data: <BulletinBoardModel>[...pState.data, response.data]);
-    // }
+    if (pState.data.where((e) => e.id == id).isEmpty) {
+      state = pState
+          .copyWith(data: <BulletinBoardModel>[...pState.data, response.data]);
+    } else {
+      state = pState.copyWith(
+          data: pState.data
+              .map<BulletinBoardModel>((e) => e.id == id ? response.data : e)
+              .toList());
+    }
   }
 }
