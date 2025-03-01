@@ -84,8 +84,13 @@ dependencies:
   flutter_speed_dial: ^7.0.0
   # 일정관리를 위한 달력 패키지
   table_calendar: ^3.1.2
-
+  # 웹에서 작성된 내용을 앱에서 볼때 html 태그 인식을 위한 패키지
   flutter_widget_from_html: ^0.16.0
+  # 첨부 파일 관련 다운로드한 파일을 핸드폰에서 바로 열어 볼수 잇게 도와주는 패키지
+  open_file: ^3.5.10
+  # 첨부 파일 다운로드시 경로를 받아오는 패키지
+  path_provider: ^2.1.5
+
 
 dev_dependencies:
   flutter_test:

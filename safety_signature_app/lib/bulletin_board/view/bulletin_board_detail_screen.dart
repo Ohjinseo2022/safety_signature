@@ -5,8 +5,10 @@ import 'package:go_router/go_router.dart';
 import 'package:safety_signature_app/bulletin_board/model/bulletin_board_detail_model.dart';
 import 'package:safety_signature_app/bulletin_board/model/bulletin_board_model.dart';
 import 'package:safety_signature_app/bulletin_board/provider/bulletin_board_provider.dart';
+import 'package:safety_signature_app/common/components/card_container.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
+import 'package:safety_signature_app/common/provider/attach_doc_master_provider.dart';
 
 class BulletinBoardDetailScreen extends ConsumerStatefulWidget {
   static String get routeName => 'bulletinBoardDetailScreen';
@@ -53,7 +55,10 @@ class _BulletinBoardDetailScreenState
     print(bulletinBoardDetail.id);
     return DefaultLayout(
       title: '전자결제 상세',
-      child: _buildDetailContent(context, bulletinBoardDetail),
+      child: _buildDetailContent(
+          context: context,
+          detail: bulletinBoardDetail,
+          downloadFile: _downloadFile),
       // body: bulletinDetail.when(
       //   data: (detail) => _buildDetailContent(context, detail),
       //   loading: () => Center(child: CircularProgressIndicator()),
@@ -61,9 +66,31 @@ class _BulletinBoardDetailScreenState
       // ),
     );
   }
+
+  // ✅ 파일 다운로드 처리
+  void _downloadFile({required String attachId, required String fileName}) {
+    // 실제 파일 다운로드 처리 (예: url_launcher 사용)
+    final attach = ref
+        .watch(attachDocMasterProvider.notifier)
+        .downloadFile(attachId: attachId, fileName: fileName);
+    print(attach);
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '파일 다운로드 중 : $fileName',
+          style: defaultTextStyle,
+        ),
+        duration: Duration(seconds: 2),
+      ),
+    );
+    if (attach == null) {}
+  }
 }
 
-Widget _buildDetailContent(BuildContext context, BulletinBoardModel detail) {
+Widget _buildDetailContent(
+    {required BuildContext context,
+    required BulletinBoardModel detail,
+    required Function downloadFile}) {
   return Padding(
     padding: EdgeInsets.all(16.0),
     child: Column(
@@ -81,22 +108,27 @@ Widget _buildDetailContent(BuildContext context, BulletinBoardModel detail) {
           color: SECONDARY_COLOR,
         ),
         Text(
-          "작성자: ${detail.createdBy} • ${detail.createdDateFormat}",
+          "작성자: ${detail.userMasterDTO.name} • ${detail.createdDateFormat}",
           style: defaultTextStyle.copyWith(fontSize: 15, color: SUBTEXT_COLOR),
         ),
 
         SizedBox(height: 8),
         SizedBox(height: 16),
         Expanded(
-          child: SingleChildScrollView(
-            child: HtmlWidget(
-              detail.boardContents,
-              textStyle: defaultTextStyle,
+          child: CardContainer(
+            child: Padding(
+              padding: const EdgeInsets.all(24.0),
+              child: SingleChildScrollView(
+                child: HtmlWidget(
+                  detail.boardContents,
+                  textStyle: defaultTextStyle,
+                ),
+                // Text(
+                //   detail.boardContents,
+                //   style: defaultTextStyle,
+                // ),
+              ),
             ),
-            // Text(
-            //   detail.boardContents,
-            //   style: defaultTextStyle,
-            // ),
           ),
         ),
         SizedBox(height: 16),
@@ -117,7 +149,8 @@ Widget _buildDetailContent(BuildContext context, BulletinBoardModel detail) {
                 trailing: IconButton(
                   icon: Icon(Icons.download),
                   onPressed: () {
-                    _downloadFile(context, file.id);
+                    downloadFile(
+                        attachId: file.id, fileName: file.attachDocName);
                   },
                 ),
               );
@@ -126,35 +159,26 @@ Widget _buildDetailContent(BuildContext context, BulletinBoardModel detail) {
         ],
 
         // 🔹 결제하기 버튼 (completionYn == false 일 때만 표시)
-        if (!detail.completionYn)
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton(
-              onPressed: () {
-                _handlePayment(context, detail.id);
-              },
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.red,
-                padding: EdgeInsets.all(16),
-              ),
-              child:
-                  Text('결제하기', style: defaultTextStyle.copyWith(fontSize: 18)),
+
+        SizedBox(
+          width: double.infinity,
+          child: ElevatedButton(
+            onPressed: detail.completionYn
+                ? null
+                : () {
+                    _handlePayment(context, detail.id);
+                  },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              disabledBackgroundColor: SUBTEXT_COLOR,
+              padding: EdgeInsets.all(16),
             ),
+            child: Text('${detail.completionYn ? '완료' : "결제하기"}',
+                style: defaultTextStyle.copyWith(fontSize: 18)),
           ),
+        ),
       ],
     ),
-  );
-}
-
-// ✅ 파일 다운로드 처리
-void _downloadFile(BuildContext context, String fileUrl) {
-  // 실제 파일 다운로드 처리 (예: url_launcher 사용)
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-        content: Text(
-      '파일 다운로드: $fileUrl',
-      style: defaultTextStyle,
-    )),
   );
 }
 

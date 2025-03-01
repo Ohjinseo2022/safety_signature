@@ -104,7 +104,7 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
         padding: EdgeInsets.all(16),
         child: Column(
           children: [
-            _infoRow("회원 유형", model.userTypeCode!),
+            _infoRow("회원 유형", model.userTypeCode.displayName),
             Divider(),
             _infoRow("전자서명 ID", model.signatureDocId ?? "N/A"),
             Divider(),

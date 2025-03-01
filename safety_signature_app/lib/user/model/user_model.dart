@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
+import 'package:safety_signature_app/common/enumeration/user_type_code.dart';
 
 part 'user_model.g.dart';
 
@@ -27,7 +28,8 @@ class UserMinModel extends UserModelBase {
   final String? signatureDocId;
 
   final String userStatusCode;
-  final String userTypeCode;
+  @JsonKey(fromJson: UserTypeCode.getByCode)
+  final UserTypeCode userTypeCode;
   UserMinModel(
       {required this.id,
       required this.name,

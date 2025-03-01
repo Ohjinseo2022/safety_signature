@@ -24,7 +24,7 @@ class BulletinBoardCard extends StatelessWidget {
       id: model.id,
       createdBy: model.userMasterDTO.name,
       createdDateFormat: model.createdDateFormat,
-      completionYn: model.completionYn ?? false,
+      completionYn: model.completionYn,
     );
   }
   @override
