@@ -45,106 +45,42 @@
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
-	<!--  -->
 	<key>CFBundleURLTypes</key>
-        	<array>
-        		<dict>
-        			<key>CFBundleTypeRole</key>
-                    <string>Editor</string>
-        			<key>CFBundleURLSchemes</key>
-        			<array>
-        			    <!-- TODO Replace this value: -->
-        			    <!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
-        				<string>com.googleusercontent.apps.624461692565-esr6r0ll4d1o78e3nthnn6ieigd1nrtf</string>
-        			    <string>kakao9a18205e226d257f0787cae4b91b3a04</string>
-                        <!-- TODO Replace this value: -->
-        			    <string>naverlogin</string>
-        			</array>
-        		</dict>
-        	</array>
-            <!-- TODO Replace this value: -->
-        	<key>naverConsumerKey</key>
-            <string>0OLKDX4me403vF1ybJ1Z</string>
-            <!-- TODO Replace this value: -->
-            <key>naverConsumerSecret</key>
-            <string>4ButqPs_gl</string>
-            <key>naverServiceAppName</key>
-            <string>안전싸인</string>
-            <!-- TODO Replace this value: -->
-            <key>naverServiceAppUrlScheme</key>
-            <string>naverlogin</string>
-            <key>LSApplicationQueriesSchemes</key>
-            <array>
-                <string>kakaokompassauth</string>
-                <string>kakaolink</string>
-                <string>kakaoplus</string>
-            </array>
-        <key>GIDClientID</key>
-        <!-- TODO Replace this value: -->
-        <!-- Copied from GoogleService-Info.plist key CLIENT_ID -->
-        <string>624461692565-esr6r0ll4d1o78e3nthnn6ieigd1nrtf.apps.googleusercontent.com</string>
-        <!-- Permission options for the `location` 위치 권한 group -->
-        <!-- <key>NSLocationWhenInUseUsageDescription</key>
-        <string>Need location when in use</string>
-        <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-        <string>Always and when in use!</string>
-        <key>NSLocationUsageDescription</key>
-        <string>Older devices need location.</string>
-        <key>NSLocationAlwaysUsageDescription</key>
-        <string>Can I have location always?</string> -->
-
-        <!-- Permission options for the `mediaLibrary` 미디어 라이브러리  group -->
-        <!-- <key>NSAppleMusicUsageDescription</key>
-        <string>Music!</string>
-        <key>kTCCServiceMediaLibrary</key>
-        <string>media</string> -->
-
-        <!-- Permission options for the `calendar` group -->
-        <key>NSCalendarsUsageDescription</key>
-        <string>일정 관리를 위한 캘린더 접근 권한</string>
-        <key>NSCalendarsFullAccessUsageDescription</key>
-        <string>아마따 앱과 캘린더 연동을 위한 엑세스 권한</string>
-
-        <!-- Permission options for the `camera` 카메라 group -->
-        <!-- <key>NSCameraUsageDescription</key>
-        <string>camera</string> -->
-
-        <!-- Permission options for the `contacts` 연락처 group -->
-        <!-- <key>NSContactsUsageDescription</key>
-        <string>contacts</string> -->
-
-        <!-- Permission options for the `microphone` 마이크 group -->
-        <!-- <key>NSMicrophoneUsageDescription</key>
-        <string>microphone</string> -->
-
-        <!-- Permission options for the `speech` 스피커 ?   group -->
-        <!-- <key>NSSpeechRecognitionUsageDescription</key>
-        <string>speech</string> -->
-
-        <!-- Permission options for the `sensors` 센서 ex) 건강 데이터 group -->
-        <!-- <key>NSMotionUsageDescription</key>
-        <string>motion</string> -->
-
-        <!-- Permission options for the `photos` 갤러리 group -->
-        <!-- <key>NSPhotoLibraryUsageDescription</key>
-        <string>photos</string> -->
-
-        <!-- Permission options for the `reminder` 알림 group -->
-        <key>NSRemindersUsageDescription</key>
-        <string>알림 기능</string>
-
-        <!-- Permission options for the `bluetooth` -->
-        <!-- <key>NSBluetoothAlwaysUsageDescription</key>
-        <string>bluetooth</string>
-        <key>NSBluetoothPeripheralUsageDescription</key>
-        <string>bluetooth</string> -->
-
-        <!-- Permission options for the `appTrackingTransparency` 사용 추적 -->
-        <!-- <key>NSUserTrackingUsageDescription</key>
-        <string>appTrackingTransparency</string> -->
-
-        <!-- Permission options for the `assistant` 시리 group -->
-        <!-- <key>NSSiriUsageDescription</key>
-        <string>The example app would like access to Siri Kit to demonstrate requesting authorization.</string> -->
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.624461692565-esr6r0ll4d1o78e3nthnn6ieigd1nrtf</string>
+				<string>kakao9a18205e226d257f0787cae4b91b3a04</string>
+				<string>naverlogin</string>
+			</array>
+		</dict>
+	</array>
+	<key>naverConsumerKey</key>
+	<string>0OLKDX4me403vF1ybJ1Z</string>
+	<key>naverConsumerSecret</key>
+	<string>4ButqPs_gl</string>
+	<key>naverServiceAppName</key>
+	<string>안전싸인</string>
+	<key>naverServiceAppUrlScheme</key>
+	<string>naverlogin</string>
+	<key>LSApplicationQueriesSchemes</key>
+	<array>
+		<string>kakaokompassauth</string>
+		<string>kakaolink</string>
+		<string>kakaoplus</string>
+	</array>
+	<key>GIDClientID</key>
+	<string>624461692565-esr6r0ll4d1o78e3nthnn6ieigd1nrtf.apps.googleusercontent.com</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>일정 관리를 위한 캘린더 접근 권한</string>
+	<key>NSCalendarsFullAccessUsageDescription</key>
+	<string>안전싸인 캘린더 연동을 위한 엑세스 권한</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>알림 기능</string>
+	<key>NSDocumentsFolderUsageDescription</key>
+	<string>앱에 전자결제 문서를 저장하기 위해 접근 권한이 필요합니다.</string>
 </dict>
 </plist>

@@ -12,6 +12,7 @@ final permissionProvider =
     Permission.calendarFullAccess,
     Permission.notification,
     Permission.reminders,
+    Permission.storage,
   ]);
 });
 
@@ -39,17 +40,19 @@ class PermissionProviderStateNotifier extends StateNotifier<PermissionBase?> {
     final calendarFullAccess = permission[Permission.calendarFullAccess]!;
     final notification = permission[Permission.notification]!;
     final reminders = permission[Permission.reminders]!;
+    final storage = permission[Permission.storage]!;
     // 전체 허용
     bool isGranted;
     if (Platform.isIOS) {
       isGranted = calendarFullAccess.isGranted ||
           calendarFullAccess.isLimited && notification.isGranted ||
           notification.isLimited && reminders.isGranted ||
-          reminders.isLimited;
+          reminders.isLimited && storage.isLimited;
     } else {
       isGranted = calendarFullAccess.isGranted &&
           notification.isGranted &&
-          reminders.isGranted;
+          reminders.isGranted &&
+          storage.isGranted;
     }
     if (isGranted) {
       state = PermissionGranted();
