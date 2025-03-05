@@ -22,8 +22,8 @@ class CustomInterceptor extends Interceptor {
   void onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
     // POST,GET,PUT,PATCH 등등 + 요청 URI 확인
-    print("[REQ] [${options.method}] ${options.uri}");
-    print("${options}");
+    // print("[REQ] [${options.method}] ${options.uri}");
+    // print("${options}");
     if (options.headers['accessToken'] == 'true') {
       //해더 엑세스 토큰 필요 유무 정보 삭제
       options.headers.remove('accessToken');
@@ -48,7 +48,7 @@ class CustomInterceptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     // TODO: implement onResponse
-    print("[RES] [${response.requestOptions}] ${response.requestOptions.uri}");
+    // print("[RES] [${response.requestOptions}] ${response.requestOptions.uri}");
     super.onResponse(response, handler);
   }
 
@@ -61,7 +61,7 @@ class CustomInterceptor extends Interceptor {
      * 다시 새로운 토큰으로 요청한다.
      * */
     // await storage.deleteAll();
-    print("[ERR] [${err.requestOptions.method}] ${err.requestOptions.uri}");
+    // print("[ERR] [${err.requestOptions.method}] ${err.requestOptions.uri}");
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
     if (refreshToken == null) {
       //리프레시 토큰 차제가 없다면 그대로 에러를 뱉어냄

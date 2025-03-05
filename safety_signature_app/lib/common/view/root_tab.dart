@@ -60,7 +60,7 @@ class _RootTabState extends ConsumerState<RootTab>
   Widget build(BuildContext context) {
     final state = ref.watch(userAuthProvider);
     final permission = ref.watch(permissionProvider);
-    print("state : $state");
+    // print("state : $state");
 
     return AnimatedSwitcher(
         duration: Duration(milliseconds: 500),
@@ -116,7 +116,7 @@ class _RootTabState extends ConsumerState<RootTab>
         unselectedFontSize: 10,
         type: BottomNavigationBarType.fixed,
         onTap: (int index) {
-          print(state);
+          // print(state);
           if (index == 1 && state is UserModelGuest) {
             loginBottomSheet(context, animationController);
             return;

@@ -55,6 +55,7 @@ declare global {
     userMasterId: string
     signatureCount: number
     attachDocList: AttachDocMasterType[]
+    siteAddress: string
   }
 
   interface AttachDocMasterType {

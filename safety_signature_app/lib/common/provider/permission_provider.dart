@@ -58,9 +58,9 @@ class PermissionProviderStateNotifier extends StateNotifier<PermissionBase?> {
       state = PermissionGranted();
       return state;
     } else {
-      print(permission);
+      // print(permission);
       for (var key in permission.keys) {
-        print("key : $key");
+        // print("key : $key");
         if (permission[key]!.isPermanentlyDenied) {
           //영구적으로 거부 aos
           state = PermissionPermanentlyDenied(
@@ -75,7 +75,7 @@ class PermissionProviderStateNotifier extends StateNotifier<PermissionBase?> {
           return state;
         }
       }
-      print("state : $state");
+      // print("state : $state");
       state = PermissionDenied();
       return state;
     }

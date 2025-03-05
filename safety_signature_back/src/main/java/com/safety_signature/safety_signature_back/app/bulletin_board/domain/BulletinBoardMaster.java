@@ -60,6 +60,11 @@ public class BulletinBoardMaster extends AbstractAuditingEntity<String> implemen
     @JoinColumn(name = "user_master_id" , insertable = false, updatable = false,foreignKey = @ForeignKey(name = "fk_tokenmanagementmaster_usermaster"))
     private UserMaster userMaster;
 
+    @Comment("현장 주소 정보")
+    @Size(max = 5000)
+    @Column(name="site_address")
+    private String siteAddress;
+
     @Comment("결제완료 유무")
     @Column(name = "completion_yn")
     private Boolean completionYn = false;

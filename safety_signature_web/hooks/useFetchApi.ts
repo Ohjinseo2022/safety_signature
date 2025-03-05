@@ -17,8 +17,8 @@ instance.interceptors.request.use(
   },
   (error) => {
     //요청 에러가 발생했을 때 수행할 로직
-    console.log(`[FetchApi] : request 오류 발생`)
-    console.log(error)
+    //console.log(`[FetchApi] : request 오류 발생`)
+    //console.log(error)
     return Promise.reject(error)
   }
 )
@@ -43,18 +43,18 @@ instance.interceptors.response.use(
     } = error
 
     //응답 에러가 발생했을 때 수행할 로직
-    console.log(
-      `[FetchApi] : ${
-        error.code.includes('REQUEST') ? 'request' : 'response'
-      } 오류 발생`
-    )
+    //console.log(
+    //   `[FetchApi] : ${
+    //     error.code.includes('REQUEST') ? 'request' : 'response'
+    //   } 오류 발생`
+    // )
     const refreshToken = getItem({ key: TokenCode.refreshToken })
     const isPathRefresh = config.url.includes('token')
     if (!refreshToken || isPathRefresh) {
       return Promise.reject({ error: error.response })
     }
     if (status === 401) {
-      console.log('토튼 만료 에러 토큰 리프레시 시도')
+      //console.log('토튼 만료 에러 토큰 리프레시 시도')
       // 기존 토큰이 만료 상태라면
       const originalRequset = config
 
@@ -67,7 +67,7 @@ instance.interceptors.response.use(
       const res = await instance(originalRequset)
       return res
     }
-    console.log(error.response)
+    //console.log(error.response)
     return Promise.reject({ error: error.response })
   }
 )

@@ -2,6 +2,7 @@ package com.safety_signature.safety_signature_back.app.user.resource;
 
 import com.safety_signature.safety_signature_back.app.auth.dto.responseDTO.LoginResDTO;
 import com.safety_signature.safety_signature_back.app.auth.service.AuthTransactionalService;
+import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardResponseMessageDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.View;
 import com.safety_signature.safety_signature_back.app.common.enumeration.UserStatusCode;
@@ -15,9 +16,11 @@ import com.safety_signature.safety_signature_back.app.user.dto.request.PostJoinB
 import com.safety_signature.safety_signature_back.app.user.dto.response.UserJoinFailedResponseDTO;
 import com.safety_signature.safety_signature_back.app.user.repository.UserMasterRepository;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
+import com.safety_signature.safety_signature_back.config.Constants;
 import com.safety_signature.safety_signature_back.config.FieldSelector;
 import com.safety_signature.safety_signature_back.config.Partial;
 import com.safety_signature.safety_signature_back.utils.PasswordUtils;
+import com.safety_signature.safety_signature_back.utils.SecurityUtils;
 import com.safety_signature.safety_signature_back.utils.common.TsidUtil;
 import com.safety_signature.safety_signature_back.utils.jwt.JwtTokenProvider;
 import com.safety_signature.safety_signature_back.utils.jwt.TokenValues;
@@ -60,6 +63,12 @@ public class UserMasterResource {
          * 2. 유효하지 않다면 401 에러 리턴
          * 3. 유효한 정보라면 해당 엑세스토큰 정보로 유저정보 리턴
          * */
+        String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
+        // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
+        if (Constants.ANONYMOUSUSER.equals(userEmail)|| userEmail ==null) {
+            BulletinBoardResponseMessageDTO result = BulletinBoardResponseMessageDTO.builder().httpStatus(HttpStatus.UNAUTHORIZED).message("UNAUTHORIZED").build();
+            return ResponseEntity.status(result.getHttpStatus()).body(null);
+        }
         UserMasterDTO result = userMasterService.isValidTokenCheckToGetUserMaster(request,tokenValues.secretKey());
         if(ObjectUtils.isEmpty(result)){
             UserResponseMessageDTO messageDTO = UserResponseMessageDTO.builder()

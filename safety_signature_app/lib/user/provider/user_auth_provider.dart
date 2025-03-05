@@ -96,7 +96,7 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
   }
 
   Future<void> getProfile() async {
-    print("동작하죠 ?");
+    // print("동작하죠 ?");
     final refreshToken = await storage.read(key: REFRESH_TOKEN_KEY);
     final accessToken = await storage.read(key: ACCESS_TOKEN_KEY);
     state = UserModelLoading();
@@ -105,10 +105,10 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
       return;
     }
     try {
-      print("자");
+      // print("자");
       final response = await userMasterRepository.userProfile();
       if (response == null) {
-        print("요기");
+        // print("요기");
         state = UserModelGuest();
         return;
       }
@@ -141,7 +141,7 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
       }
       return response;
     } catch (e) {
-      print("join error ${e.toString()}");
+      // print("join error ${e.toString()}");
       state = UserModelError(message: e.toString());
       return null;
     }
@@ -157,15 +157,15 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
               ? await UserApi.instance.loginWithKakaoTalk()
               : await UserApi.instance
                   .loginWithKakaoAccount(); //loginWithKakaoTalk   loginWithKakaoAccount
-      print('카카오계정으로 로그인 성공 ${token.accessToken}');
-      print('카카오계정 ${token}');
+      // print('카카오계정으로 로그인 성공 ${token.accessToken}');
+      // print('카카오계정 ${token}');
       String accessToken = token.accessToken;
       // storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
       await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
       // final loginResponse = await
       return true;
     } catch (error) {
-      print('카카오계정으로 로그인 실패 $error');
+      // print('카카오계정으로 로그인 실패 $error');
       return false;
     }
   }
@@ -180,7 +180,7 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
       await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
       return true;
     } catch (error) {
-      print('Error during Google login: $error');
+      // print('Error during Google login: $error');
       return false;
     }
   }

@@ -8,19 +8,27 @@ import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import useFetchApi from '@/hooks/useFetchApi'
 import { useInput } from '@/hooks/useInput'
+import CommonButton from '@/components/common/CommonButton'
 import CommonEditor from '@/components/common/CommonEditor'
 import CommonInput from '@/components/common/CommonInput'
+import DaumPostModal from '@/components/modal/DaumPostModal'
 import queryClient from '@/app/queryClient'
 
 const WritePage = () => {
-  const { isModalVisible, onChangeModalVisible, callBackFunction } =
-    useAlertStore()
-  const [boardTitle, onChangeBoardTitle, setBoardTitle] = useInput<string>('')
-  const [boardContents, onChangeBoardContents, setBoardContents] =
-    useInput<string>('')
+  const { onChangeModalVisible } = useAlertStore()
+  const [boardTitle, onChangeBoardTitle] = useInput<string>('')
+  const [boardContents, onChangeBoardContents] = useInput<string>('')
+  const [address, setAddress] = useState<string>('') // 주소 상태 추가
+  const [detailAddress, onChangeDetailAddress] = useInput('')
+  const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false) // 모달 상태 추가
   const inputFiles = useRef<HTMLInputElement>(null)
   const [files, setFiles] = useState<FileObj[] | null>(null)
   const router = useRouter()
+  // 주소 검색 후 처리 함수
+  const handleAddressSelect = (data: any) => {
+    setAddress(`${data.roadAddress} (${data.zonecode})`) // 주소 + 우편번호 저장
+    setIsAddressModalOpen(false) // 모달 닫기
+  }
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     //파일 이존재하면서
     if (inputFiles.current) {
@@ -66,15 +74,22 @@ const WritePage = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log('제목:', boardTitle)
-    console.log('내용:', boardContents)
-    console.log('첨부 파일:', files)
+    //console.log('제목:', boardTitle)
+    //console.log('내용:', boardContents)
+    //console.log('첨부 파일:', files)
     if (!boardTitle) {
       onChangeModalVisible({ isVisible: true, msg: '제목을 입력해주세요.' })
       return
     }
     if (!boardContents) {
       onChangeModalVisible({ isVisible: true, msg: '내용을 입력해주세요.' })
+      return
+    }
+    if (!address || !detailAddress) {
+      onChangeModalVisible({
+        isVisible: true,
+        msg: '주소 또는 상세주소는 필수입니다.',
+      })
       return
     }
     if (!files) {
@@ -86,6 +101,7 @@ const WritePage = () => {
     const boardData = JSON.stringify({
       boardTitle: boardTitle,
       boardContents: boardContents,
+      boardAddress: `${address} / ${detailAddress}`,
     })
     formData.append(
       'boardData',
@@ -146,7 +162,36 @@ const WritePage = () => {
             placeholder="내용을 입력해주세요."
           ></CommonEditor>
         </FormGroup>
-
+        {/* 주소 입력 및 검색 버튼 */}
+        <br />
+        <br />
+        <FormGroup>
+          <Label>주소</Label>
+          <AddressContainer>
+            <CommonInput
+              htmlFor="address"
+              placeholder="주소를 검색해주세요."
+              type="text"
+              value={address}
+              readOnly
+            />
+            <CommonInput
+              htmlFor="address"
+              placeholder="상세주소"
+              type="text"
+              value={detailAddress}
+              onChange={onChangeDetailAddress}
+            />
+            <CommonButton
+              type="button"
+              onClick={() => setIsAddressModalOpen(true)}
+            >
+              주소 검색
+            </CommonButton>
+          </AddressContainer>
+        </FormGroup>
+        <br />
+        <br />
         <FileUploadContainer>
           <label htmlFor="files">파일 첨부</label>
           <input
@@ -158,25 +203,29 @@ const WritePage = () => {
             onChange={handleFileChange}
           />
         </FileUploadContainer>
+        <br />
         <FormGroup>
           <SubmitButton type="submit">등록하기</SubmitButton>
         </FormGroup>
       </form>
+      <DaumPostModal
+        isVisible={isAddressModalOpen}
+        setIsVisible={setIsAddressModalOpen}
+        onCompletePost={handleAddressSelect}
+      />
     </WriteContainer>
   )
 }
 
 export default WritePage
+/** 스타일 */
 const WriteContainer = styled.div`
   background-color: #121212;
   color: #e0e0e0;
   padding: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
   width: 100%;
   max-width: 800px;
-  min-width: 600px;
-  min-height: calc(100vh - 80px);
   margin: 40px auto;
   display: flex;
   flex-direction: column;
@@ -187,30 +236,20 @@ const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
   gap: 8px;
-  label {
-    font-size: 18px;
-    color: #b0b0b0;
-  }
+`
 
-  input,
-  textarea {
-    padding: 12px;
-    border-radius: 4px;
-    border: 1px solid #444444;
-    background-color: #1e1e1e;
-    color: #e0e0e0;
-    font-size: 14px;
+const Label = styled.label`
+  font-size: 18px;
+  color: #b0b0b0;
+`
 
-    &::placeholder {
-      color: #666666;
-    }
-  }
+const AddressContainer = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
 
-  textarea {
-    min-height: 200px; /* 기본 높이 */
-    resize: vertical; /* 크기 조절 가능 */
-  }
-  button {
+  input {
+    flex: 1;
   }
 `
 
@@ -221,15 +260,6 @@ const FileUploadContainer = styled.div`
   background-color: #1e1e1e;
   padding: 10px;
   border-radius: 4px;
-
-  label {
-    font-size: 16px;
-    color: #b0b0b0;
-  }
-
-  input[type='file'] {
-    color: #e0e0e0;
-  }
 `
 
 const SubmitButton = styled.button`

@@ -22,4 +22,7 @@ public class BulletinBoardRegistrationRequestDTO {
     @Schema(description = "전자문서 설명 & 내용")
     private String boardContents;
 
+    @NotNull
+    @Schema(description = "현장 주소 정보")
+    private String boardAddress;
 }

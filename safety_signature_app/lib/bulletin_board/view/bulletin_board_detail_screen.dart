@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:go_router/go_router.dart';
+import 'package:safety_signature_app/bulletin_board/model/approve_signature_model.dart';
 import 'package:safety_signature_app/bulletin_board/model/bulletin_board_detail_model.dart';
 import 'package:safety_signature_app/bulletin_board/model/bulletin_board_model.dart';
+import 'package:safety_signature_app/bulletin_board/provider/approve_master_provider.dart';
 import 'package:safety_signature_app/bulletin_board/provider/bulletin_board_provider.dart';
 import 'package:safety_signature_app/common/components/card_container.dart';
 import 'package:safety_signature_app/common/const/color.dart';
@@ -52,13 +54,13 @@ class _BulletinBoardDetailScreenState
         child: CircularProgressIndicator(),
       ));
     }
-    print(bulletinBoardDetail.id);
     return DefaultLayout(
       title: '전자결제 상세',
       child: _buildDetailContent(
           context: context,
           detail: bulletinBoardDetail,
-          downloadFile: _downloadFile),
+          downloadFile: _downloadFile,
+          handleSignature: _handleSignature),
       // body: bulletinDetail.when(
       //   data: (detail) => _buildDetailContent(context, detail),
       //   loading: () => Center(child: CircularProgressIndicator()),
@@ -67,13 +69,60 @@ class _BulletinBoardDetailScreenState
     );
   }
 
+// ✅ 결제 처리
+  void _handleSignature(String bulletinBoardId) async {
+    print(bulletinBoardId);
+    // approveResult is ApproveSignatureMessageModel
+    // 결제 처리 로직 추가
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          '결제 진행 중...',
+          style: defaultTextStyle,
+        ),
+        duration: Duration(seconds: 2),
+      ),
+    );
+    await ref
+        .read(approveMasterProvider.notifier)
+        .approveSignature(bulletinBoardId: bulletinBoardId)
+        .then((_) {
+      final state = ref.watch(approveMasterProvider);
+      if (state is ApproveSignatureMessageModel) {
+        state.httpStatus == 200
+            ? ref
+                .read(bulletinBoardProvider.notifier)
+                .getDetail(id: widget.bulletinBoardId)
+            : null;
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              state.message,
+              style: defaultTextStyle,
+            ),
+            duration: Duration(seconds: 2),
+          ),
+        );
+      }
+    }).catchError((_) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(
+            '결제 실패 잠시 후 다시 시도해 주세요.',
+            style: defaultTextStyle,
+          ),
+          duration: Duration(seconds: 2),
+        ),
+      );
+    });
+  }
+
   // ✅ 파일 다운로드 처리
   void _downloadFile({required String attachId, required String fileName}) {
     // 실제 파일 다운로드 처리 (예: url_launcher 사용)
     final attach = ref
         .watch(attachDocMasterProvider.notifier)
         .downloadFile(attachId: attachId, fileName: fileName);
-    print(attach);
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
@@ -90,7 +139,8 @@ class _BulletinBoardDetailScreenState
 Widget _buildDetailContent(
     {required BuildContext context,
     required BulletinBoardModel detail,
-    required Function downloadFile}) {
+    required Function downloadFile,
+    required Function handleSignature}) {
   return Padding(
     padding: EdgeInsets.all(16.0),
     child: Column(
@@ -166,7 +216,7 @@ Widget _buildDetailContent(
             onPressed: detail.completionYn
                 ? null
                 : () {
-                    _handlePayment(context, detail.id);
+                    handleSignature(detail.id);
                   },
             style: ElevatedButton.styleFrom(
               backgroundColor: Colors.red,
@@ -179,17 +229,5 @@ Widget _buildDetailContent(
         ),
       ],
     ),
-  );
-}
-
-// ✅ 결제 처리
-void _handlePayment(BuildContext context, String bulletinBoardId) {
-  // 결제 처리 로직 추가
-  ScaffoldMessenger.of(context).showSnackBar(
-    SnackBar(
-        content: Text(
-      '결제 진행 중...',
-      style: defaultTextStyle,
-    )),
   );
 }

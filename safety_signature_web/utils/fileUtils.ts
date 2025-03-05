@@ -40,7 +40,7 @@ export const blobFileDownload = (file: Blob, fileName: string) => {
   // ✅ file이 Blob 타입인지 확인하고 생성
   const blob = file instanceof Blob ? file : new Blob([file])
 
-  console.log(blob) // 디버깅용: Blob 데이터 확인
+  //console.log(blob) // 디버깅용: Blob 데이터 확인
   if (blob.size === 0) {
     console.error('Blob 파일 크기가 0입니다. 데이터를 확인하세요.')
     return
@@ -50,7 +50,7 @@ export const blobFileDownload = (file: Blob, fileName: string) => {
   const link = document.createElement('a')
   link.href = url
   link.download = fileName
-  console.log(link)
+  //console.log(link)
   link.click()
   URL.revokeObjectURL(url)
 }

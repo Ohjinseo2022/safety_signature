@@ -103,8 +103,8 @@ export const isAllowedMimeType = (
       }
     }
 
-    console.log('mimeType : ' + mimeType)
-    console.log(allowedMimeType)
+    //console.log('mimeType : ' + mimeType)
+    //console.log(allowedMimeType)
     return allowedMimeType.includes(mimeType)
   }
   return false

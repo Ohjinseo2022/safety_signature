@@ -8,8 +8,7 @@ interface CommonDataTableProps {
   onTopButtonClick?: (e: any) => void
   topBtnLable?: string
   headers: { label: string; columns: string }[]
-
-  dataItem: any
+  dataItem: any[]
 }
 
 const CommonDataTable: React.FC<CommonDataTableProps> = ({
@@ -37,30 +36,32 @@ const CommonDataTable: React.FC<CommonDataTableProps> = ({
           </tr>
         </thead>
         <tbody>
-          {dataItem.map((item: any, idx: number) => (
-            <tr key={`${item.id}-${idx}`}>
-              {headers.map((header, index) => {
-                if (header.columns === 'attachDocId') {
-                  return (
-                    <td
-                      className="signature-cell"
-                      key={`${header.columns}-${item.id}`}
-                    >
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_DOMAIN}/${process.env.NEXT_PUBLIC_BASE_URL}/attach/download/${item[header.columns]}`}
-                      ></img>
-                    </td>
-                  )
-                }
+          {Array.isArray(dataItem) && dataItem.length > 0
+            ? dataItem.map((item: any, idx: number) => (
+                <tr key={`${item.id}-${idx}`}>
+                  {headers.map((header, index) => {
+                    if (header.columns === 'attachDocId') {
+                      return (
+                        <td
+                          className="signature-cell"
+                          key={`${header.columns}-${item.id}`}
+                        >
+                          <img
+                            src={`${process.env.NEXT_PUBLIC_DOMAIN}/${process.env.NEXT_PUBLIC_BASE_URL}/attach/download/${item[header.columns]}`}
+                          ></img>
+                        </td>
+                      )
+                    }
 
-                return (
-                  <td key={`${header.columns}-${item.id}`}>
-                    {item[header.columns]}
-                  </td>
-                )
-              })}
-            </tr>
-          ))}
+                    return (
+                      <td key={`${header.columns}-${item.id}`}>
+                        {item[header.columns]}
+                      </td>
+                    )
+                  })}
+                </tr>
+              ))
+            : null}
         </tbody>
       </DataTable>
     </DataTableContainer>

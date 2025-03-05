@@ -1,5 +1,6 @@
 package com.safety_signature.safety_signature_back.app.approve_master.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.safety_signature.safety_signature_back.app.common.dto.ResponseDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -12,6 +13,6 @@ import org.springframework.http.HttpStatus;
 @AllArgsConstructor
 @Builder
 public class ApproveMasterMessageDTO extends ResponseDTO {
-    HttpStatus httpStatus;
+    int httpStatus;
     String message;
 }

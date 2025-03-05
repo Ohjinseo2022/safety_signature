@@ -8,7 +8,7 @@ interface CommonInputProps {
   placeholder?: string
   htmlFor?: string
   value: any
-  onChange: (e: any) => void
+  onChange?: (e: any) => void
   label?: string
   isEnter?: boolean
   readOnly?: boolean

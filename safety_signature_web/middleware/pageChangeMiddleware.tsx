@@ -38,7 +38,7 @@ const PageChangeMiddleware = ({
     NProgress.done()
   }
   useEffect(() => {
-    console.log('현재 경로:', pathname)
+    //console.log('현재 경로:', pathname)
 
     alertStore.overlayClose = false
     // 페이지 이동 시작 감지

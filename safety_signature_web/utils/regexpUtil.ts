@@ -266,7 +266,7 @@ export const getBase64Str = () => {
     matches.push(match[1])
   }
 
-  // console.log(matches);
+  // //console.log(matches);
 }
 
 export const removeHtmlTag = (htmlString: string) => {

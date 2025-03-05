@@ -174,6 +174,8 @@ const ModalContent = styled.div<{ $isTextOnly: boolean }>`
   flex: 1;
   overflow-y: auto; /* 내용이 많을 경우 스크롤 */
   margin-bottom: 20px;
+  height: 100%; // 추가
+  max-height: 90vh; // 너무 커지는 것을 방지
   /* HTML 문자열을 처리할 수 있도록 스타일 정의 */
   p,
   div {

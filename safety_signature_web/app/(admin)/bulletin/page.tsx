@@ -80,7 +80,7 @@ const BulletinPage = ({}: BulletinPageProps) => {
           }
         }
       )
-      console.log(result)
+      //console.log(result)
       return result
     } else {
       return []
@@ -95,7 +95,7 @@ const BulletinPage = ({}: BulletinPageProps) => {
     { label: '결제완료', columns: 'signature' },
   ]
   const handleSearch = async (e: any) => {
-    // console.log(e)
+    // //console.log(e)
     // await refetch()
     // alert('검색 실행')
   }

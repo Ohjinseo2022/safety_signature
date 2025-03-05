@@ -3,10 +3,15 @@
 import { useAlertStore } from '@/store/alertStore'
 import styled from 'styled-components'
 import { use, useEffect, useMemo, useState } from 'react'
+import { getDownloadExcel } from '@/hooks/common/useDownLoad'
 import { useInput } from '@/hooks/useInput'
 import CommonDataTable from '@/components/common/CommonDataTable'
 import CustomDownloadButton from '@/components/custom/CustomDownloadButton'
-import { LoginResponseSuccess } from '@/app/(common)/user/login/_userRepository/types'
+import { CommonCard } from '@/components/styled/common'
+import {
+  LoginResponseSuccess,
+  UserTypeCode,
+} from '@/app/(common)/user/login/_userRepository/types'
 import { useUserProfile } from '@/app/(common)/user/login/_userState/userStore'
 import {
   ApproveMasterType,
@@ -50,19 +55,11 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
 
   const approveDataList: ApproveMasterType[] = useMemo(() => {
     if (approveListIsFetched && approveList) {
-      //    {
-      //   id: 1,
-      //   docName: '문서1.pdf',
-      //   name: '홍길동',
-      //   signature: '✔️',
-      //   time: '2025-01-22 10:00',
-      //   site: '현장1',
-      // },
       return approveList.data
     }
     return []
   }, [approveList, approveListIsFetched])
-  console.log('unwrappedParams : ', unwrappedParams)
+  //console.log('unwrappedParams : ', unwrappedParams)
   const headers = [
     { label: '문서명', columns: 'bulletinBoardTitle' },
     { label: '이름', columns: 'userName' },
@@ -71,13 +68,11 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
     { label: '현장명', columns: 'siteName' },
   ]
 
-  const downloadExcel = () => {
+  const onDownLoadExcel = async () => {
+    await getDownloadExcel(unwrappedParams.id)
     alert('댓글 데이터를 엑셀로 다운로드합니다.')
   }
   const onSignatureHandler = async () => {
-    /**
-     * 로그인한 유저의 권한 정보를 읽고 해당 계정의 사인정보기반으로 결제처리
-     */
     const result = await approveSignature(unwrappedParams.id)
     if (result) {
       onChangeModalVisible({ isVisible: true, msg: result.message })
@@ -93,8 +88,11 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
           dangerouslySetInnerHTML={{ __html: detailData.boardContents }}
         ></div>
       </PostInfo>
-
-      <DownloadSection>
+      <CommonCard>
+        <h3>현장 주소 정보</h3>
+        <div> {detailData.siteAddress}</div>
+      </CommonCard>
+      <CommonCard>
         <h3>첨부된 문서</h3>
         <div>
           {detailData.attachDocList && detailData.attachDocList.length > 0 ? (
@@ -105,13 +103,22 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
             <span>첨부된 문서가 없습니다.</span>
           )}
         </div>
-      </DownloadSection>
+      </CommonCard>
+
       <CommonDataTable
         title={'결제완료 리스트'}
-        topBtnLable={'결제하기'}
-        onTopButtonClick={onSignatureHandler}
+        topBtnLable={
+          userProfile.userTypeCode === UserTypeCode.MASTER_ADMINISTRATOR
+            ? '다운로드 '
+            : '결제하기'
+        }
+        onTopButtonClick={
+          userProfile.userTypeCode === UserTypeCode.MASTER_ADMINISTRATOR
+            ? onDownLoadExcel
+            : onSignatureHandler
+        }
         headers={headers}
-        dataItem={approveDataList}
+        dataItem={approveDataList.length > 0 ? approveDataList : []}
       />
     </DetailContainer>
   ) : (
@@ -159,28 +166,5 @@ const PostInfo = styled.div`
     padding: 20px; /* 내부 여백 */
     border-radius: 8px;
     min-height: 200px; /* 최소 높이 설정 */
-  }
-`
-
-const DownloadSection = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 20px;
-  background-color: #1e1e1e;
-  border-radius: 8px;
-
-  button {
-    background-color: #60a5fa;
-    color: #ffffff;
-    border: none;
-    padding: 10px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-
-    &:hover {
-      background-color: #3b82f6;
-    }
   }
 `

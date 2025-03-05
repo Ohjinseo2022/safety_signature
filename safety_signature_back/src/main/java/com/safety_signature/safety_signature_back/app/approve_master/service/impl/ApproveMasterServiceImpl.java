@@ -53,7 +53,7 @@ public class ApproveMasterServiceImpl implements ApproveMasterService {
             ApproveMasterCustomDTO customDTO = ApproveMasterCustomDTO.from(dto);
             customDTO.setApproveStatus("approve");
             customDTO.setBulletinBoardTitle(bulletinBoardMasterDTO.getBoardTitle());
-            customDTO.setSiteName("추가 예정");
+            customDTO.setSiteName(bulletinBoardMasterDTO.getSiteAddress());
             list.add(customDTO);
         }
         return  new PageImpl<>(list,pageable,approveMasterRepository.countByBulletinBoardId(bulletinBoardMasterDTO.getId()));
@@ -76,5 +76,24 @@ public class ApproveMasterServiceImpl implements ApproveMasterService {
     public ApproveMasterDTO save(ApproveMasterDTO approveMasterDTO) {
         log.debug("Request to save ApproveMasterDTO : {}", approveMasterDTO);
         return approveMasterMapper.toDto(approveMasterRepository.save(approveMasterMapper.toEntity(approveMasterDTO)));
+    }
+
+    @Override
+    public List<ApproveMasterDTO> userMasterByExistingApproveMastersOnTheBulletinBoard(String bulletinBoardId, String userMasterId) {
+        List<ApproveMaster> approveMaster = approveMasterRepository.findAllByBulletinBoardIdAndUserMasterId(bulletinBoardId, userMasterId);
+        return approveMaster.stream().map(approveMasterMapper::toDto).toList();
+    }
+
+    @Override
+    public List<ApproveMasterCustomDTO> existingApproveMastersOnTheBulletinBoard(BulletinBoardMasterDTO bulletinBoardMasterDTO) {
+        List<ApproveMaster> approveMaster = approveMasterRepository.findAllByBulletinBoardId(bulletinBoardMasterDTO.getId());
+        return approveMaster.stream().map(approveMasterMapper::toDto).map(e->
+        {
+            ApproveMasterCustomDTO customDTO = ApproveMasterCustomDTO.from(e);
+            customDTO.setApproveStatus("approve");
+            customDTO.setBulletinBoardTitle(bulletinBoardMasterDTO.getBoardTitle());
+            customDTO.setSiteName(bulletinBoardMasterDTO.getSiteAddress());
+            return customDTO;
+        }).toList();
     }
 }

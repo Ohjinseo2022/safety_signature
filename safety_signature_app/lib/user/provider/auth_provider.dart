@@ -69,7 +69,7 @@ class AuthProvider extends ChangeNotifier {
    */
   String? redirectLogic(GoRouterState state) {
     return null;
-    // print(state.location);
+    // // print(state.location);
     // final loginGo = state.location == '/login';
     // // if (state.location == '/splash') {
     // //

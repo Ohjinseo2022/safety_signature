@@ -31,8 +31,8 @@ export default function Header() {
   ]
   const [profile, setProfile] = useState<boolean>(false)
   useEffect(() => {
-    console.log(userProfile)
-    console.log('얍', isLoginResponceSuccess(userProfile))
+    //console.log(userProfile)
+    //console.log('얍', isLoginResponceSuccess(userProfile))
     setProfile(isLoginResponceSuccess(userProfile))
   }, [pathname, userProfile])
 
@@ -42,7 +42,7 @@ export default function Header() {
   const onLoginAndOutHandler = async (type: string) => {
     if (type === 'o') {
       //로그아웃 로직 추가해야함.
-      console.log('저장해야할 마지막 URL : ', pathname)
+      //console.log('저장해야할 마지막 URL : ', pathname)
       removeItem({ key: TokenCode.accessToken })
       removeItem({ key: TokenCode.refreshToken })
       pathStore.setLastPath(pathname, {})

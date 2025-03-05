@@ -12,7 +12,19 @@ export const getMinIoFileDownload = async (attachDocId: string) => {
     }
   )
   if (status === 200) {
-    console.log(data)
+    //console.log(data)
+    let deCodefileName = decodeURIComponent(filename)
+    blobFileDownload(data as Blob, deCodefileName)
+  }
+}
+
+export const getDownloadExcel = async (bulletinBoardId: string) => {
+  const { data, filename, error, status } = await useFetchApi(
+    `/approve/export-excel/${bulletinBoardId}`,
+    { method: 'get' },
+    { responseType: 'blob' }
+  )
+  if (status === 200) {
     let deCodefileName = decodeURIComponent(filename)
     blobFileDownload(data as Blob, deCodefileName)
   }

@@ -1,7 +1,9 @@
 package com.safety_signature.safety_signature_back.app.bulletin_board.service.impl;
 
 import com.safety_signature.safety_signature_back.app.approve_master.domain.ApproveMaster;
+import com.safety_signature.safety_signature_back.app.approve_master.dto.ApproveMasterDTO;
 import com.safety_signature.safety_signature_back.app.approve_master.repository.ApproveMasterRepository;
+import com.safety_signature.safety_signature_back.app.approve_master.service.ApproveMasterService;
 import com.safety_signature.safety_signature_back.app.bulletin_board.domain.BulletinBoardMaster;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.BulletinBoardAttachInfoDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.BulletinBoardMasterDTO;
@@ -45,15 +47,22 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
     private AttachDocMasterService attachDocMasterService;
     private BulletinBoardAttachInfoService bulletinBoardAttachInfoService;
     private ApproveMasterRepository approveMasterRepository;
+    private ApproveMasterService approveMasterService;
 
-    public BulletinBoardMasterServiceImpl(UserMasterService userMasterService, BulletinBoardMasterRepository bulletinBoardMasterRepository, BulletinBoardMasterMapper bulletinBoardMasterMapper, AttachDocMasterService attachDocMasterService, BulletinBoardAttachInfoService bulletinBoardAttachInfoService,
-                                          ApproveMasterRepository approveMasterRepository) {
+    public BulletinBoardMasterServiceImpl(UserMasterService userMasterService,
+                                          BulletinBoardMasterRepository bulletinBoardMasterRepository,
+                                          BulletinBoardMasterMapper bulletinBoardMasterMapper,
+                                          AttachDocMasterService attachDocMasterService,
+                                          BulletinBoardAttachInfoService bulletinBoardAttachInfoService,
+                                          ApproveMasterRepository approveMasterRepository,
+                                          ApproveMasterService approveMasterService) {
         this.userMasterService = userMasterService;
         this.bulletinBoardMasterRepository = bulletinBoardMasterRepository;
         this.bulletinBoardMasterMapper = bulletinBoardMasterMapper;
         this.attachDocMasterService = attachDocMasterService;
         this.bulletinBoardAttachInfoService = bulletinBoardAttachInfoService;
         this.approveMasterRepository = approveMasterRepository;
+        this.approveMasterService = approveMasterService;
     }
 
     /**
@@ -78,6 +87,7 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
         BulletinBoardMasterDTO bulletinBoardMasterDTO = this.save(BulletinBoardMasterDTO.builder()
                 .boardContents(registrationRequestDTO.getBoardContents())
                 .boardTitle(registrationRequestDTO.getBoardTitle())
+                .siteAddress(registrationRequestDTO.getBoardAddress())
                 .userMasterId(userMasterDTO.getId())
                 .userMasterDTO(userMasterDTO)
                 .attachYn(!ObjectUtils.isEmpty(files))//첨부 파일 유무
@@ -200,8 +210,8 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
             if(approveCount ==  0){
                 customDTO.setCompletionYn(false);
             }else{
-               List<ApproveMaster> approveMaster = approveMasterRepository.findAllByBulletinBoardIdAndUserMasterId(customDTO.getId(), userMasterDTO.getId());
-                if (ObjectUtils.isEmpty(approveMaster)) {
+               List<ApproveMasterDTO> approveMasterDTO = approveMasterService.userMasterByExistingApproveMastersOnTheBulletinBoard(customDTO.getId(), userMasterDTO.getId());
+                if (ObjectUtils.isEmpty(approveMasterDTO)) {
                     customDTO.setCompletionYn(false);
                 } else {
                     customDTO.setCompletionYn(true);

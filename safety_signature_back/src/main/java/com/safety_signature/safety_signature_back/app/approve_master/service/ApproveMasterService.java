@@ -7,6 +7,7 @@ import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ApproveMasterService {
@@ -14,4 +15,6 @@ public interface ApproveMasterService {
     Page<ApproveMasterCustomDTO> getAllApproveMasters(BulletinBoardMasterDTO bulletinBoardMasterDTO , Pageable pageable);
     Optional<ApproveMasterDTO> partialUpdate(ApproveMasterDTO approveMasterDTO);
     ApproveMasterDTO save(ApproveMasterDTO approveMasterDTO);
+    List<ApproveMasterDTO> userMasterByExistingApproveMastersOnTheBulletinBoard (String bulletinBoardId , String userMasterId);
+    List<ApproveMasterCustomDTO> existingApproveMastersOnTheBulletinBoard (BulletinBoardMasterDTO bulletinBoardMasterDTO);
 }

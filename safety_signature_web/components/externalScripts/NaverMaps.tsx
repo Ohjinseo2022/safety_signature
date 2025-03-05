@@ -38,7 +38,7 @@ const NaverMaps: React.FC<NaverMapsProps> = ({
         if (status === window.naver.maps.Service.Status.OK) {
           const result = response.v2
           if (result && result.address) {
-            console.log(result)
+            //console.log(result)
             setAddress(
               result.address.jibunAddress || result.address.roadAddress
             )
@@ -59,8 +59,8 @@ const NaverMaps: React.FC<NaverMapsProps> = ({
   //         query: '편의점',
   //       },
   //       (status: any, response: any) => {
-  //         console.log(status)
-  //         console.log(response)
+  //         //console.log(status)
+  //         //console.log(response)
   //       }
   //     )
   //   }

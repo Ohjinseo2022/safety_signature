@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'bulletin_board_repository.dart';
+part of 'approve_master_repository.dart';
 
 // **************************************************************************
 // RetrofitGenerator
@@ -8,8 +8,8 @@ part of 'bulletin_board_repository.dart';
 
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers
 
-class _BulletinBoardRepository implements BulletinBoardRepository {
-  _BulletinBoardRepository(
+class _ApproveMasterRepository implements ApproveMasterRepository {
+  _ApproveMasterRepository(
     this._dio, {
     this.baseUrl,
   });
@@ -19,24 +19,24 @@ class _BulletinBoardRepository implements BulletinBoardRepository {
   String? baseUrl;
 
   @override
-  Future<CursorPagination<BulletinBoardModel>> paginate(
-      {PaginationParams? paginationParams = const PaginationParams()}) async {
+  Future<ApproveSignatureMessageModel> postCompletedSignature(
+      {required ApproveSignatureRequestModel
+          approveSignatureRequestModel}) async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    queryParameters.addAll(paginationParams?.toJson() ?? <String, dynamic>{});
-    queryParameters.removeWhere((k, v) => v == null);
     final _headers = <String, dynamic>{r'accessToken': 'true'};
     _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
+    final _data = <String, dynamic>{};
+    _data.addAll(approveSignatureRequestModel.toJson());
     final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<CursorPagination<BulletinBoardModel>>(Options(
-      method: 'GET',
+        _setStreamType<ApproveSignatureMessageModel>(Options(
+      method: 'POST',
       headers: _headers,
       extra: _extra,
     )
             .compose(
               _dio.options,
-              '/list-for-user',
+              '/completed-signature',
               queryParameters: queryParameters,
               data: _data,
             )
@@ -45,42 +45,7 @@ class _BulletinBoardRepository implements BulletinBoardRepository {
               _dio.options.baseUrl,
               baseUrl,
             ))));
-    final value = CursorPagination<BulletinBoardModel>.fromJson(
-      _result.data!,
-      (json) => BulletinBoardModel.fromJson(json as Map<String, dynamic>),
-    );
-    return value;
-  }
-
-  @override
-  Future<CommonDetailModel<BulletinBoardDetailModel>> getBulletinBoardDetail(
-      {required String id}) async {
-    const _extra = <String, dynamic>{};
-    final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{r'accessToken': 'true'};
-    _headers.removeWhere((k, v) => v == null);
-    final Map<String, dynamic>? _data = null;
-    final _result = await _dio.fetch<Map<String, dynamic>>(
-        _setStreamType<CommonDetailModel<BulletinBoardDetailModel>>(Options(
-      method: 'GET',
-      headers: _headers,
-      extra: _extra,
-    )
-            .compose(
-              _dio.options,
-              '/${id}',
-              queryParameters: queryParameters,
-              data: _data,
-            )
-            .copyWith(
-                baseUrl: _combineBaseUrls(
-              _dio.options.baseUrl,
-              baseUrl,
-            ))));
-    final value = CommonDetailModel<BulletinBoardDetailModel>.fromJson(
-      _result.data!,
-      (json) => BulletinBoardDetailModel.fromJson(json as Map<String, dynamic>),
-    );
+    final value = ApproveSignatureMessageModel.fromJson(_result.data!);
     return value;
   }
 

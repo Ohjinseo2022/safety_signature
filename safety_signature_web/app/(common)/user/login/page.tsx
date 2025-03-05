@@ -50,7 +50,7 @@ const UserLogin: React.FC<UserLoginProps> = ({}) => {
       })
       if (isLoginResponceSuccess(userProfile)) {
         if (lastPath && lastPath[0]) {
-          console.log('로그인후 라스트 패스', lastPath)
+          //console.log('로그인후 라스트 패스', lastPath)
           router.push(
             ...(lastPath as [href: string, options?: any | undefined])
           )

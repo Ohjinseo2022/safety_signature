@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:safety_signature_app/common/components/text_editor.dart';
 import 'package:safety_signature_app/common/const/color.dart';
+import 'package:safety_signature_app/common/const/data.dart';
 import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
@@ -106,9 +107,9 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
           children: [
             _infoRow("회원 유형", model.userTypeCode.displayName),
             Divider(),
-            _infoRow("전자서명 ID", model.signatureDocId ?? "N/A"),
-            Divider(),
             _infoRow("회원 고유 번호", model.id),
+            Divider(),
+            _infoRow("전자서명 정보", model.signatureDocId ?? "N/A", isImg: true),
           ],
         ),
       ),
@@ -165,14 +166,19 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
   }
 
   /// ✅ 정보 표시용 위젯
-  Widget _infoRow(String label, String value) {
+  Widget _infoRow(String label, String value, {bool isImg = false}) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
-        Text(
-          value,
-        ),
+        isImg
+            ? Image.network(
+                'http://$ip$baseUrl/attach/download/$value',
+                height: 50,
+                width: 100,
+                fit: BoxFit.cover,
+              )
+            : Text(value)
       ],
     );
   }

@@ -139,6 +139,12 @@ public class BulletinBoardMasterResource {
     @GetMapping("/list-for-user")
     public ResponseEntity<InfiniteScrollResponseDTO<BulletinBoardMasterCustomDTO>> listForUser( @RequestParam Optional<String> nextCursor,
                                                                                                 @RequestParam(defaultValue = "20") int size){
+        String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
+        // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
+        if (Constants.ANONYMOUSUSER.equals(userEmail)|| userEmail ==null) {
+            BulletinBoardResponseMessageDTO result = BulletinBoardResponseMessageDTO.builder().httpStatus(HttpStatus.UNAUTHORIZED).message("UNAUTHORIZED").build();
+            return ResponseEntity.status(result.getHttpStatus()).body(null);
+        }
         InfiniteScrollResponseDTO<BulletinBoardMasterCustomDTO> result = bulletinBoardMasterService.getInfiniteScrollData(nextCursor,  PageRequest.of(0, size, Sort.by(Sort.Order.desc("createdDate"))));
         return ResponseEntity.ok().body(result);
     }

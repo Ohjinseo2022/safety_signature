@@ -5,11 +5,11 @@
  * @template T The type of the value to parse from localStorage. Defaults to `unknown`.
  */
 const getItem = <T = unknown>(key: string): T | null => {
-  const value = window.localStorage.getItem(key);
-  if (!value) return null;
-  console.log("value", value);
-  return JSON.parse(value);
-};
+  const value = window.localStorage.getItem(key)
+  if (!value) return null
+  //console.log("value", value);
+  return JSON.parse(value)
+}
 
 /**
  * Saves a value to localStorage with the given key.
@@ -17,7 +17,7 @@ const getItem = <T = unknown>(key: string): T | null => {
  * @param value The value to save to localStorage.
  */
 const setItem = (key: string, value: unknown) => {
-  window.localStorage.setItem(key, JSON.stringify(value));
-};
+  window.localStorage.setItem(key, JSON.stringify(value))
+}
 
-export { getItem, setItem };
+export { getItem, setItem }

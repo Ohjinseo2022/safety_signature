@@ -1,4 +1,3 @@
-import { channel } from 'diagnostics_channel'
 import { useQuery } from '@tanstack/react-query'
 import useFetchApi from '@/hooks/useFetchApi'
 
@@ -14,18 +13,15 @@ const getBulletinBoardList = async (props: BulletinBoardSearchProps) => {
     data: BulletinBoardMasterType[]
   }>(
     '/bulletin-board/registration/list-for-administrators',
-    {
-      method: 'get',
-      params: props,
-    },
+    { method: 'get', params: props },
     { isAuth: true }
   )
   if (!error && data) {
-    console.log(data)
-    console.log('count : ', count)
+    //console.log(data)
+    //console.log('count : ', count)
     return { ...data, count: count }
   } else {
-    console.log(error)
+    //console.log(error)
     return error
   }
 }
@@ -113,8 +109,8 @@ const getApproveList = async (props: ApproveSignatureSearchProps) => {
     { isAuth: true }
   )
   if (!error && data) {
-    console.log(data)
-    console.log('count : ', count)
+    //console.log(data)
+    //console.log('count : ', count)
     return { ...data, count: count }
   } else {
     return error

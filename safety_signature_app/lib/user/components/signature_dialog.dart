@@ -32,7 +32,7 @@ Future<void> signatureDialog(
             child: ListBody(
               children: <Widget>[
                 GestureDetector(
-                  onPanUpdate: (details) => print('흠...?'),
+                  onPanUpdate: (details) => {},
                   child: Container(
                     height: 150,
                     width: MediaQuery.of(context).size.width * 0.9,

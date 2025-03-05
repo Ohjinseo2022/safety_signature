@@ -27,7 +27,7 @@ class AttachDocMasterStateNotifier extends StateNotifier<dynamic> {
       final Directory directory = await getApplicationDocumentsDirectory();
       final String filePath = "${directory.path}/$fileName";
 
-      print("📂 다운로드 위치: $filePath");
+      // print("📂 다운로드 위치: $filePath");
 
       // ✅ 3. 서버에서 파일 다운로드 요청
       final response = await attachDocMasterRepository.downloadFile(
@@ -36,11 +36,11 @@ class AttachDocMasterStateNotifier extends StateNotifier<dynamic> {
       // ✅ 4. 파일 저장
       File file = File(filePath);
       await file.writeAsBytes(response); // 파일 저장
-      print("✅ 파일 다운로드 완료: $filePath");
+      // print("✅ 파일 다운로드 완료: $filePath");
       OpenFile.open(filePath);
       return filePath;
     } catch (e) {
-      print("❌ 파일 다운로드 오류: $e");
+      // print("❌ 파일 다운로드 오류: $e");
       return null;
     }
   }
