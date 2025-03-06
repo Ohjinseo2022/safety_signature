@@ -48,25 +48,32 @@ class _BulletinBoardDetailScreenState
   Widget build(BuildContext context) {
     final bulletinBoardDetail =
         ref.watch(bulletinBoardDetailProvider(widget.bulletinBoardId));
+
     if (bulletinBoardDetail == null) {
       return DefaultLayout(
           child: Center(
         child: CircularProgressIndicator(),
       ));
     }
+    if (bulletinBoardDetail is BulletinBoardDetailModel) {
+      return DefaultLayout(
+        title: '전자결제 상세',
+        child: _buildDetailContent(
+            context: context,
+            detail: bulletinBoardDetail,
+            downloadFile: _downloadFile,
+            handleSignature: _handleSignature),
+        // body: bulletinDetail.when(
+        //   data: (detail) => _buildDetailContent(context, detail),
+        //   loading: () => Center(child: CircularProgressIndicator()),
+        //   error: (err, stack) => Center(child: Text('데이터 로딩 실패')),
+        // ),
+      );
+    }
     return DefaultLayout(
-      title: '전자결제 상세',
-      child: _buildDetailContent(
-          context: context,
-          detail: bulletinBoardDetail,
-          downloadFile: _downloadFile,
-          handleSignature: _handleSignature),
-      // body: bulletinDetail.when(
-      //   data: (detail) => _buildDetailContent(context, detail),
-      //   loading: () => Center(child: CircularProgressIndicator()),
-      //   error: (err, stack) => Center(child: Text('데이터 로딩 실패')),
-      // ),
-    );
+        child: Center(
+      child: CircularProgressIndicator(),
+    ));
   }
 
 // ✅ 결제 처리
@@ -132,13 +139,12 @@ class _BulletinBoardDetailScreenState
         duration: Duration(seconds: 2),
       ),
     );
-    if (attach == null) {}
   }
 }
 
 Widget _buildDetailContent(
     {required BuildContext context,
-    required BulletinBoardModel detail,
+    required BulletinBoardDetailModel detail,
     required Function downloadFile,
     required Function handleSignature}) {
   return Padding(
@@ -161,8 +167,7 @@ Widget _buildDetailContent(
           "작성자: ${detail.userMasterDTO.name} • ${detail.createdDateFormat}",
           style: defaultTextStyle.copyWith(fontSize: 15, color: SUBTEXT_COLOR),
         ),
-
-        SizedBox(height: 8),
+        // Text(detail?.siteAddress),
         SizedBox(height: 16),
         Expanded(
           child: CardContainer(
@@ -181,16 +186,29 @@ Widget _buildDetailContent(
             ),
           ),
         ),
-        SizedBox(height: 16),
+        const SizedBox(height: 16),
+        if (detail.siteAddress != null) ...[
+          Text(
+            '현장 정보',
+            style: defaultTextStyle.copyWith(
+                fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            detail.siteAddress!,
+            style: defaultTextStyle,
+          ),
+          const SizedBox(height: 16),
+        ],
 
         // 🔹 첨부 파일 다운로드 버튼
-        if (detail is BulletinBoardDetailModel && detail.attachYn) ...[
+        if (detail.attachYn) ...[
           Text(
             '첨부 파일',
             style: defaultTextStyle.copyWith(
                 fontSize: 20, fontWeight: FontWeight.bold),
           ),
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
           Column(
             children: detail.attachDocList.map((file) {
               return ListTile(
@@ -207,9 +225,7 @@ Widget _buildDetailContent(
             }).toList(),
           ),
         ],
-
-        // 🔹 결제하기 버튼 (completionYn == false 일 때만 표시)
-
+        // 🔹 결제하기 버튼 (completionYn == false 일 때만 활성화)
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(

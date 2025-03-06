@@ -1,6 +1,7 @@
 package com.safety_signature.safety_signature_back.app.bulletin_board.domain;
 
 import com.safety_signature.safety_signature_back.app.common.domain.AbstractAuditingEntity;
+import com.safety_signature.safety_signature_back.app.common.enumeration.SafetySignatureStatusCode;
 import com.safety_signature.safety_signature_back.app.user.domain.UserMaster;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -64,6 +65,15 @@ public class BulletinBoardMaster extends AbstractAuditingEntity<String> implemen
     @Size(max = 5000)
     @Column(name="site_address")
     private String siteAddress;
+
+    @Enumerated(value = EnumType.STRING)
+    @Comment("게시글 타입 및 상태코드")
+    @Column(name="board_status_code")
+    private SafetySignatureStatusCode boardStatusCode;
+
+    @Comment("공개 기업 정보")
+    @Column(name="allowed_companies")
+    private String allowedCompanies;
 
     @Comment("결제완료 유무")
     @Column(name = "completion_yn")

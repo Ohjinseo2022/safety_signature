@@ -6,7 +6,7 @@ import { ReactNode, useEffect } from 'react'
 interface CommonModalProps {
   overlayClose?: boolean
   children: ReactNode | string // HTML 태그 또는 HTML 문자열 허용
-  callBackFunction?: (e: any) => boolean | undefined
+  callBackFunction?: (e: any) => boolean | Promise<any> | undefined | void
   isVisible?: boolean
   isCancel?: boolean
   title?: string
@@ -31,10 +31,8 @@ const CommonModal: React.FC<CommonModalProps> = ({
   }
   const onConfirm = async (e: any) => {
     if (callBackFunction) {
-      const result = await callBackFunction?.(e)
-      if (result) {
-        setIsVisible(false)
-      }
+      await callBackFunction?.(e)
+      setIsVisible(false)
     } else {
       setIsVisible(false)
     }
@@ -44,6 +42,7 @@ const CommonModal: React.FC<CommonModalProps> = ({
     if (overlayClose) {
       const handleKeyDown = (e: KeyboardEvent) => {
         if (e.key === 'Escape' || e.key === 'Enter') {
+          callBackFunction?.(e)
           setIsVisible(false)
         }
       }

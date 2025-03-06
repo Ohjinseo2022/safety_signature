@@ -77,6 +77,7 @@ const BulletinPage = ({}: BulletinPageProps) => {
             createdDate: e.createdDateFormat,
             site: '추가예정',
             signature: e.signatureCount,
+            boardStatusCode: e?.boardStatusCode,
           }
         }
       )
@@ -89,10 +90,11 @@ const BulletinPage = ({}: BulletinPageProps) => {
 
   const headers = [
     { label: '글제목', columns: 'boardTitle' },
-    { label: '현장명', columns: 'site' },
+    // { label: '현장명', columns: 'site' },
     { label: '작성자', columns: 'createdBy' },
     { label: '작성일자', columns: 'createdDate' },
     { label: '결제완료', columns: 'signature' },
+    { label: '상태', columns: 'boardStatusCode' },
   ]
   const handleSearch = async (e: any) => {
     // //console.log(e)

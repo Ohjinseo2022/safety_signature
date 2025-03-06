@@ -9,6 +9,7 @@ part 'bulletin_board_detail_model.g.dart';
 @JsonSerializable()
 class BulletinBoardDetailModel extends BulletinBoardModel {
   final List<AttachDocMasterModel> attachDocList;
+  final String? siteAddress;
   BulletinBoardDetailModel(
       {required super.id,
       required super.attachYn,
@@ -23,7 +24,8 @@ class BulletinBoardDetailModel extends BulletinBoardModel {
       required super.userMasterDTO,
       required super.userMasterId,
       required super.signatureCount,
-      required this.attachDocList});
+      required this.attachDocList,
+      this.siteAddress});
 
   factory BulletinBoardDetailModel.fromJson(Map<String, dynamic> json) =>
       _$BulletinBoardDetailModelFromJson(json);

@@ -2,6 +2,7 @@
 
 import { durationDay, nowDate } from '@/utils/utils'
 import styled from 'styled-components'
+import { useRouter } from 'next/navigation'
 
 export interface PostsType {
   id: string
@@ -29,6 +30,27 @@ const CommonBoard = ({
   createBtn,
   children,
 }: BoardProps) => {
+  const router = useRouter()
+  const getStatusStyle = (status: string) => {
+    switch (status) {
+      case 'DRAFT':
+        return { color: 'gray', text: '초안' }
+      case 'PUBLISHED':
+        return { color: 'green', text: '공개' }
+      case 'HIDDEN':
+        return { color: 'red', text: '숨김' }
+      case 'DELETED':
+        return { color: 'black', text: '삭제됨' }
+      case 'ARCHIVED':
+        return { color: 'blue', text: '보관됨' }
+      case 'EXPIRED':
+        return { color: 'orange', text: '만료됨' }
+      case 'RESTRICTED':
+        return { color: 'purple', text: '기업 제한' } // 특정 기업만 공개
+      default:
+        return { color: '#e0e0e0', text: status }
+    }
+  }
   return (
     <BoardContainer>
       <BoardHeader>
@@ -50,18 +72,25 @@ const CommonBoard = ({
                   <CustomLink
                     $isNew={durationDay(post.createdDate, nowDate()) <= 1}
                     key={`${header.columns}-${post.id}`}
-                    href={`${post.path}${post.id}`}
+                    onClick={() => router.push(`${post.path}${post.id}`)}
                   >
                     {post[header.columns]}
                   </CustomLink>
                 )
-              } else {
+              }
+              if (header.columns === 'boardStatusCode') {
+                const { color, text } = getStatusStyle(post.boardStatusCode)
                 return (
-                  <span key={`${header.columns}-${post.id}`}>
-                    {post[header.columns]}
+                  <span key={`${header.columns}-${post.id}`} style={{ color }}>
+                    {text}
                   </span>
                 )
               }
+              return (
+                <span key={`${header.columns}-${post.id}`}>
+                  {post[header.columns]}
+                </span>
+              )
             })}
           </li>
         ))}
@@ -114,7 +143,7 @@ const BoardHeader = styled.div`
 
 const BoardTableHeader = styled.div`
   display: grid;
-  grid-template-columns: 1fr 100px 120px 120px 80px; /* BoardList와 동일한 그리드 구성 */
+  grid-template-columns: 1fr 100px 120px 120px 80px; /* BoardList와 동일한 그리드 구성 TODO 동적으로 grid 컬럼 사이즈 조정 필요*/
   padding: 12px 16px;
   background-color: #1e1e1e;
   border-radius: 4px;
@@ -181,6 +210,7 @@ const BoardList = styled.ul<BoardListCssType>`
       color: #b0b0b0;
       font-size: 14px;
       text-align: center;
+      text-overflow: ellipsis !important;
     }
 
     span:first-child {
@@ -188,7 +218,7 @@ const BoardList = styled.ul<BoardListCssType>`
     }
   }
 `
-const CustomLink = styled.a<BoardListCssType>`
+const CustomLink = styled.span<BoardListCssType>`
   text-decoration: none;
   color: #60a5fa !important;
   position: relative;

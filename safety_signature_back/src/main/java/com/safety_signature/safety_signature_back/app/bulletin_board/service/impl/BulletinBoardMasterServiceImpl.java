@@ -16,6 +16,7 @@ import com.safety_signature.safety_signature_back.app.bulletin_board.service.Bul
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.specification.BulletinBoardMasterServiceSpecification;
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.util.InfiniteScrollResponseDTO;
+import com.safety_signature.safety_signature_back.app.common.enumeration.SafetySignatureStatusCode;
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocMasterService;
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
@@ -90,6 +91,7 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
                 .siteAddress(registrationRequestDTO.getBoardAddress())
                 .userMasterId(userMasterDTO.getId())
                 .userMasterDTO(userMasterDTO)
+                .boardStatusCode(registrationRequestDTO.getStatusCode())
                 .attachYn(!ObjectUtils.isEmpty(files))//첨부 파일 유무
                 .build());
         //첨부파일 저장
@@ -186,9 +188,9 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
         Page<BulletinBoardMaster> page;
 
         if (cursor.isPresent()) {
-            page = bulletinBoardMasterRepository.findByIdLessThanOrderByCreatedDateDesc(cursor.get(), pageable);
+            page = bulletinBoardMasterRepository.findByIdLessThanAndBoardStatusCodeOrderByCreatedDateDesc(cursor.get() , SafetySignatureStatusCode.PUBLISHED, pageable);
         } else {
-            page = bulletinBoardMasterRepository.findAll(pageable);
+            page = bulletinBoardMasterRepository.findAllByBoardStatusCode(SafetySignatureStatusCode.PUBLISHED,pageable);
         }
         // 다음 커서 값 설정 (있으면 마지막 데이터의 ID)
         String nextCursor = page.hasNext() ? page.getContent().get(page.getContent().size() - 1).getId().toString() : null;
@@ -226,5 +228,19 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
         Page<BulletinBoardMasterCustomDTO> result =
                 new PageImpl<>(list ,pageable, bulletinBoardMasterRepository.count());
         return InfiniteScrollResponseDTO.from(result, nextCursor,page.hasNext());
+    }
+
+    @Override
+    public BulletinBoardMasterDTO partialUpdate(BulletinBoardMasterDTO bulletinBoardMasterDTO) {
+        Optional<BulletinBoardMaster> existingBulletinMater = bulletinBoardMasterRepository.findById(bulletinBoardMasterDTO.getId());
+        if(existingBulletinMater.isEmpty()){
+            return null;
+        }
+        return existingBulletinMater
+                .map((entity)->{
+                    bulletinBoardMasterMapper.partialUpdate(entity,bulletinBoardMasterDTO);
+                    return entity;
+                })
+                .map(bulletinBoardMasterMapper::toDto).get();
     }
 }

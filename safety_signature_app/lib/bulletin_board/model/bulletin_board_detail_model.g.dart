@@ -26,6 +26,7 @@ BulletinBoardDetailModel _$BulletinBoardDetailModelFromJson(
       attachDocList: (json['attachDocList'] as List<dynamic>)
           .map((e) => AttachDocMasterModel.fromJson(e as Map<String, dynamic>))
           .toList(),
+      siteAddress: json['siteAddress'] as String?,
     );
 
 Map<String, dynamic> _$BulletinBoardDetailModelToJson(
@@ -45,4 +46,5 @@ Map<String, dynamic> _$BulletinBoardDetailModelToJson(
       'userMasterId': instance.userMasterId,
       'signatureCount': instance.signatureCount,
       'attachDocList': instance.attachDocList,
+      'siteAddress': instance.siteAddress,
     };

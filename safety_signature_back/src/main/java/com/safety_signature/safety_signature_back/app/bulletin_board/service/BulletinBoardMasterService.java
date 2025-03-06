@@ -18,4 +18,5 @@ public interface BulletinBoardMasterService {
     BulletinBoardMasterCustomDTO getBulletinBoardMasterCustomDTO(String bulletinBoardId);
     BulletinBoardMasterDTO getBulletinBoardMasterDTO(String bulletinBoardId);
     InfiniteScrollResponseDTO<BulletinBoardMasterCustomDTO> getInfiniteScrollData(Optional<String> cursor, Pageable pageable);
+    BulletinBoardMasterDTO partialUpdate(BulletinBoardMasterDTO bulletinBoardMasterDTO);
 }

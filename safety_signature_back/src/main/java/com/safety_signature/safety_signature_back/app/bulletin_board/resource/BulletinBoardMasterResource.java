@@ -45,9 +45,9 @@ public class BulletinBoardMasterResource {
     private final UserMasterService userMasterService;
     @Operation(summary = "전자 결제 문서 등록")
     @PostMapping("")
-        public ResponseEntity<BulletinBoardResponseBaseDTO> registration(
-                @RequestPart("boardData") BulletinBoardRegistrationRequestDTO bulletinBoardRegistrationRequestDTO,
-                @RequestPart(value = "files", required = false) List<MultipartFile> files) throws Exception{
+    public ResponseEntity<BulletinBoardResponseBaseDTO> registration(
+            @RequestPart("boardData") BulletinBoardRegistrationRequestDTO bulletinBoardRegistrationRequestDTO,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files) throws Exception{
         String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
         // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
         if (Constants.ANONYMOUSUSER.equals(userEmail)|| userEmail ==null) {
@@ -63,6 +63,30 @@ public class BulletinBoardMasterResource {
             return ResponseEntity.status(result.getHttpStatus()).body(result);
         }
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BulletinBoardResponseMessageDTO.builder().httpStatus(HttpStatus.INTERNAL_SERVER_ERROR).build());
+    }
+    @Operation(summary = "전자 결제 문서 업데이트")
+    @PostMapping("/update")
+    public ResponseEntity<BulletinBoardResponseBaseDTO> bulletinBoardUpdate(
+            @RequestPart("boardData") BulletinBoardRegistrationRequestDTO bulletinBoardRegistrationRequestDTO,
+            @RequestPart(value = "files", required = false) List<MultipartFile> files) {
+        String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
+        // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
+        if (Constants.ANONYMOUSUSER.equals(userEmail)|| userEmail ==null) {
+            BulletinBoardResponseMessageDTO result = BulletinBoardResponseMessageDTO.builder().httpStatus(HttpStatus.UNAUTHORIZED).message("UNAUTHORIZED").build();
+            return ResponseEntity.status(result.getHttpStatus()).body(result);
+        }
+        BulletinBoardMasterDTO bulletinBoardMasterDTO = bulletinBoardMasterService.partialUpdate(BulletinBoardMasterDTO.builder()
+                        .boardStatusCode(bulletinBoardRegistrationRequestDTO.getStatusCode())
+                        .boardContents(bulletinBoardRegistrationRequestDTO.getBoardContents())
+                        .siteAddress(bulletinBoardRegistrationRequestDTO.getBoardAddress())
+                        .id(bulletinBoardRegistrationRequestDTO.getBulletinBoardId())
+                        .boardTitle(bulletinBoardRegistrationRequestDTO.getBoardTitle())
+                        .build());
+        if(!ObjectUtils.isEmpty(bulletinBoardMasterDTO)){
+            BulletinBoardResponseMessageDTO result = BulletinBoardResponseMessageDTO.builder().httpStatus(HttpStatus.OK).message("업데이트 성공").build();
+            return ResponseEntity.status(result.getHttpStatus()).body(result);
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BulletinBoardResponseMessageDTO.builder().httpStatus(HttpStatus.INTERNAL_SERVER_ERROR).build());
     }
 
     @Operation(summary = "전자 결제 문서 관리자 리스트 조회")

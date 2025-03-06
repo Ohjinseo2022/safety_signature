@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 import useFetchApi from '@/hooks/useFetchApi'
+import queryClient from '@/app/queryClient'
 
 export interface BulletinBoardSearchProps extends Pageable {
   boardTitle: string
@@ -123,4 +124,58 @@ export const useApproveListQuery = (props: ApproveSignatureSearchProps) => {
     queryFn: async () => getApproveList(props),
     gcTime: 30 * 60 * 1000,
   })
+}
+
+export const onBulletinUpdateOrNewBulletin = async (props: {
+  bulletinBoardId?: string
+  boardTitle?: string
+  boardContents?: string
+  boardAddress?: string
+  statusCode?: string
+  files?: FileObj[]
+}): Promise<boolean> => {
+  const formData = new FormData()
+  const boardData = JSON.stringify({
+    bulletinBoardId: props.bulletinBoardId ?? undefined,
+    boardTitle: props.boardTitle ?? undefined,
+    boardContents: props.boardContents ?? undefined,
+    boardAddress: props.boardAddress ?? undefined,
+    statusCode: props.statusCode ?? undefined,
+  })
+  formData.append(
+    'boardData',
+    new Blob([boardData], { type: 'application/json' })
+  )
+  if (props.files) {
+    // ✅ 파일 데이터 추가
+    props.files.forEach((fileObj, index) => {
+      if (fileObj.file) {
+        formData.append('files', fileObj.file) // files[] 배열로 추가
+      }
+    })
+  }
+  const { status } = await useFetchApi(
+    props.bulletinBoardId
+      ? '/bulletin-board/registration/update'
+      : '/bulletin-board/registration',
+    {
+      method: 'post',
+      data: formData,
+      headers: 'multipart/form-data',
+    },
+    { isAuth: true }
+  )
+  console.log(status)
+  if (status === 200) {
+    await queryClient.invalidateQueries({
+      queryKey: ['bulletinBoardList'],
+      exact: false,
+    })
+    await queryClient.invalidateQueries({
+      queryKey: [props.bulletinBoardId],
+      exact: false,
+    })
+    return true
+  }
+  return false
 }

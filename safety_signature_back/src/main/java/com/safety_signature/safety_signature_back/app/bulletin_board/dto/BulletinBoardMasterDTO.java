@@ -3,9 +3,11 @@ package com.safety_signature.safety_signature_back.app.bulletin_board.dto;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.safety_signature.safety_signature_back.app.common.dto.AbstractAuditingDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.View;
+import com.safety_signature.safety_signature_back.app.common.enumeration.SafetySignatureStatusCode;
 import com.safety_signature.safety_signature_back.app.user.domain.UserMaster;
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -48,9 +50,16 @@ public class BulletinBoardMasterDTO extends AbstractAuditingDTO<String> implemen
     @Schema(description = "게시글 오너 ID")
     private String userMasterId;
 
-    @JsonView(View.Min.class)
+
     @Schema(description = "게시글 오너 ID")
     private UserMasterDTO userMasterDTO;
+
+    @Schema(description = "게시글 타입 및 상태코드")
+    private SafetySignatureStatusCode boardStatusCode;
+
+    @Schema(description = "공개 기업 정보")
+    @Column(name="allowed_companies")
+    private String allowedCompanies;
 
     @Schema(description = "결제완료 유무")
     private Boolean completionYn = false;

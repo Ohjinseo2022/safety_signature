@@ -6,6 +6,7 @@ import { checkFileNameExtension } from '@/utils/joinUtils'
 import styled from 'styled-components'
 import { useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { SafetySignatureStatusCode } from '@/types/enum'
 import useFetchApi from '@/hooks/useFetchApi'
 import { useInput } from '@/hooks/useInput'
 import CommonButton from '@/components/common/CommonButton'
@@ -13,6 +14,7 @@ import CommonEditor from '@/components/common/CommonEditor'
 import CommonInput from '@/components/common/CommonInput'
 import DaumPostModal from '@/components/modal/DaumPostModal'
 import queryClient from '@/app/queryClient'
+import { onBulletinUpdateOrNewBulletin } from '../_hooks/BulletinBoardQuery'
 
 const WritePage = () => {
   const { onChangeModalVisible } = useAlertStore()
@@ -102,6 +104,7 @@ const WritePage = () => {
       boardTitle: boardTitle,
       boardContents: boardContents,
       boardAddress: `${address} / ${detailAddress}`,
+      statusCode: SafetySignatureStatusCode.PUBLISHED,
     })
     formData.append(
       'boardData',
@@ -114,22 +117,28 @@ const WritePage = () => {
         formData.append('files', fileObj.file) // files[] 배열로 추가
       }
     })
-
-    const { data, error, status } = await useFetchApi(
-      '/bulletin-board/registration',
-      {
-        method: 'post',
-        data: formData,
-        headers: 'multipart/form-data',
-      },
-      { isAuth: true }
-    )
-    if (status === 200) {
-      // queryClient.
-      await queryClient.invalidateQueries({
-        queryKey: ['bulletinBoardList'],
-        exact: false,
-      })
+    const result = await onBulletinUpdateOrNewBulletin({
+      boardTitle: boardTitle,
+      boardContents: boardContents,
+      statusCode: SafetySignatureStatusCode.PUBLISHED,
+      boardAddress: `${address} / ${detailAddress}`,
+      files: files,
+    })
+    // const { data, error, status } = await useFetchApi(
+    //   '/bulletin-board/registration',
+    //   {
+    //     method: 'post',
+    //     data: formData,
+    //     headers: 'multipart/form-data',
+    //   },
+    //   { isAuth: true }
+    // )
+    if (result) {
+      // // queryClient.
+      // await queryClient.invalidateQueries({
+      //   queryKey: ['bulletinBoardList'],
+      //   exact: false,
+      // })
       onChangeModalVisible({
         isVisible: true,
         msg: '등록 완료 됐습니다.',

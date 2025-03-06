@@ -1,0 +1,10 @@
+export enum SafetySignatureStatusCode {
+  DRAFT = 'DRAFT',
+  PUBLISHED = 'PUBLISHED',
+  HIDDEN = 'HIDDEN',
+  DELETED = 'DELETED',
+  ARCHIVED = 'ARCHIVED',
+  RESTRICTED = 'RESTRICTED',
+  PRIVATE = 'PRIVATE',
+  EXPIRED = 'EXPIRED',
+}

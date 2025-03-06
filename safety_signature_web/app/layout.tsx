@@ -8,6 +8,7 @@ import Footer from '@/components/layout/Footer'
 import Header from '@/components/layout/Header'
 import MainBody from '@/components/layout/MainBody'
 import StyledComponentsRegistry from '@/components/layout/StyledComponentsRegistry'
+import queryClient from './queryClient'
 
 const geistSans = Geist({
   variable: '--font-geist-sans',

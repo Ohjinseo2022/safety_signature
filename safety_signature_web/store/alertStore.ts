@@ -12,14 +12,16 @@ interface AlertStoreType {
   onChangeModalVisible: ({
     isVisible,
     msg,
+    isCancel,
     callBackFunction,
   }: {
     isVisible: boolean
     msg?: string
-    callBackFunction?: () => boolean
+    callBackFunction?: () => boolean | Promise<any> | void
+    isCancel?: boolean
     overlayClose?: boolean
   }) => void
-  callBackFunction?: (e: any) => boolean
+  callBackFunction?: (e: any) => boolean | Promise<any> | void
   children: ReactNode | string
   initAlertStore: () => void
 }
@@ -29,17 +31,20 @@ export const useAlertStore = create<AlertStoreType>()(
       isModalVisible: false,
       overlayClose: true,
       title: undefined,
+      isCancel: false,
       children: '',
       onChangeModalVisible: ({
         isVisible,
         msg = '',
         callBackFunction,
+        isCancel = false,
         overlayClose = true,
       }) => {
         set(() => ({
           isModalVisible: isVisible,
           children: msg,
           callBackFunction: callBackFunction,
+          isCancel: isCancel,
           overlayClose: overlayClose,
         }))
       },
@@ -49,7 +54,7 @@ export const useAlertStore = create<AlertStoreType>()(
           overlayClose: true,
           title: undefined,
           children: '',
-          callBackFunction: (e: any) => true,
+          callBackFunction: (e: any) => undefined,
         }))
       },
     }),

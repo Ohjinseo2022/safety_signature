@@ -36,8 +36,13 @@ export default function Header() {
     setProfile(isLoginResponceSuccess(userProfile))
   }, [pathname, userProfile])
 
-  const { isModalVisible, onChangeModalVisible, children, callBackFunction } =
-    useAlertStore()
+  const {
+    isModalVisible,
+    onChangeModalVisible,
+    children,
+    callBackFunction,
+    isCancel,
+  } = useAlertStore()
 
   const onLoginAndOutHandler = async (type: string) => {
     if (type === 'o') {
@@ -107,6 +112,7 @@ export default function Header() {
         <CommonModal
           isVisible={isModalVisible}
           title=""
+          isCancel={isCancel}
           setIsVisible={(e) => {
             onChangeModalVisible({ isVisible: e })
           }}

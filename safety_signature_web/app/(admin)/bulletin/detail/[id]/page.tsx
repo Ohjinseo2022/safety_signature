@@ -3,10 +3,14 @@
 import { useAlertStore } from '@/store/alertStore'
 import styled from 'styled-components'
 import { use, useEffect, useMemo, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { SafetySignatureStatusCode } from '@/types/enum'
 import { getDownloadExcel } from '@/hooks/common/useDownLoad'
 import { useInput } from '@/hooks/useInput'
+import CommonButton from '@/components/common/CommonButton'
 import CommonDataTable from '@/components/common/CommonDataTable'
 import CustomDownloadButton from '@/components/custom/CustomDownloadButton'
+import CommonModal from '@/components/modal/CommonModal'
 import { CommonCard } from '@/components/styled/common'
 import {
   LoginResponseSuccess,
@@ -16,6 +20,7 @@ import { useUserProfile } from '@/app/(common)/user/login/_userState/userStore'
 import {
   ApproveMasterType,
   approveSignature,
+  onBulletinUpdateOrNewBulletin,
   useApproveListQuery,
   useBulletinBoardQuery,
 } from '../../_hooks/BulletinBoardQuery'
@@ -26,13 +31,24 @@ interface BulletinDetailPageProps {
 
 const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
   const unwrappedParams = use(params) // params를 언래핑
+  const router = useRouter()
   const { isModalVisible, onChangeModalVisible, callBackFunction } =
     useAlertStore()
+  const [bulletinModal, onChnageBulletinModal, setBulletinModal] = useInput<{
+    isVisible: boolean
+    children: string
+    callBack: () => void
+  }>({
+    isVisible: false,
+    children: '',
+    callBack: () => router.push('/bulletin'),
+  })
   const userProfile = useUserProfile().userProfile as LoginResponseSuccess
   const {
     data: bulletinBoardDetail,
     error,
     isFetched,
+    refetch,
   } = useBulletinBoardQuery(unwrappedParams.id)
   const [page, onChangePage, setPage] = useInput<number>(1)
   // 결제 완료 리스트
@@ -70,7 +86,6 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
 
   const onDownLoadExcel = async () => {
     await getDownloadExcel(unwrappedParams.id)
-    alert('댓글 데이터를 엑셀로 다운로드합니다.')
   }
   const onSignatureHandler = async () => {
     const result = await approveSignature(unwrappedParams.id)
@@ -79,10 +94,61 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
       result.status === 200 ? approveListRefetch() : undefined
     }
   }
+  const onStatusChangeHandler = async (type: 'D' | 'A') => {
+    onChangeModalVisible({
+      isVisible: true,
+      isCancel: true,
+      msg:
+        type === 'D'
+          ? '정말 삭제 하시겠습니까?'
+          : '문서를 다시 복구 시키시겠습니까?',
+      callBackFunction: async () => {
+        const result = await onBulletinUpdateOrNewBulletin({
+          bulletinBoardId: unwrappedParams.id,
+          statusCode:
+            type === 'D'
+              ? SafetySignatureStatusCode.DELETED
+              : SafetySignatureStatusCode.PUBLISHED,
+        })
+        if (result) {
+          setBulletinModal({
+            isVisible: result,
+            children: `전자결제 문서가 ${type === 'D' ? '삭제' : '복구'}가 완료됐습니다.`,
+            callBack:
+              type === 'D' ? () => router.push('/bulletin') : () => refetch(),
+          })
+        }
+      },
+    })
+  }
+
   return detailData ? (
     <DetailContainer>
       <PostInfo>
-        <h2>{detailData.boardTitle}</h2>
+        <FlexTitle>
+          <h2>{detailData.boardTitle}</h2>
+          {userProfile.id === detailData.userMasterId && (
+            <div>
+              <CommonButton>수정</CommonButton>
+              <CommonButton
+                $backgroundColor={'#FF0000'}
+                onClick={() =>
+                  onStatusChangeHandler(
+                    detailData.boardStatusCode !==
+                      SafetySignatureStatusCode.DELETED
+                      ? 'D'
+                      : 'A'
+                  )
+                }
+              >
+                {detailData.boardStatusCode !==
+                SafetySignatureStatusCode.DELETED
+                  ? '삭제'
+                  : '복구'}
+              </CommonButton>
+            </div>
+          )}
+        </FlexTitle>
         <div
           className="content"
           dangerouslySetInnerHTML={{ __html: detailData.boardContents }}
@@ -120,6 +186,17 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
         headers={headers}
         dataItem={approveDataList.length > 0 ? approveDataList : []}
       />
+      <CommonModal
+        isVisible={bulletinModal.isVisible}
+        setIsVisible={(e: boolean) =>
+          setBulletinModal((state) => {
+            return { ...state, isVisible: e }
+          })
+        }
+        callBackFunction={bulletinModal.callBack}
+      >
+        {bulletinModal.children}
+      </CommonModal>
     </DetailContainer>
   ) : (
     <></>
@@ -144,7 +221,12 @@ const DetailContainer = styled.div`
   flex-direction: column;
   gap: 20px;
 `
-
+const FlexTitle = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+`
 const PostInfo = styled.div`
   background-color: #1e1e1e;
   padding: 40px; /* 여유 공간 추가 */
