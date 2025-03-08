@@ -16,12 +16,14 @@ type LoggerImpl = <T>(
 
 const loggerImpl: LoggerImpl = (f, name) => (set, get, store) => {
   // type T = ReturnType<typeof f>;
-  const loggedSet: typeof set = (...a) => {
+  const loggedSet: typeof set = (...a: any) => {
+    //@ts-ignore
     set(...a)
     //console.log(...(name ? [`${name}:`] : []), get())
   }
   const setState = store.setState
   store.setState = (...a) => {
+    //@ts-ignore
     setState(...a)
     //console.log(...(name ? [`${name}:`] : []), store.getState())
   }
