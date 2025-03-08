@@ -15,11 +15,15 @@ pipeline {
                     sh '''
                     ssh -p 10000 ${SERVER_USER}@${SERVER_IP} << 'EOF'
                     cd /home/ojsadmin/jenkins
-                    if [ -d "safety_signature" ]; then
+                    
+                    # 저장소가 존재하면 최신 코드 가져오기
+                    if [ -d "safety_signature/.git" ]; then
+                        echo "✅ Git 저장소가 존재합니다. 최신 코드 가져오기."
                         cd safety_signature
                         git reset --hard origin/${REPO_BRANCH}
                         git pull origin ${REPO_BRANCH}
                     else
+                        echo "⚠️  Git 저장소가 존재하지 않습니다. 클론을 수행합니다."
                         git clone -b ${REPO_BRANCH} git@github.com:Ohjinseo2022/safety_signature.git
                     fi
                     EOF
@@ -33,10 +37,18 @@ pipeline {
                 sshagent (credentials: ['server-ssh-key']) {
                     sh '''
                     ssh -p 10000 ${SERVER_USER}@${SERVER_IP} << 'EOF'
-                    cd /home/ojsadmin/jenkins
-                    git pull origin master
+                    cd /home/ojsadmin/jenkins/safety_signature
+
+                    echo "🔄 최신 코드 가져오기..."
+                    git pull origin ${REPO_BRANCH}
+
+                    echo "🛑 기존 컨테이너 종료..."
                     echo '${SUDO_PASSWORD}' | sudo -S docker-compose down
+
+                    echo "⚙️  컨테이너 빌드..."
                     echo '${SUDO_PASSWORD}' | sudo -S docker-compose build
+
+                    echo "🚀 컨테이너 실행..."
                     echo '${SUDO_PASSWORD}' | sudo -S docker-compose up -d
                     EOF
                     '''
