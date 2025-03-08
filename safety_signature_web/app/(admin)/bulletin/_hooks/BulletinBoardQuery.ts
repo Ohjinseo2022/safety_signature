@@ -69,7 +69,7 @@ export const approveSignature = async (
     if (!error) {
       return { ...data, status: status }
     } else {
-      return { ...error, status: status }
+      return { ...error.data, status: status }
     }
   } catch (e) {
     return {

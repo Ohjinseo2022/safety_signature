@@ -89,6 +89,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
   }
   const onSignatureHandler = async () => {
     const result = await approveSignature(unwrappedParams.id)
+
     if (result) {
       onChangeModalVisible({ isVisible: true, msg: result.message })
       result.status === 200 ? approveListRefetch() : undefined
@@ -174,12 +175,14 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
       <CommonDataTable
         title={'결제완료 리스트'}
         topBtnLable={
-          userProfile.userTypeCode === UserTypeCode.MASTER_ADMINISTRATOR
+          userProfile.id === detailData.userMasterId
             ? '다운로드 '
-            : '결제하기'
+            : !detailData.completionYn
+              ? '결제하기'
+              : ''
         }
         onTopButtonClick={
-          userProfile.userTypeCode === UserTypeCode.MASTER_ADMINISTRATOR
+          userProfile.id === detailData.userMasterId
             ? onDownLoadExcel
             : onSignatureHandler
         }
