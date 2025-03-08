@@ -5,6 +5,7 @@ pipeline {
         SERVER_USER = "ojsadmin"
         SERVER_IP = "124.63.21.91"
         REPO_BRANCH = "master"  // 저장소 브랜치
+        SUDO_PASSWORD = credentials('sudo-password')
     }
 
     stages {
@@ -12,6 +13,8 @@ pipeline {
             steps {
                 sshagent (credentials: ['github-ssh-key']) {  // 기존 키 사용
                     sh '''
+                    ssh -p 10000 ${SERVER_USER}@${SERVER_IP} << 'EOF'
+                    cd /home/ojsadmin/jenkins
                     if [ -d "safety_signature" ]; then
                         cd safety_signature
                         git reset --hard origin/${REPO_BRANCH}
@@ -19,6 +22,7 @@ pipeline {
                     else
                         git clone -b ${REPO_BRANCH} git@github.com:Ohjinseo2022/safety_signature.git
                     fi
+                    EOF
                     '''
                 }
             }
@@ -31,9 +35,9 @@ pipeline {
                     ssh -p 10000 ${SERVER_USER}@${SERVER_IP} << 'EOF'
                     cd /home/ojsadmin/jenkins
                     git pull origin master
-                    sudo -S docker-compose down || true
-                    sudo -S docker-compose build
-                    sudo -S docker-compose up -d
+                    echo '${SUDO_PASSWORD}' | sudo -S docker-compose down
+                    echo '${SUDO_PASSWORD}' | sudo -S docker-compose build
+                    echo '${SUDO_PASSWORD}' | sudo -S docker-compose up -d
                     EOF
                     '''
                 }
