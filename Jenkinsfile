@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         SERVER_USER = "ojsadmin"
-        SERVER_IP = "127.0.0.1"
+        SERVER_IP = "124.63.21.91"
         REPO_BRANCH = "master"  // 저장소 브랜치
     }
 
@@ -28,7 +28,7 @@ pipeline {
             steps {
                 sshagent (credentials: ['server-ssh-key']) {
                     sh '''
-                    ssh -p 22 ${SERVER_USER}@${SERVER_IP} << 'EOF'
+                    ssh -p 10000 ${SERVER_USER}@${SERVER_IP} << 'EOF'
                     cd /home/ojsadmin/jenkins
                     git pull origin master
                     sudo docker-compose down || true
