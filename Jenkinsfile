@@ -31,9 +31,9 @@ pipeline {
                     ssh -p 10000 ${SERVER_USER}@${SERVER_IP} << 'EOF'
                     cd /home/ojsadmin/jenkins
                     git pull origin master
-                    sudo docker-compose down || true
-                    sudo docker-compose build
-                    sudo docker-compose up -d
+                    sudo -S docker-compose down || true
+                    sudo -S docker-compose build
+                    sudo -S docker-compose up -d
                     EOF
                     '''
                 }
