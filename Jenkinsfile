@@ -13,7 +13,7 @@ pipeline {
             steps {
                 sshagent (credentials: ['github-ssh-key']) {  // 기존 키 사용
                     sh '''
-                    ssh -p 10000 ${SERVER_USER}@${SERVER_IP} << 'EOF'
+                    ssh -p 10000 ${SERVER_USER}@${SERVER_IP} <<EOF
                     cd /home/ojsadmin/jenkins
                     
                     # 저장소가 존재하면 최신 코드 가져오기
@@ -25,10 +25,9 @@ pipeline {
                     else
                         echo "⚠️  Git 저장소가 존재하지 않습니다. 클론을 수행합니다."
                         git clone -b ${REPO_BRANCH} git@github.com:Ohjinseo2022/safety_signature.git safety_signature
-                        echo "⚠️  클론을 수행완료."
                     fi
                     EOF
-                    '''
+                    '''.stripIndent()
                 }
             }
         }
@@ -37,7 +36,7 @@ pipeline {
             steps {
                 sshagent (credentials: ['server-ssh-key']) {
                     sh '''
-                    ssh -p 10000 ${SERVER_USER}@${SERVER_IP} << 'EOF'
+                    ssh -p 10000 ${SERVER_USER}@${SERVER_IP} <<EOF
                     cd /home/ojsadmin/jenkins/safety_signature
 
                     echo "🔄 최신 코드 가져오기..."
@@ -52,7 +51,7 @@ pipeline {
                     echo "🚀 컨테이너 실행..."
                     echo '${SUDO_PASSWORD}' | sudo -S docker-compose up -d
                     EOF
-                    '''
+                    '''.stripIndent()
                 }
             }
         }
