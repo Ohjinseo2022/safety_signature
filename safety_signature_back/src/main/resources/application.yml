@@ -4,6 +4,12 @@ server:
     context-path: /services/backend
 
 spring:
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ENC(H8bDbms3z4eV82Vh2F+fnOod1DTt876urlQWkYlllHTVX6MNBn3oIan/RL1vjyuLcIBQODnSt13ZmbaaG4D0A8C2X+04XgJRaG1V8IyloqGx051a0IM1ew==)
   application:
     name: safety_signature_back
   datasource:
@@ -29,9 +35,7 @@ spring:
         show_sql: true        #
     show-sql: true
 
-  config:
-    import:
-      classpath:/private/application-security.yml
+
   sql:
     init:
       platform: postgres
@@ -67,3 +71,12 @@ client:
 api:
   domain: "http://localhost:8080"
   baseUrl: "/services/backend"
+
+access-token:
+  secret-key: ENC(M2o/g3PSJwzjB3wyuEVJx38we5yXOVN5gqBpa0gp6IAnq+NXS4FxxvvWItON8PzkSKgmLhKIk1A=)
+  expire-length: 3600000
+
+refresh-token:
+  expire-length: 1209600000
+
+kakao-admin-key: ENC(Cd6KCTQNNC++/IPD6iEFFLwgMVNmrj3FC5vOSliT/zZWixQYgWzKZlFfV0onM7pA)
