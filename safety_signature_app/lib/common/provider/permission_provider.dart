@@ -91,16 +91,16 @@ Future<PermissionStatus> checkAndRequestStoragePermission() async {
 
   if (sdkInt >= 33) {
     // ✅ Android 13 (API 33) 이상
-    print("🔍 Android 13 이상 - 세분화된 미디어 권한 확인");
+    // print("🔍 Android 13 이상 - 세분화된 미디어 권한 확인");
     PermissionStatus images = await Permission.photos.request();
     PermissionStatus videos = await Permission.videos.request();
     PermissionStatus audio = await Permission.audio.request();
 
     if (images.isGranted || videos.isGranted || audio.isGranted) {
-      print("✅ Android 13 - 저장소 및 미디어 권한 허용됨");
+      // print("✅ Android 13 - 저장소 및 미디어 권한 허용됨");
       return PermissionStatus.granted;
     } else {
-      print("❌ Android 13 - 저장소 및 미디어 권한 거부됨");
+      // print("❌ Android 13 - 저장소 및 미디어 권한 거부됨");
       return PermissionStatus.denied;
     }
   } else if (sdkInt >= 30) {
