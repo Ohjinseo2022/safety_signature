@@ -74,7 +74,7 @@ class CustomInterceptor extends Interceptor {
     if (isStatus401 && !isPathRefresh) {
       final dio = Dio();
       try {
-        final res = await dio.post('http://$ip$baseUrl/auth/token/renew',
+        final res = await dio.post('$ip$baseUrl/auth/token/renew',
             options: Options(headers: {
               'authorization': 'Bearer $refreshToken',
             }));

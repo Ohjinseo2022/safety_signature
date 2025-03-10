@@ -173,7 +173,7 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
         Text(label, style: TextStyle(fontWeight: FontWeight.bold)),
         isImg
             ? Image.network(
-                'http://$ip$baseUrl/attach/download/$value',
+                '$ip$baseUrl/attach/download/$value',
                 height: 50,
                 width: 100,
                 fit: BoxFit.cover,

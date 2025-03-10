@@ -12,7 +12,7 @@ final approveMasterRepositoryProvider =
   final dio = ref.watch(dioProvider);
   final repository = ApproveMasterRepository(
     dio,
-    baseUrl: "http://$ip$baseUrl/approve",
+    baseUrl: "$ip$baseUrl/approve",
   );
   return repository;
 });

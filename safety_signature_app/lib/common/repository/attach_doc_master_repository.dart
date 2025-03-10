@@ -12,7 +12,7 @@ final attachDocMasterRepositoryProvider =
   final dio = ref.watch(dioProvider);
   final repository = AttachDocMasterRepository(
     dio,
-    baseUrl: "http://$ip$baseUrl/attach",
+    baseUrl: "$ip$baseUrl/attach",
   );
   return repository;
 });

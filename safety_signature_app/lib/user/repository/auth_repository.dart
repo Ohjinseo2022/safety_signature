@@ -10,7 +10,7 @@ part 'auth_repository.g.dart';
 
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final dio = ref.watch(dioProvider);
-  return AuthRepository(dio, baseUrl: 'http://$ip$baseUrl');
+  return AuthRepository(dio, baseUrl: '$ip$baseUrl');
 });
 
 @RestApi()

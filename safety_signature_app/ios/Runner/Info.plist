@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>안전싸인</string>
+	<string>${APP_NAME}</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -81,6 +81,6 @@
 	<key>NSRemindersUsageDescription</key>
 	<string>알림 기능</string>
 	<key>NSDocumentsFolderUsageDescription</key>
-	<string>앱에 전자결제 문서를 저장하기 위해 접근 권한이 필요합니다.</string>
+	<string>안전싸인앱에서 전자서명 관련 파일을 저장하고 접근하기 위해 사용됩니다.</string>
 </dict>
 </plist>

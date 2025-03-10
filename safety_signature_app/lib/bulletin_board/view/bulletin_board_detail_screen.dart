@@ -78,7 +78,6 @@ class _BulletinBoardDetailScreenState
 
 // ✅ 결제 처리
   void _handleSignature(String bulletinBoardId) async {
-    print(bulletinBoardId);
     // approveResult is ApproveSignatureMessageModel
     // 결제 처리 로직 추가
     ScaffoldMessenger.of(context).showSnackBar(

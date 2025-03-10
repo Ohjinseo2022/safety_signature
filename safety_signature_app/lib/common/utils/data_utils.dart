@@ -9,7 +9,7 @@ class DataUtils {
   }
 
   static String pathToUrl(String value) {
-    return "http://$ip$value";
+    return "$ip$value";
   }
 
   static List<String> listPathsToUrls(List paths) {

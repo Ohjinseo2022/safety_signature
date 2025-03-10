@@ -60,7 +60,7 @@ dependencies:
   # TODO: 설정완료 후 주석 해제
   #  flutter_naver_login: ^2.0.0
   flutter_svg: ^2.0.14
-  envied: ^0.5.4+1
+  envied: ^1.1.1
   # 웹소켓 클라이언트 를 위한 패키지
   stomp_dart_client: ^2.1.0
   # 앱 처음실행시 색깔 지정
@@ -90,6 +90,8 @@ dependencies:
   open_file: ^3.5.10
   # 첨부 파일 다운로드시 경로를 받아오는 패키지
   path_provider: ^2.1.5
+  # 플렛폼 관련
+  device_info_plus: ^11.3.0
 
 
 dev_dependencies:
@@ -106,11 +108,10 @@ dev_dependencies:
   json_serializable: ^6.8.0
   retrofit_generator: '>=7.0.0 <8.0.0'   #// required dart >=2.19
   riverpod_generator: ^2.4.0
-  envied_generator: ^0.5.4+1
+  envied_generator: ^1.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
-
 # The following section is specific to Flutter packages.
 flutter:
 

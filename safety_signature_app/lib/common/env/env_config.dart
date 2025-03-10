@@ -1,7 +1,10 @@
 import 'package:envied/envied.dart';
 part 'env_config.g.dart';
 
-@envied
+// 현재 실행 중인 `flavor`에 따라 환경 파일을 로드
+// const String flavor = String.fromEnvironment('FLAVOR', defaultValue: 'local'); 버그가 있는듯..
+
+@Envied(path: '.env')
 abstract class Env {
   @EnviedField(varName: 'ENV_BASE_URL', obfuscate: true)
   static String ENV_BASE_URL = _Env.ENV_BASE_URL;

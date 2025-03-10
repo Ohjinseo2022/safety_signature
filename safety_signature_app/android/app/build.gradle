@@ -37,6 +37,21 @@ android {
             signingConfig = signingConfigs.debug
         }
     }
+    flavorDimensions "build-type"
+
+    productFlavors {
+        local {
+            dimension "build-type"
+            applicationIdSuffix ".local"
+            resValue "string", "app_name", "안전싸인-local"
+        }
+
+
+        prod {
+            dimension "build-type"
+            resValue "string", "app_name", "안전싸인"
+        }
+    }
 }
 
 flutter {

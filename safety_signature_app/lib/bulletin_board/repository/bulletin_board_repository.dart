@@ -17,7 +17,7 @@ final bulletinBoardRepositoryProvider =
   final dio = ref.watch(dioProvider);
   final repository = BulletinBoardRepository(
     dio,
-    baseUrl: "http://$ip$baseUrl/bulletin-board/registration",
+    baseUrl: "$ip$baseUrl/bulletin-board/registration",
   );
   return repository;
 });
