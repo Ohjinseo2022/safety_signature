@@ -6,7 +6,7 @@
     "dev": "env-cmd -f .env.dev next dev -p 3000 --turbopack",
     "local": "env-cmd -f .env.local next dev -p 3000 --turbopack",
     "build": "next build",
-    "start": "next start",
+    "start": "next start .env.prod -p 3000",
     "lint": "next lint"
   },
   "dependencies": {
