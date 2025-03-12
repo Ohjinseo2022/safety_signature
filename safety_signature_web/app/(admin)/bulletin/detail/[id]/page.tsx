@@ -1,8 +1,10 @@
 'use client'
 
 import { useAlertStore } from '@/store/alertStore'
+import html2canvas from 'html2canvas'
+import { jsPDF } from 'jspdf'
 import styled from 'styled-components'
-import { use, useEffect, useMemo, useState } from 'react'
+import { use, useEffect, useMemo, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { SafetySignatureStatusCode } from '@/types/enum'
 import { getDownloadExcel } from '@/hooks/common/useDownLoad'
@@ -31,6 +33,7 @@ interface BulletinDetailPageProps {
 }
 
 const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
+  const approveTable = useRef<HTMLElement>(null)
   const unwrappedParams = use(params) // params를 언래핑
   const router = useRouter()
   const { isModalVisible, onChangeModalVisible, callBackFunction } =
@@ -83,13 +86,57 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
   const headers = [
     { label: 'NO', columns: 'index' },
     { label: '업체명', columns: 'companyName' },
-    { label: '공증', columns: 'constructionBusiness' },
+    { label: '공종', columns: 'constructionBusiness' },
     { label: '성명', columns: 'createdDateFormat' },
     { label: '확인', columns: 'attachDocId' },
   ]
 
   const onDownLoadExcel = async () => {
-    await getDownloadExcel(unwrappedParams.id)
+    // await getDownloadExcel(unwrappedParams.id)
+    if (approveTable.current) {
+      const element = approveTable.current
+      const canvas = await html2canvas(element, { scale: 2 }) // 고해상도 캡처
+      const imgData = canvas.toDataURL('image/png')
+
+      const componentWidth = element.offsetWidth
+      const componentHeight = element.offsetHeight
+
+      const pdf = new jsPDF({
+        orientation: 'p', // 기본 A4 세로
+        unit: 'mm',
+        format: 'a4',
+      })
+
+      // A4 크기
+      const A4_WIDTH = 210 // mm
+      const A4_HEIGHT = 297 // mm
+      const scaleFactor = A4_WIDTH / componentWidth
+      const scaledHeight = componentHeight * scaleFactor
+
+      if (scaledHeight < A4_HEIGHT) {
+        // 요소가 A4보다 작다면, 공백을 추가
+        pdf.addImage(imgData, 'PNG', 0, 0, A4_WIDTH, scaledHeight)
+        pdf.setFillColor(255, 255, 255) // 흰색
+        pdf.rect(0, scaledHeight, A4_WIDTH, A4_HEIGHT - scaledHeight, 'F') // 나머지 영역 채우기
+      } else {
+        // 요소가 A4보다 크다면, 여러 페이지로 나눔
+        let yPosition = 0
+        while (yPosition < componentHeight) {
+          pdf.addImage(
+            imgData,
+            'PNG',
+            0,
+            -yPosition * scaleFactor,
+            A4_WIDTH,
+            componentHeight * scaleFactor
+          )
+          yPosition += A4_HEIGHT / scaleFactor
+          if (yPosition < componentHeight) pdf.addPage()
+        }
+      }
+
+      pdf.save(`${detailData.boardTitle}.pdf`)
+    }
   }
   const onSignatureHandler = async () => {
     const result = await approveSignature(unwrappedParams.id)
@@ -179,6 +226,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
           )}
         </div>
       </CommonCard>
+
       <CommonDataTable
         title={'결재완료 리스트'}
         topBtnLable={
@@ -195,6 +243,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
         }
         children={
           <EducationCertificate
+            ref={approveTable}
             siteName={detailData.siteName}
             educationDate={detailData.createdDateFormat}
             educationType={detailData.boardTitle}

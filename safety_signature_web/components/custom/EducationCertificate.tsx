@@ -5,6 +5,7 @@ import React from 'react'
 import { ApproveMasterType } from '@/app/(admin)/bulletin/_hooks/BulletinBoardQuery'
 
 interface EducationCertificateProps {
+  ref?: any
   headers: { label: string; columns: string }[]
   siteName: string
   educationType: string
@@ -16,6 +17,7 @@ interface EducationCertificateProps {
 }
 
 const EducationCertificate: React.FC<EducationCertificateProps> = ({
+  ref,
   siteName,
   headers,
   educationType,
@@ -24,7 +26,7 @@ const EducationCertificate: React.FC<EducationCertificateProps> = ({
 }) => {
   console.log(participants)
   return (
-    <Container>
+    <Container ref={ref}>
       {/* 상단 테이블 */}
       <HeaderTable>
         <tbody>
