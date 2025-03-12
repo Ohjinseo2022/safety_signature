@@ -43,6 +43,10 @@ public class BulletinBoardMasterDTO extends AbstractAuditingDTO<String> implemen
     @Schema(description = "현장 주소 정보")
     private String siteAddress;
 
+    @Size(max = 5000)
+    @Schema(description = "현장명")
+    private String siteName;
+
     @Schema(description = "첨부파일 유무")
     private Boolean attachYn;
 

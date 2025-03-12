@@ -9,6 +9,7 @@ interface CommonDataTableProps {
   topBtnLable?: string
   headers: { label: string; columns: string }[]
   dataItem: any[]
+  children?: React.ReactNode
 }
 
 const CommonDataTable: React.FC<CommonDataTableProps> = ({
@@ -17,6 +18,7 @@ const CommonDataTable: React.FC<CommonDataTableProps> = ({
   topBtnLable,
   headers,
   dataItem,
+  children,
 }) => {
   return (
     <DataTableContainer>
@@ -26,44 +28,47 @@ const CommonDataTable: React.FC<CommonDataTableProps> = ({
           <button onClick={onTopButtonClick}>{topBtnLable}</button>
         )}
       </DataTableHeader>
+      {!children ? (
+        <DataTable>
+          <thead>
+            <tr>
+              {headers.map((header, idx) => (
+                <th key={`${header.columns}-${idx}`}>{header.label}</th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {Array.isArray(dataItem) && dataItem.length > 0
+              ? dataItem.map((item: any, idx: number) => (
+                  <tr key={`${item.id}-${idx}`}>
+                    {headers.map((header, index) => {
+                      if (header.columns === 'attachDocId') {
+                        return (
+                          <td
+                            className="signature-cell"
+                            key={`${header.columns}-${item.id}`}
+                          >
+                            <img
+                              src={`${process.env.NEXT_PUBLIC_DOMAIN}${process.env.NEXT_PUBLIC_BASE_URL}/attach/download/${item[header.columns]}`}
+                            ></img>
+                          </td>
+                        )
+                      }
 
-      <DataTable>
-        <thead>
-          <tr>
-            {headers.map((header, idx) => (
-              <th key={`${header.columns}-${idx}`}>{header.label}</th>
-            ))}
-          </tr>
-        </thead>
-        <tbody>
-          {Array.isArray(dataItem) && dataItem.length > 0
-            ? dataItem.map((item: any, idx: number) => (
-                <tr key={`${item.id}-${idx}`}>
-                  {headers.map((header, index) => {
-                    if (header.columns === 'attachDocId') {
                       return (
-                        <td
-                          className="signature-cell"
-                          key={`${header.columns}-${item.id}`}
-                        >
-                          <img
-                            src={`${process.env.NEXT_PUBLIC_DOMAIN}/${process.env.NEXT_PUBLIC_BASE_URL}/attach/download/${item[header.columns]}`}
-                          ></img>
+                        <td key={`${header.columns}-${item.id}`}>
+                          {item[header.columns]}
                         </td>
                       )
-                    }
-
-                    return (
-                      <td key={`${header.columns}-${item.id}`}>
-                        {item[header.columns]}
-                      </td>
-                    )
-                  })}
-                </tr>
-              ))
-            : null}
-        </tbody>
-      </DataTable>
+                    })}
+                  </tr>
+                ))
+              : null}
+          </tbody>
+        </DataTable>
+      ) : (
+        children
+      )}
     </DataTableContainer>
   )
 }

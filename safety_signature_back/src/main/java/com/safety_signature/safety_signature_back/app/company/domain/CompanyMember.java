@@ -31,16 +31,16 @@ public class CompanyMember extends AbstractAuditingEntity<String> implements Ser
 
     @Comment("회사 구성원 고유 ID")
     @NotNull
-    @Size(max = 36)
+    @Size(max = 100)
     @Id
-    @Column(name="id", length = 36, nullable = false,unique = true)
+    @Column(name="id", length = 100, nullable = false,unique = true)
     private String id;
 
-    @Comment("직책 정보")
+    @Comment("공사 종목")
     @NotNull
     @Size(max =100)
-    @Column(name = "job_position",length = 100)
-    private String jobPosition;
+    @Column(name = "construction business",length = 100)
+    private String constructionBusiness;
 
     @Comment("활성 상태")
     @NotNull

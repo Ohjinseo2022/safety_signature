@@ -101,7 +101,7 @@ table {
 
 th,
 td {
-  border: 1px solid #333333; /* 테두리 색상 */
+  border: 1px solid #333333 !important; /* 테두리 색상 */
   padding: 12px 15px; /* 셀 내부 여백 */
   text-align: left;
 }

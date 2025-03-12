@@ -16,16 +16,16 @@ import java.util.List;
 public class ApproveMasterCustomDTO extends ApproveMasterDTO {
     @Schema(description = "최소 생성 일시 문자열 포멧")
     private String createdDateFormat;
-    @Schema(description = "현장 명")
-    private String siteName;
+    @Schema(description = "업체 명")
+    private String companyName;
 
-    @Schema(description = "전자결제 제목")
-    private String bulletinBoardTitle;
+    @Schema(description = "공사 종목 명")
+    private String constructionBusiness;
 
     public static ApproveMasterCustomDTO from(ApproveMasterDTO approveMasterDTO) {
         ApproveMasterCustomDTO approveMasterCustomDTO = new ApproveMasterCustomDTO();
         BeanUtils.copyProperties(approveMasterDTO, approveMasterCustomDTO);
-        approveMasterCustomDTO.setCreatedDateFormat(DateUtil.instantToStringDate(approveMasterCustomDTO.getCreatedDate(), "yyyy-MM-dd HH:mm"));
+        approveMasterCustomDTO.setCreatedDateFormat(DateUtil.instantToStringDate(approveMasterCustomDTO.getCreatedDate(), "yyyy-MM-dd"));
         return approveMasterCustomDTO;
     }
 

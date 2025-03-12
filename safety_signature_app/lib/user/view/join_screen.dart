@@ -90,159 +90,164 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
     }
     return DefaultLayout(
       title: "회원가입",
-      backgroundColor: SECONDARY_COLOR,
       topAppBarBtn: false,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          _inputField(
-            inputValue: name,
-            title: "이름",
-            placeholder: "이름을 입력해 주세요.",
-            onChangedValue: (value) {
-              name = value;
-            },
-            enabled: state is! UserMinModel,
-          ),
-          _inputField(
-            inputValue: userId,
-            title: "아이디(이메일)",
-            placeholder: "아이디(이메일)을 입력해 주세요. ex)xxx@gmail.com",
-            onChangedValue: (value) {
-              // setState(() {
-              userId = value;
-              // });
-            },
-            validator: (value) {
-              userIdValid = DataUtils.emailRegex(value);
-              return userIdValid;
-            },
-            enabled: state is! UserMinModel,
-          ),
-          _inputField(
-              inputValue: mobile,
-              title: "핸드폰 번호",
-              placeholder: "핸드폰 번호를 입력해 주세요. 숫자만 입력 가능 합니다.",
-              onChangedValue: (value) {
-                // setState(() {
-                mobile = value;
-                // });
-              },
-              inputFormatters: [
-                FilteringTextInputFormatter.digitsOnly,
-                LengthLimitingTextInputFormatter(11),
-              ],
-              validator: (value) {
-                mobileValid = DataUtils.phoneRegex(value);
-                return mobileValid;
-              },
-              //state 가 UserMinModel 이 아니거나 UserMinModel 이어도 mobile 정보가 없다면
-              enabled: state is! UserMinModel ||
-                  !(state is UserMinModel && state.mobile != null)),
-          _inputField(
-            inputValue: password,
-            title: "비밀번호",
-            placeholder: "비밀번호를 입력해 주세요.",
-            onChangedValue: (value) {
-              password = value;
-              setState(() {
-                if (value == "") {
-                  passwordCheck = "";
-                }
-              });
-            },
-            validator: (value) {
-              passwordValid = DataUtils.passwordRegex(value);
-              return passwordValid;
-            },
-            obscureText: true,
-          ),
-          if (password != "")
-            _inputField(
-              inputValue: passwordCheck,
-              title: "비밀번호 확인",
-              placeholder: "비밀번호를 다시한번 입력해주세요.",
-              onChangedValue: (value) {
-                // setState(() {
-                passwordCheck = value;
-                // });
-              },
-              validator: (value) {
-                passwordCheckValid = DataUtils.passwordRegex(value) ??
-                    (password == passwordCheck ? null : "비밀번호 와 일치하지 않습니다.");
-                return passwordCheckValid;
-              },
-              obscureText: true,
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  _inputField(
+                    inputValue: name,
+                    title: "이름",
+                    placeholder: "이름을 입력해 주세요.",
+                    onChangedValue: (value) {
+                      name = value;
+                    },
+                    enabled: state is! UserMinModel,
+                  ),
+                  _inputField(
+                    inputValue: userId,
+                    title: "아이디(이메일)",
+                    placeholder: "아이디(이메일)을 입력해 주세요. ex)xxx@gmail.com",
+                    onChangedValue: (value) {
+                      userId = value;
+                    },
+                    validator: (value) {
+                      userIdValid = DataUtils.emailRegex(value);
+                      return userIdValid;
+                    },
+                    enabled: state is! UserMinModel,
+                  ),
+                  _inputField(
+                    inputValue: mobile,
+                    title: "핸드폰 번호",
+                    placeholder: "핸드폰 번호를 입력해 주세요. 숫자만 입력 가능 합니다.",
+                    onChangedValue: (value) {
+                      mobile = value;
+                    },
+                    inputFormatters: [
+                      FilteringTextInputFormatter.digitsOnly,
+                      LengthLimitingTextInputFormatter(11),
+                    ],
+                    validator: (value) {
+                      mobileValid = DataUtils.phoneRegex(value);
+                      return mobileValid;
+                    },
+                    enabled: state is! UserMinModel ||
+                        !(state is UserMinModel && state.mobile != null),
+                  ),
+                  _inputField(
+                    inputValue: password,
+                    title: "비밀번호",
+                    placeholder: "비밀번호를 입력해 주세요.",
+                    onChangedValue: (value) {
+                      password = value;
+                      setState(() {
+                        if (value == "") {
+                          passwordCheck = "";
+                        }
+                      });
+                    },
+                    validator: (value) {
+                      passwordValid = DataUtils.passwordRegex(value);
+                      return passwordValid;
+                    },
+                    obscureText: true,
+                  ),
+                  if (password != "")
+                    _inputField(
+                      inputValue: passwordCheck,
+                      title: "비밀번호 확인",
+                      placeholder: "비밀번호를 다시한번 입력해주세요.",
+                      onChangedValue: (value) {
+                        passwordCheck = value;
+                      },
+                      validator: (value) {
+                        passwordCheckValid = DataUtils.passwordRegex(value) ??
+                            (password == passwordCheck
+                                ? null
+                                : "비밀번호 와 일치하지 않습니다.");
+                        return passwordCheckValid;
+                      },
+                      obscureText: true,
+                    ),
+                ],
+              ),
             ),
+          ),
+          // 🛠️ 버튼을 하단에 고정
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            padding:
+                const EdgeInsets.only(left: 20, right: 20, top: 0, bottom: 40),
             child: ElevatedButton(
-                style: ElevatedButton.styleFrom(),
-                onPressed: () async {
-                  if (name == "" ||
-                      userIdValid != null ||
-                      mobileValid != null ||
-                      passwordValid != null ||
-                      passwordCheckValid != null) {
-                    String alertMessage = name == ""
-                        ? "이름을 입력해 주세요."
-                        : userIdValid.runtimeType == String
-                            ? "아이디(이메일)을 확인해 주세요."
-                            : mobileValid.runtimeType == String
-                                ? "핸드폰 번호를 확인해 주세요 "
-                                : passwordValid.runtimeType == String
-                                    ? "비밀번호를 확인해 주세요."
-                                    : passwordCheckValid.runtimeType == String
-                                        ? "비밀번호를 확인해 주세요."
-                                        : "";
-                    commonDialog(
-                        context: context,
-                        content: Container(
-                            height: 50,
-                            alignment: Alignment.bottomCenter,
-                            child: Text(
-                              alertMessage,
-                              style: defaultTextStyle,
-                            )),
-                        onConfirm: () {},
-                        barrierDismissible: true);
-                    return;
-                  } else {
-                    await signatureDialog(
-                        context: context,
-                        onConfirm: (Uint8List image) async {
-                          ref
-                              .read(modalControllerProvider.notifier)
-                              .isPopUp(visibility: true);
-                          await ref.read(userAuthProvider.notifier).userJoin(
-                              PostJoinBody(
-                                  id: state is UserMinModel ? state.id : null,
-                                  name: name!,
-                                  userId: userId!,
-                                  mobile: mobile!,
-                                  password: password,
-                                  image: image));
-                          // if (isJoin is JoinFailedResponse) {
-                          //   await commonDialog(
-                          //     context: context,
-                          //     title: '회원가입 실패',
-                          //     content: Text(
-                          //       isJoin.message,
-                          //       style: defaultTextStyle,
-                          //     ),
-                          //     onConfirm: () {},
-                          //   );
-                          // } else {
-                          //   print("ddd");
-                          //   context.goNamed(RootTab.routeName);
-                          // }
-                          // print(value);
-                        });
-                  }
-                },
-                child: Text("전자 서명 추가 및 가입하기")),
-          )
+              style: ElevatedButton.styleFrom(
+                backgroundColor: PRIMARY_COLOR,
+                elevation: 3,
+                shadowColor: SECONDARY_COLOR,
+                fixedSize: Size(MediaQuery.of(context).size.width, 60),
+              ),
+              onPressed: () async {
+                if (name == "" ||
+                    userIdValid != null ||
+                    mobileValid != null ||
+                    passwordValid != null ||
+                    passwordCheckValid != null) {
+                  String alertMessage = name == ""
+                      ? "이름을 입력해 주세요."
+                      : userIdValid.runtimeType == String
+                          ? "아이디(이메일)을 확인해 주세요."
+                          : mobileValid.runtimeType == String
+                              ? "핸드폰 번호를 확인해 주세요 "
+                              : passwordValid.runtimeType == String
+                                  ? "비밀번호를 확인해 주세요."
+                                  : passwordCheckValid.runtimeType == String
+                                      ? "비밀번호를 확인해 주세요."
+                                      : "";
+                  commonDialog(
+                    context: context,
+                    content: Container(
+                      height: 50,
+                      // color: BACK_GROUND_COLOR,
+                      alignment: Alignment.bottomCenter,
+                      child: Text(
+                        alertMessage,
+                        style: defaultTextStyle,
+                      ),
+                    ),
+                    onConfirm: () {},
+                    barrierDismissible: true,
+                  );
+                  return;
+                } else {
+                  await signatureDialog(
+                    context: context,
+                    onConfirm: (Uint8List image) async {
+                      ref
+                          .read(modalControllerProvider.notifier)
+                          .isPopUp(visibility: true);
+                      await ref.read(userAuthProvider.notifier).userJoin(
+                            PostJoinBody(
+                              id: state is UserMinModel ? state.id : null,
+                              name: name!,
+                              userId: userId!,
+                              mobile: mobile!,
+                              password: password,
+                              image: image,
+                            ),
+                          );
+                    },
+                  );
+                }
+              },
+              child: Text(
+                "전자 서명 추가 및 가입하기",
+                style: defaultTextStyle,
+              ),
+            ),
+          ),
         ],
       ),
     );

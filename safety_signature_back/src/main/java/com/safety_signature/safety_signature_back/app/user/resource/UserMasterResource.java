@@ -6,6 +6,7 @@ import com.safety_signature.safety_signature_back.app.bulletin_board.dto.respons
 import com.safety_signature.safety_signature_back.app.common.dto.AttachDocMasterDTO;
 import com.safety_signature.safety_signature_back.app.common.dto.View;
 import com.safety_signature.safety_signature_back.app.common.enumeration.UserStatusCode;
+import com.safety_signature.safety_signature_back.app.common.enumeration.UserTypeCode;
 import com.safety_signature.safety_signature_back.app.common.service.AttachDocMasterService;
 import com.safety_signature.safety_signature_back.app.token.dto.TokenManagementMaterDTO;
 import com.safety_signature.safety_signature_back.app.token.service.TokenManagementMasterService;
@@ -128,13 +129,13 @@ public class UserMasterResource {
                     .name(postJoinBody.getName())
                     .mobile(postJoinBody.getMobile())
                     .signatureDocId(attachDocMasterDTO.getId())
+                    .userTypeCode(UserTypeCode.GENERAL_MEMBER)
                     .userStatusCode(UserStatusCode.ACTIVE)
                     .build();
             UserMasterDTO result =  userMasterService.partialUpdate(userMasterDTO);
             TokenManagementMaterDTO tokenManagementMaterDTO= tokenManagementMasterService.createOrUpdateTokenManagementMaster(result);
             return ResponseEntity.ok().body(LoginResDTO.builder().accessToken(tokenManagementMaterDTO.getAccessToken()).refreshToken(tokenManagementMaterDTO.getRefreshToken()).build());
         }
-
 
     }
 }

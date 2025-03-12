@@ -37,7 +37,7 @@ class ApproveMasterStateNotifier
                   bulletinBoardId: bulletinBoardId));
       state = approveResponse;
     } catch (e) {
-      state = ApproveSignatureMessageModel(message: '결제 실패 잠시 후 다시 시도해 주세요.');
+      state = ApproveSignatureMessageModel(message: '결재 실패 잠시 후 다시 시도해 주세요.');
     }
   }
 }

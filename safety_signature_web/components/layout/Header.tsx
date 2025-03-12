@@ -25,7 +25,7 @@ export default function Header() {
   const { userProfile, initProfile } = useUserProfile()
   const menuItems: { label: string; path: string; subMenu: string[] }[] = [
     { label: '회원 관리', path: '/user', subMenu: [] },
-    { label: '전자결제 관리', path: '/bulletin', subMenu: [] },
+    { label: '전자결재 관리', path: '/bulletin', subMenu: [] },
     { label: '현장 관리', path: '/site', subMenu: [] },
     // { label: '네이버 지도 API', path: '/navermaps', subMenu: [] },
   ]

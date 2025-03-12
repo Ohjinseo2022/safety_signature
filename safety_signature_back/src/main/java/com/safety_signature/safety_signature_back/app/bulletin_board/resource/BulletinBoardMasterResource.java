@@ -78,7 +78,8 @@ public class BulletinBoardMasterResource {
         BulletinBoardMasterDTO bulletinBoardMasterDTO = bulletinBoardMasterService.partialUpdate(BulletinBoardMasterDTO.builder()
                         .boardStatusCode(bulletinBoardRegistrationRequestDTO.getStatusCode())
                         .boardContents(bulletinBoardRegistrationRequestDTO.getBoardContents())
-                        .siteAddress(bulletinBoardRegistrationRequestDTO.getBoardAddress())
+                        .siteAddress(bulletinBoardRegistrationRequestDTO.getSiteAddress())
+                        .siteName(bulletinBoardRegistrationRequestDTO.getSiteName())
                         .id(bulletinBoardRegistrationRequestDTO.getBulletinBoardId())
                         .boardTitle(bulletinBoardRegistrationRequestDTO.getBoardTitle())
                         .build());
@@ -100,12 +101,13 @@ public class BulletinBoardMasterResource {
           Pageable pageable)throws Exception{
         /**
          * 1. 검색조건
-         *      - 게시글 제목
-         *      - 작성자
-         *      - 기간
-         *      - 내가쓴글
-         *      - 로그인한 권한 체크
-         *      - 페이지네이션
+         *      - 게시글 제목 fix
+         *      - 작성자 fix
+         *      - 기간 fix
+         *      - 내가쓴글 fix
+         *      - 로그인한 권한 체크 fix
+         *      - 페이지네이션 fix
+         *      - 내가 작성자의 회사 구성원인지 판단 해야함
          */
 
         String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);

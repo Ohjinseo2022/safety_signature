@@ -43,6 +43,7 @@ public class UserMasterServiceImpl implements UserMasterService {
      * */
         UserMasterDTO newUserDTO = new UserMasterDTO();
         String socialTypeCode = SocialTypeCode.from(socialLoginReqDTO.getSocialType());
+
         newUserDTO.setName(profileResponse.name());
         if(profileResponse.phoneNumber()!=null){
             newUserDTO.setMobile(profileResponse.phoneNumber());

@@ -21,7 +21,7 @@ const WritePage = () => {
   const [boardTitle, onChangeBoardTitle] = useInput<string>('')
   const [boardContents, onChangeBoardContents] = useInput<string>('')
   const [address, setAddress] = useState<string>('') // 주소 상태 추가
-  const [detailAddress, onChangeDetailAddress] = useInput('')
+  const [detailAddress, onChangeDetailAddress] = useInput<string>('')
   const [isAddressModalOpen, setIsAddressModalOpen] = useState<boolean>(false) // 모달 상태 추가
   const inputFiles = useRef<HTMLInputElement>(null)
   const [files, setFiles] = useState<FileObj[] | null>(null)
@@ -50,11 +50,16 @@ const WritePage = () => {
           'png',
           'gif',
           'jpeg',
+          'pptx',
+          'doc',
+          'docx',
+          'xlsx',
+          'hwp',
         ])
         if (!isExtension) {
           onChangeModalVisible({
             isVisible: true,
-            msg: '확장자 pdf, png, jpeg, gif 을/를 제외한 파일은 업로드 불가능합니다.',
+            msg: '확장자 pdf, png, jpeg, gif, pptx, doc, docx, xlsx, hwp 을/를 제외한 파일은 업로드 불가능합니다.',
           })
           break
         }
@@ -87,41 +92,43 @@ const WritePage = () => {
       onChangeModalVisible({ isVisible: true, msg: '내용을 입력해주세요.' })
       return
     }
-    if (!address || !detailAddress) {
-      onChangeModalVisible({
-        isVisible: true,
-        msg: '주소 또는 상세주소는 필수입니다.',
-      })
-      return
-    }
+    // if (!address || !detailAddress) { //TODO : 주소 히스토리 관리 하기 전까진 필수값 해제
+    //   onChangeModalVisible({
+    //     isVisible: true,
+    //     msg: '주소 또는 상세주소는 필수입니다.',
+    //   })
+    //   return
+    // }
     if (!files) {
       onChangeModalVisible({ isVisible: true, msg: '첨부파일은 필수입니다.' })
       return
     }
-    const formData = new FormData()
+    // const formData = new FormData()
     // ✅ 게시글 데이터 추가 (JSON으로 변환 후 Blob으로 추가)
-    const boardData = JSON.stringify({
-      boardTitle: boardTitle,
-      boardContents: boardContents,
-      boardAddress: `${address} / ${detailAddress}`,
-      statusCode: SafetySignatureStatusCode.PUBLISHED,
-    })
-    formData.append(
-      'boardData',
-      new Blob([boardData], { type: 'application/json' })
-    )
+    // const boardData = JSON.stringify({
+    //   boardTitle: boardTitle,
+    //   boardContents: boardContents,
+    //   boardAddress:
+    //     !address || !detailAddress ? '' : `${address} / ${detailAddress}`,
+    //   statusCode: SafetySignatureStatusCode.PUBLISHED,
+    // })
+    // formData.append(
+    //   'boardData',
+    //   new Blob([boardData], { type: 'application/json' })
+    // )
 
-    // ✅ 파일 데이터 추가
-    files.forEach((fileObj, index) => {
-      if (fileObj.file) {
-        formData.append('files', fileObj.file) // files[] 배열로 추가
-      }
-    })
+    // // ✅ 파일 데이터 추가
+    // files.forEach((fileObj, index) => {
+    //   if (fileObj.file) {
+    //     formData.append('files', fileObj.file) // files[] 배열로 추가
+    //   }
+    // })
     const result = await onBulletinUpdateOrNewBulletin({
       boardTitle: boardTitle,
       boardContents: boardContents,
       statusCode: SafetySignatureStatusCode.PUBLISHED,
-      boardAddress: `${address} / ${detailAddress}`,
+      siteAddress: address,
+      siteName: detailAddress,
       files: files,
     })
     // const { data, error, status } = await useFetchApi(

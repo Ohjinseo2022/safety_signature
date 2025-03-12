@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:safety_signature_app/common/const/color.dart';
 
 Future<void> commonDialog(
     {required BuildContext context,
@@ -13,6 +14,7 @@ Future<void> commonDialog(
     builder: (BuildContext context) {
       return AlertDialog(
         title: title == null ? null : Text(title),
+        backgroundColor: BACK_GROUND_COLOR,
         content: SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
@@ -21,16 +23,24 @@ Future<void> commonDialog(
           ),
         ),
         actions: [
-          TextButton(
-            child: Text('확인'),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
+            child: Text(
+              '확인',
+              style: defaultTextStyle,
+            ),
             onPressed: () {
               onConfirm();
               Navigator.of(context).pop();
             },
           ),
           if (onCancel != null) // onCancel이 전달된 경우만 '취소' 버튼 표시
-            TextButton(
-              child: Text('취소'),
+            ElevatedButton(
+              style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
+              child: Text(
+                '취소',
+                style: defaultTextStyle,
+              ),
               onPressed: () {
                 onCancel();
                 Navigator.of(context).pop();

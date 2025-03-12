@@ -94,15 +94,17 @@ export interface ApproveMasterType {
   lastModifiedBy: string
   lastModifiedDate: Date
   createdDateFormat: string
-  siteName: string
-  bulletinBoardTitle: string
+  companyName: string
+  constructionBusiness: string
+  [key: string]: any
 }
+
 const getApproveList = async (props: ApproveSignatureSearchProps) => {
   const { data, status, error, count } = await useFetchApi<{
-    data: ApproveMasterType[]
+    data: { evenData: ApproveMasterType[]; oddData: ApproveMasterType[] }
     count: number
   }>(
-    `/approve/completed-list/${props.bulletinBoardId}`,
+    `/approve/completed-table-list/${props.bulletinBoardId}`,
     {
       method: 'get',
       params: props,
@@ -130,7 +132,8 @@ export const onBulletinUpdateOrNewBulletin = async (props: {
   bulletinBoardId?: string
   boardTitle?: string
   boardContents?: string
-  boardAddress?: string
+  siteAddress?: string
+  siteName?: string
   statusCode?: string
   files?: FileObj[]
 }): Promise<boolean> => {
@@ -139,7 +142,8 @@ export const onBulletinUpdateOrNewBulletin = async (props: {
     bulletinBoardId: props.bulletinBoardId ?? undefined,
     boardTitle: props.boardTitle ?? undefined,
     boardContents: props.boardContents ?? undefined,
-    boardAddress: props.boardAddress ?? undefined,
+    siteAddress: props.siteAddress ?? undefined,
+    siteName: props.siteName ?? undefined,
     statusCode: props.statusCode ?? undefined,
   })
   formData.append(

@@ -21,8 +21,8 @@ public class CompanyMemberDTO extends AbstractAuditingDTO<String> implements Ser
     private String id;
 
     @Size(max = 100)
-    @Schema(description = "활성 상태" )
-    private String jobPosition;
+    @Schema(description = "공사 종목" )
+    private String constructionBusiness;
 
     @Size(max = 100)
     @Schema(description = "활성 상태" )

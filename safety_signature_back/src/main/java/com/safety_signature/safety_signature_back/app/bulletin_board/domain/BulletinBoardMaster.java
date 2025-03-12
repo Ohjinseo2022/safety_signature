@@ -66,6 +66,11 @@ public class BulletinBoardMaster extends AbstractAuditingEntity<String> implemen
     @Column(name="site_address")
     private String siteAddress;
 
+    @Comment("현장명")
+    @Size(max = 5000)
+    @Column(name="site_name")
+    private String siteName;
+
     @Enumerated(value = EnumType.STRING)
     @Comment("게시글 타입 및 상태코드")
     @Column(name="board_status_code")

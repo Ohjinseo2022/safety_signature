@@ -3,6 +3,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:hand_signature/signature.dart';
+import 'package:safety_signature_app/common/components/common_button.dart';
 import 'package:safety_signature_app/common/components/common_dialog.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:syncfusion_flutter_signaturepad/signaturepad.dart';
@@ -27,7 +28,11 @@ Future<void> signatureDialog(
         StatefulBuilder(
       builder: (BuildContext context, StateSetter setDialog) {
         return AlertDialog(
-          title: Text("전자 서명 등록"),
+          backgroundColor: BACK_GROUND_COLOR,
+          title: Text(
+            "전자 서명 등록",
+            style: defaultTextStyle,
+          ),
           content: SingleChildScrollView(
             child: ListBody(
               children: <Widget>[
@@ -41,9 +46,14 @@ Future<void> signatureDialog(
                       Container(
                         height: 150,
                         width: MediaQuery.of(context).size.width * 0.9,
-                        color: Colors.black26,
+                        color: BORDER_COLOR,
                       ),
-                      if (!isSignature) Center(child: Text("여기에 서명을 해주세요")),
+                      if (!isSignature)
+                        Center(
+                            child: Text(
+                          "여기에 서명을 해주세요",
+                          style: defaultTextStyle,
+                        )),
                       SfSignaturePad(
                         onDraw: (offset, time) async {
                           if (image == null && !isSignature) {
@@ -75,62 +85,59 @@ Future<void> signatureDialog(
             ),
           ),
           actions: [
-            TextButton(
-              child: Text('초기화'),
-              onPressed: () {
-                setDialog(() {
-                  signaturePadKey.currentState?.clear();
-                  image = null;
-                  isSignature = false;
-                });
-              },
-            ),
-            TextButton(
-              child: Text('확인'),
-              onPressed: () async {
-                if (isSignature) {
-                  commonDialog(
-                      context: context,
-                      content: Container(
-                          height: 50,
-                          alignment: Alignment.bottomCenter,
-                          child: const Text(
-                            "서명 정보는 등록 후 수정 할수 없습니다. 회원가입 진행 할까요?",
-                            style: defaultTextStyle,
-                          )),
-                      onConfirm: () async {
-                        final image =
-                            await signaturePadKey.currentState!.toImage();
-                        ByteData? byteData = (await image.toByteData(
-                            format: ImageByteFormat.png)) as ByteData?;
+            CommonButton(
+                label: '초기화',
+                onPressed: () {
+                  setDialog(() {
+                    signaturePadKey.currentState?.clear();
+                    image = null;
+                    isSignature = false;
+                  });
+                }),
+            CommonButton(
+                label: '확인',
+                onPressed: () async {
+                  if (isSignature) {
+                    commonDialog(
+                        context: context,
+                        content: Container(
+                            height: 50,
+                            alignment: Alignment.bottomCenter,
+                            child: const Text(
+                              "서명 정보는 등록 후 수정 할수 없습니다. 회원가입 진행 할까요?",
+                              style: defaultTextStyle,
+                            )),
+                        onConfirm: () async {
+                          final image =
+                              await signaturePadKey.currentState!.toImage();
+                          ByteData? byteData = (await image.toByteData(
+                              format: ImageByteFormat.png)) as ByteData?;
 
-                        Uint8List? pngBytes = byteData?.buffer.asUint8List();
-                        onConfirm(pngBytes!);
-                        Navigator.of(context).pop();
-                      },
-                      onCancel: () {},
-                      barrierDismissible: true);
-                } else {
-                  commonDialog(
-                      context: context,
-                      content: Container(
-                          height: 50,
-                          alignment: Alignment.bottomCenter,
-                          child: Text(
-                            "서명은 필수 값입니다.",
-                            style: defaultTextStyle,
-                          )),
-                      onConfirm: () {},
-                      barrierDismissible: true);
-                }
-              },
-            ),
-            TextButton(
-              child: Text('최소'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
+                          Uint8List? pngBytes = byteData?.buffer.asUint8List();
+                          onConfirm(pngBytes!);
+                          Navigator.of(context).pop();
+                        },
+                        onCancel: () {},
+                        barrierDismissible: true);
+                  } else {
+                    commonDialog(
+                        context: context,
+                        content: Container(
+                            height: 50,
+                            alignment: Alignment.bottomCenter,
+                            child: Text(
+                              "서명은 필수 값입니다.",
+                              style: defaultTextStyle,
+                            )),
+                        onConfirm: () {},
+                        barrierDismissible: true);
+                  }
+                }),
+            CommonButton(
+                label: '최소',
+                onPressed: () {
+                  Navigator.of(context).pop();
+                }),
           ],
         );
       },

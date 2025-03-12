@@ -24,6 +24,9 @@ public class BulletinBoardMasterCustomDTO extends BulletinBoardMasterDTO {
     @Schema(description = "전자결제 문서 첨부 파일")
     private List<AttachDocMasterDTO> attachDocList;
 
+    @Schema(description = "회사코드")
+    private String companyMasterId;
+
     public static BulletinBoardMasterCustomDTO from(BulletinBoardMasterDTO dto) {
         // 가장 편한 방법이지만 가독성이 떨어질 수 있다는 단점이있음!
         BulletinBoardMasterCustomDTO customDTO = new BulletinBoardMasterCustomDTO();

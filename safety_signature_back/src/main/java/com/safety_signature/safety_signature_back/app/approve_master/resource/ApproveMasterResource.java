@@ -4,6 +4,7 @@ import com.safety_signature.safety_signature_back.app.approve_master.domain.Appr
 import com.safety_signature.safety_signature_back.app.approve_master.dto.ApproveMasterDTO;
 import com.safety_signature.safety_signature_back.app.approve_master.dto.request.ApproveCompletedSignatureRequestDTO;
 import com.safety_signature.safety_signature_back.app.approve_master.dto.response.ApproveMasterCustomDTO;
+import com.safety_signature.safety_signature_back.app.approve_master.dto.response.ApproveMasterListCustomDTO;
 import com.safety_signature.safety_signature_back.app.approve_master.dto.response.ApproveMasterListDTO;
 import com.safety_signature.safety_signature_back.app.approve_master.dto.response.ApproveMasterMessageDTO;
 import com.safety_signature.safety_signature_back.app.approve_master.service.ApproveMasterService;
@@ -11,6 +12,7 @@ import com.safety_signature.safety_signature_back.app.bulletin_board.dto.Bulleti
 import com.safety_signature.safety_signature_back.app.bulletin_board.dto.response.BulletinBoardResponseMessageDTO;
 import com.safety_signature.safety_signature_back.app.bulletin_board.service.BulletinBoardMasterService;
 import com.safety_signature.safety_signature_back.app.common.dto.ResponseDTO;
+import com.safety_signature.safety_signature_back.app.common.dto.util.InfiniteScrollResponseDTO;
 import com.safety_signature.safety_signature_back.app.user.dto.UserMasterDTO;
 import com.safety_signature.safety_signature_back.app.user.service.UserMasterService;
 import com.safety_signature.safety_signature_back.config.Constants;
@@ -18,9 +20,10 @@ import com.safety_signature.safety_signature_back.utils.PaginationUtil;
 import com.safety_signature.safety_signature_back.utils.SecurityUtils;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.servlet.http.HttpServletRequest;
+
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
@@ -37,9 +40,8 @@ import org.springframework.util.ObjectUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+
 import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
@@ -76,13 +78,30 @@ public class ApproveMasterResource {
         // 페이징 설정
         // =========================================================================================================
         if(ObjectUtils.isEmpty(pageable)) {
-            pageable =  PageRequest.of(0, 10, Sort.by(Sort.Order.desc("createdDate")));
+            pageable =  PageRequest.of(0, 10, Sort.by(Sort.Order.asc("createdDate")));
         } else {
-            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Order.desc("createdDate")));
+            pageable = PageRequest.of(pageable.getPageNumber(), pageable.getPageSize(), Sort.by(Sort.Order.asc("createdDate")));
         }
         Page<ApproveMasterCustomDTO> result =  approveMasterService.getAllApproveMasters(bulletinBoardMasterDTO, pageable);
         HttpHeaders headers =  PaginationUtil.generatePaginationHttpHeaders(ServletUriComponentsBuilder.fromCurrentRequest(), result);
         return ResponseEntity.ok().headers(headers).body(ApproveMasterListDTO.builder().data(result.getContent()).build());
+    }
+    @Operation(summary = "전자 결제 전체 리스트 조회")
+    @GetMapping(value = "/completed-table-list/{bulletinBoardId}")
+    public ResponseEntity<ResponseDTO> getInfiniteScrollList( @PathVariable String bulletinBoardId,@RequestParam(defaultValue = "20") int size) {
+        String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
+        // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
+        if (Constants.ANONYMOUSUSER.equals(userEmail)|| userEmail ==null) {
+            ApproveMasterMessageDTO result = ApproveMasterMessageDTO.builder().httpStatus(HttpStatus.UNAUTHORIZED.value()).message("UNAUTHORIZED").build();
+            return ResponseEntity.status(result.getHttpStatus()).body(null);
+        }
+        BulletinBoardMasterDTO bulletinBoardMasterDTO =  bulletinBoardMasterService.getBulletinBoardMasterDTO(bulletinBoardId);
+        if(ObjectUtils.isEmpty(bulletinBoardMasterDTO)){
+            ApproveMasterMessageDTO masterMessageDTO = ApproveMasterMessageDTO.builder().message("존재하지 않는 전자 결제 게시글 입니다.").httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()).build();
+            return ResponseEntity.status(masterMessageDTO.getHttpStatus()).body(masterMessageDTO);
+        }
+        ApproveMasterListCustomDTO result = approveMasterService.getInfiniteScrollList(bulletinBoardMasterDTO, bulletinBoardId,PageRequest.of(0, size, Sort.by(Sort.Order.asc("createdDate"))));
+        return ResponseEntity.ok().body(result);
     }
 
     @Operation(summary = "전자 결제 사인 처리")
@@ -119,7 +138,7 @@ public class ApproveMasterResource {
         ApproveMasterMessageDTO masterMessageDTO = ApproveMasterMessageDTO.builder().message("전자 결제 승인 완료").httpStatus(HttpStatus.OK.value()).build();
         return ResponseEntity.status(masterMessageDTO.getHttpStatus()).body(masterMessageDTO);
     }
-
+    @Operation(summary = "전자 결제 내역 내보내기")
     @GetMapping("/export-excel/{bulletinBoardId}")
     public ResponseEntity<byte[]> exportToExcel(@PathVariable String bulletinBoardId) throws IOException {
 
@@ -147,10 +166,10 @@ public class ApproveMasterResource {
         int rowIdx = 1;
         for (ApproveMasterCustomDTO approve : approveList) {
             Row row = sheet.createRow(rowIdx);
-            row.createCell(0).setCellValue(approve.getBulletinBoardTitle());
+            row.createCell(0).setCellValue(approve.getConstructionBusiness());
             row.createCell(1).setCellValue(approve.getUserName());
             row.createCell(3).setCellValue(approve.getCreatedDateFormat());
-            row.createCell(4).setCellValue(approve.getSiteName());
+            row.createCell(4).setCellValue(approve.getCompanyName());
 
             // 서명 이미지 삽입
             try {

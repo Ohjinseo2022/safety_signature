@@ -1,6 +1,6 @@
 # safety_signature_app
 
-통합 안전관리 전자결제 시스템
+통합 안전관리 전자결재 시스템
 
 ## Getting Started
 

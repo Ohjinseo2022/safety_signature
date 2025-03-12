@@ -20,22 +20,6 @@ import { useBulletinBoardListQuery } from './_hooks/BulletinBoardQuery'
 interface BulletinPageProps {}
 
 const BulletinPage = ({}: BulletinPageProps) => {
-  useEffect(() => {
-    const test = async () => {
-      const tt = await useFetchApi(
-        `/bulletin-board/registration/list-for-user?${Math.random()}`,
-        {
-          method: 'get',
-          params: {
-            nextCursor: '0JQDHACBKCPTC',
-            size: 20,
-          },
-        },
-        { isAuth: true }
-      )
-    }
-    test()
-  }, [])
   const router = useRouter()
   const [searchInput, onChangeSearchInput] = useInput<string>('')
   const [startDate, onChangeStartDate, setStartDate] = useInput<string>(
@@ -48,16 +32,19 @@ const BulletinPage = ({}: BulletinPageProps) => {
   const [createdBy, onChangeCreatedBy, setCreatedBy] = useInput<string>('')
   const [page, onChangePage, setPage] = useInput<number>(1)
 
-  const { data: bulletinBoardList = { data: [], count: 0 }, refetch } =
-    useBulletinBoardListQuery({
-      boardTitle: searchInput,
-      createdBy: createdBy,
-      startDate: startDate,
-      endDate: datePlus(endDate, '1'),
-      page: page - 1,
-      size: 10,
-      isOwner: isCreated,
-    })
+  const {
+    data: bulletinBoardList = { data: [], count: 0 },
+    refetch,
+    status,
+  } = useBulletinBoardListQuery({
+    boardTitle: searchInput,
+    createdBy: createdBy,
+    startDate: startDate,
+    endDate: datePlus(endDate, '1'),
+    page: page - 1,
+    size: 10,
+    isOwner: isCreated,
+  })
   const paginationSet = useMemo(() => {
     return pagerSet(bulletinBoardList.count, '10')
   }, [bulletinBoardList])
@@ -93,7 +80,7 @@ const BulletinPage = ({}: BulletinPageProps) => {
     // { label: '현장명', columns: 'site' },
     { label: '작성자', columns: 'createdBy' },
     { label: '작성일자', columns: 'createdDate' },
-    { label: '결제완료', columns: 'signature' },
+    { label: '결재완료', columns: 'signature' },
     { label: '상태', columns: 'boardStatusCode' },
   ]
   const handleSearch = async (e: any) => {

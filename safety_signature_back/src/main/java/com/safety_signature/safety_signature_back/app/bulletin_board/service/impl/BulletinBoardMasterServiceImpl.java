@@ -50,6 +50,7 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
     private ApproveMasterRepository approveMasterRepository;
     private ApproveMasterService approveMasterService;
 
+
     public BulletinBoardMasterServiceImpl(UserMasterService userMasterService,
                                           BulletinBoardMasterRepository bulletinBoardMasterRepository,
                                           BulletinBoardMasterMapper bulletinBoardMasterMapper,
@@ -88,7 +89,8 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
         BulletinBoardMasterDTO bulletinBoardMasterDTO = this.save(BulletinBoardMasterDTO.builder()
                 .boardContents(registrationRequestDTO.getBoardContents())
                 .boardTitle(registrationRequestDTO.getBoardTitle())
-                .siteAddress(registrationRequestDTO.getBoardAddress())
+                .siteAddress(registrationRequestDTO.getSiteAddress())
+                .siteName(registrationRequestDTO.getSiteName())
                 .userMasterId(userMasterDTO.getId())
                 .userMasterDTO(userMasterDTO)
                 .boardStatusCode(registrationRequestDTO.getStatusCode())
@@ -162,6 +164,7 @@ public class BulletinBoardMasterServiceImpl implements BulletinBoardMasterServic
         if(bulletinBoardMasterDTO != null){
             List<AttachDocMasterDTO> attachDocMasterDTOList = attachDocMasterService.findByAttachDocOwnerId(bulletinBoardMasterDTO.getId());
             BulletinBoardMasterCustomDTO result =BulletinBoardMasterCustomDTO.from(bulletinBoardMasterDTO);
+//            result.getUserMasterId()
             result.setSignatureCount(approveMasterRepository.countByBulletinBoardId(result.getId()));
             String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
             // 무조건 있긴함. 처음 리소스 호출시 검증로직 선 실행 후 해당 로직에 도달됨

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:safety_signature_app/common/components/common_button.dart';
 import 'package:safety_signature_app/common/components/common_dialog.dart';
 import 'package:safety_signature_app/common/components/custom_text_form_field.dart';
 import 'package:safety_signature_app/common/const/color.dart';
@@ -59,42 +60,38 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
               ),
               SizedBox(height: 24),
               // 로그인 버튼
-
-              ElevatedButton(
-                onPressed: () async {
-                  // 로그인 액션
-                  bool isLogin = await ref
-                      .read(userAuthProvider.notifier)
-                      .normalLogin(
-                          loginNormalReqModel: LoginNormalReqModel(
-                              userId: userId, password: password));
-                  if (isLogin) {
-                    context.goNamed(RootTab.routeName);
-                  } else {
-                    await commonDialog(
-                        context: context,
-                        title: "로그인 실패",
-                        content: Text(
-                          "아이디/비밀번호 를 확인해주세요.",
-                          style: defaultTextStyle,
-                        ),
-                        onConfirm: () {});
-                  }
-                },
-                child: Text('로그인'),
-                style: ElevatedButton.styleFrom(
+              CommonButton(
+                  label: '로그인',
                   padding: EdgeInsets.symmetric(vertical: 16),
-                ),
-              ),
+                  onPressed: () async {
+                    // 로그인 액션
+                    bool isLogin = await ref
+                        .read(userAuthProvider.notifier)
+                        .normalLogin(
+                            loginNormalReqModel: LoginNormalReqModel(
+                                userId: userId, password: password));
+                    if (isLogin) {
+                      context.goNamed(RootTab.routeName);
+                    } else {
+                      await commonDialog(
+                          context: context,
+                          title: "로그인 실패",
+                          content: Text(
+                            "아이디/비밀번호 를 확인해주세요.",
+                            style: defaultTextStyle,
+                          ),
+                          onConfirm: () {});
+                    }
+                  }),
               // SizedBox(height: 16),
               // 비밀번호 찾기 & 회원가입 링크
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  _underLineTextBtn(onPressed: () {}, text: "비밀번호를 잊어버렸나요?"),
+                  // _underLineTextBtn(onPressed: () {}, text: "비밀번호를 잊어버렸나요?"),// TODO: 본인인증 기능 추가되면 추가하기
                   _underLineTextBtn(
                       onPressed: () {
-                        context.goNamed(JoinScreen.routeName);
+                        context.pushNamed(JoinScreen.routeName);
                       },
                       text: "회원가입"),
                 ],

@@ -56,6 +56,7 @@ declare global {
     signatureCount: number
     attachDocList: AttachDocMasterType[]
     siteAddress: string
+    siteName: string
     boardStatusCode?: string
   }
 

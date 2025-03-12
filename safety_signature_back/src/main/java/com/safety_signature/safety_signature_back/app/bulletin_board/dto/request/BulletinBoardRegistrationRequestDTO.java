@@ -28,9 +28,12 @@ public class BulletinBoardRegistrationRequestDTO {
     @Schema(description = "전자문서 설명 & 내용")
     private String boardContents;
 
-    @NotNull
+
     @Schema(description = "현장 주소 정보")
-    private String boardAddress;
+    private String siteAddress;
+
+    @Schema(description = "현장명")
+    private String siteName;
 
     @Schema(description = "전자결제 문서 상태 코드")
     private SafetySignatureStatusCode statusCode;

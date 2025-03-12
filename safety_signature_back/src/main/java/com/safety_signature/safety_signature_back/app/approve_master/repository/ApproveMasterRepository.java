@@ -11,6 +11,7 @@ import java.util.List;
 public interface ApproveMasterRepository extends JpaRepository<ApproveMaster, String> , JpaSpecificationExecutor<ApproveMaster> {
     long countByBulletinBoardId(String bulletinBoardId);
     Page<ApproveMaster> findByBulletinBoardId(String bulletinBoardId, Pageable page);
-    List<ApproveMaster> findAllByBulletinBoardId(String bulletinBoardId);
+    List<ApproveMaster> findAllByBulletinBoardIdOrderByCreatedDateAsc(String bulletinBoardId);
     List<ApproveMaster> findAllByBulletinBoardIdAndUserMasterId(String bulletinBoardId, String userMasterId);
+    Page<ApproveMaster> findByIdLessThanAndBulletinBoardId(String id, String bulletinBoardId, Pageable page);
 }

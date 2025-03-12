@@ -27,7 +27,7 @@ const Footer = ({}: FooterProps) => {
   return (
     <FooterContainer>
       <p>
-        © 안심 전자 결제 관리자 사이트 |{' '}
+        © 안심 전자 결재 관리자 사이트 |{' '}
         <a href="/privacy">개인정보 처리 방침</a>
       </p>
     </FooterContainer>

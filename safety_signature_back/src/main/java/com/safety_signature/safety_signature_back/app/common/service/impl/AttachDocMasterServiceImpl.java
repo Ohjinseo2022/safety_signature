@@ -102,7 +102,8 @@ public class AttachDocMasterServiceImpl implements AttachDocMasterService {
                 log.info("attachDocMasterAndMinIoSave file : {} ",file);
                 String extension = FileNameUtils.getExtension(file.getOriginalFilename());
                 String directory = String.format("signature/%s", attachDocOwnerId);
-                if (Pattern.matches("(?i)(GIF|JPG|JPEG|PNG|PDF)$", extension)) {
+//
+                if (Pattern.matches("(?i)(GIF|JPG|JPEG|PNG|PDF|PPTX|DOC|DOCX|XLSX|HWP)$", extension)) {
                     String storedFileName = minioUtils.upload(file, directory);
                     AttachDocMasterDTO attachDocMasterDTO = AttachDocMasterDTO.builder()
                             .attachDocName(file.getOriginalFilename())

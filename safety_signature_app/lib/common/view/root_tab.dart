@@ -72,7 +72,7 @@ class _RootTabState extends ConsumerState<RootTab>
 
   Widget _rootTab({required UserModelBase? state}) {
     List<dynamic> tabList = [
-      {"title": "전자결제 게시판", "child": BulletinBoardListScreen()},
+      {"title": "전자결재 게시판", "child": BulletinBoardListScreen()},
       // {"title": "테스트중", "child": MyPageScreen()},
       {
         "title": state is UserMinModel ? "메이페이지" : null,
@@ -129,7 +129,7 @@ class _RootTabState extends ConsumerState<RootTab>
             icon: Icon(index == 0
                 ? Icons.calendar_month
                 : Icons.calendar_month_outlined),
-            label: "전자결제",
+            label: "전자결재",
           ),
           // BottomNavigationBarItem(
           //     icon: Icon(index == 1

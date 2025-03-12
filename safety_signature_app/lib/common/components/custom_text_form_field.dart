@@ -71,6 +71,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           autovalidateMode: widget.validator != null
               ? AutovalidateMode.onUserInteraction
               : null,
+
           controller: _controller,
           // initialValue: widget.value,
           cursorColor: TEXT_COLOR,
@@ -85,6 +86,7 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           },
           inputFormatters: widget.inputFormatters,
           validator: widget.validator,
+          style: defaultTextStyle,
           //입력 필드의 데코레이션
           decoration: InputDecoration(
             prefixIcon: widget.prefixIcon,
@@ -95,13 +97,12 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
             enabled: widget.enabled, // 활성화 비활성화
             hintText: widget.hintText,
             errorText: widget.errorText,
-
             errorStyle: const TextStyle(overflow: TextOverflow.ellipsis),
             hintStyle: TextStyle(
               color: TEXT_COLOR.withOpacity(0.3),
               fontSize: 14.0,
             ),
-            fillColor: Colors.transparent, //SECONDARY_COLOR ,
+            fillColor: CARD_COLOR, // Colors.transparent, //SECONDARY_COLOR ,
             filled: true,
             //모든 input 상태의 기본 스타일 세팅
             border: widget.border ?? baseBorder,

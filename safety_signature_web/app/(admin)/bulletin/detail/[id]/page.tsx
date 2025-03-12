@@ -10,6 +10,7 @@ import { useInput } from '@/hooks/useInput'
 import CommonButton from '@/components/common/CommonButton'
 import CommonDataTable from '@/components/common/CommonDataTable'
 import CustomDownloadButton from '@/components/custom/CustomDownloadButton'
+import EducationCertificate from '@/components/custom/EducationCertificate'
 import CommonModal from '@/components/modal/CommonModal'
 import { CommonCard } from '@/components/styled/common'
 import {
@@ -51,7 +52,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
     refetch,
   } = useBulletinBoardQuery(unwrappedParams.id)
   const [page, onChangePage, setPage] = useInput<number>(1)
-  // 결제 완료 리스트
+  // 결재 완료 리스트
   const {
     data: approveList,
     error: approveListError,
@@ -60,7 +61,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
   } = useApproveListQuery({
     bulletinBoardId: unwrappedParams.id,
     page: page - 1,
-    size: 10,
+    size: 23,
   })
   const detailData: BulletinBoardMasterType = useMemo(() => {
     if (isFetched && bulletinBoardDetail) {
@@ -69,19 +70,22 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
     return undefined
   }, [isFetched, bulletinBoardDetail])
 
-  const approveDataList: ApproveMasterType[] = useMemo(() => {
+  const approveDataList: {
+    evenData: ApproveMasterType[][]
+    oddData: ApproveMasterType[][]
+  } = useMemo(() => {
     if (approveListIsFetched && approveList) {
-      return approveList.data
+      return approveList
     }
     return []
   }, [approveList, approveListIsFetched])
   //console.log('unwrappedParams : ', unwrappedParams)
   const headers = [
-    { label: '문서명', columns: 'bulletinBoardTitle' },
-    { label: '이름', columns: 'userName' },
-    { label: '서명', columns: 'attachDocId' },
-    { label: '시간', columns: 'createdDateFormat' },
-    { label: '현장명', columns: 'siteName' },
+    { label: 'NO', columns: 'index' },
+    { label: '업체명', columns: 'companyName' },
+    { label: '공증', columns: 'constructionBusiness' },
+    { label: '성명', columns: 'createdDateFormat' },
+    { label: '확인', columns: 'attachDocId' },
   ]
 
   const onDownLoadExcel = async () => {
@@ -114,7 +118,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
         if (result) {
           setBulletinModal({
             isVisible: result,
-            children: `전자결제 문서가 ${type === 'D' ? '삭제' : '복구'}가 완료됐습니다.`,
+            children: `전자결재 문서가 ${type === 'D' ? '삭제' : '복구'}가 완료됐습니다.`,
             callBack:
               type === 'D' ? () => router.push('/bulletin') : () => refetch(),
           })
@@ -155,10 +159,14 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
           dangerouslySetInnerHTML={{ __html: detailData.boardContents }}
         ></div>
       </PostInfo>
-      <CommonCard>
-        <h3>현장 주소 정보</h3>
-        <div> {detailData.siteAddress}</div>
-      </CommonCard>
+      {(detailData.siteAddress || detailData.siteName) && (
+        <CommonCard>
+          <h3>현장 정보</h3>
+          <div style={{ height: `40px`, padding: '10px 16px' }}>
+            {`${detailData.siteName ?? detailData.siteAddress}`}
+          </div>
+        </CommonCard>
+      )}
       <CommonCard>
         <h3>첨부된 문서</h3>
         <div>
@@ -171,14 +179,13 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
           )}
         </div>
       </CommonCard>
-
       <CommonDataTable
-        title={'결제완료 리스트'}
+        title={'결재완료 리스트'}
         topBtnLable={
           userProfile.id === detailData.userMasterId
             ? '다운로드 '
             : !detailData.completionYn
-              ? '결제하기'
+              ? '결재하기'
               : ''
         }
         onTopButtonClick={
@@ -186,9 +193,19 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
             ? onDownLoadExcel
             : onSignatureHandler
         }
+        children={
+          <EducationCertificate
+            siteName={detailData.siteName}
+            educationDate={detailData.createdDateFormat}
+            educationType={detailData.boardTitle}
+            headers={headers}
+            participants={approveDataList}
+          />
+        }
+        dataItem={[]}
         headers={headers}
-        dataItem={approveDataList.length > 0 ? approveDataList : []}
       />
+
       <CommonModal
         isVisible={bulletinModal.isVisible}
         setIsVisible={(e: boolean) =>

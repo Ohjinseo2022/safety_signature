@@ -29,7 +29,7 @@ public class CompanyMaster  extends AbstractAuditingEntity<String> implements Se
 
     @Comment("회사 고유 ID")
     @NotNull
-    @Size(max = 36)
+    @Size(max = 100)
     @Id
     @Column(name="id", length = 36, nullable = false,unique = true)
     private String id;

@@ -57,7 +57,7 @@ class _BulletinBoardDetailScreenState
     }
     if (bulletinBoardDetail is BulletinBoardDetailModel) {
       return DefaultLayout(
-        title: '전자결제 상세',
+        title: '전자결재 상세',
         child: _buildDetailContent(
             context: context,
             detail: bulletinBoardDetail,
@@ -76,14 +76,14 @@ class _BulletinBoardDetailScreenState
     ));
   }
 
-// ✅ 결제 처리
+// ✅ 결재 처리
   void _handleSignature(String bulletinBoardId) async {
     // approveResult is ApproveSignatureMessageModel
-    // 결제 처리 로직 추가
+    // 결재 처리 로직 추가
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         content: Text(
-          '결제 진행 중...',
+          '결재 진행 중...',
           style: defaultTextStyle,
         ),
         duration: Duration(seconds: 2),
@@ -114,7 +114,7 @@ class _BulletinBoardDetailScreenState
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-            '결제 실패 잠시 후 다시 시도해 주세요.',
+            '결재 실패 잠시 후 다시 시도해 주세요.',
             style: defaultTextStyle,
           ),
           duration: Duration(seconds: 2),
@@ -224,7 +224,7 @@ Widget _buildDetailContent(
             }).toList(),
           ),
         ],
-        // 🔹 결제하기 버튼 (completionYn == false 일 때만 활성화)
+        // 🔹 결재하기 버튼 (completionYn == false 일 때만 활성화)
         SizedBox(
           width: double.infinity,
           child: ElevatedButton(
@@ -238,7 +238,7 @@ Widget _buildDetailContent(
               disabledBackgroundColor: SUBTEXT_COLOR,
               padding: EdgeInsets.all(16),
             ),
-            child: Text('${detail.completionYn ? '완료' : "결제하기"}',
+            child: Text('${detail.completionYn ? '완료' : "결재하기"}',
                 style: defaultTextStyle.copyWith(fontSize: 18)),
           ),
         ),

@@ -60,7 +60,7 @@ class BulletinBoardCard extends StatelessWidget {
               ),
             ),
 
-            // 🔹 오른쪽: 결제 완료 여부 아이콘
+            // 🔹 오른쪽: 결재 완료 여부 아이콘
             if (completionYn ?? false)
               Icon(Icons.check_circle, color: Colors.green, size: 24)
             else
