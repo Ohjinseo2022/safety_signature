@@ -5,8 +5,6 @@ import 'package:go_router/go_router.dart';
 import 'package:safety_signature_app/common/components/login_button.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/enumeration/social.dart';
-import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
-import 'package:safety_signature_app/common/provider/modal_controller_porivder.dart';
 import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
@@ -33,6 +31,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     if (state is UserMinModel) {
       widget.animationController?.animateTo(0);
     }
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -52,9 +51,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             width: double.infinity,
           ),
           _googleLoginButton(onPressed: () async {
-            await ref
-                .watch(modalControllerProvider.notifier)
-                .isPopUp(visibility: true);
             await onLoginHandler(
                 context: context, platform: SocialTypeCode.GOOGLE.code);
           }),
@@ -62,9 +58,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             height: 15,
           ),
           _kakaoLoginButton(onPressed: () async {
-            await ref
-                .watch(modalControllerProvider.notifier)
-                .isPopUp(visibility: true);
             await onLoginHandler(
                 context: context, platform: SocialTypeCode.KAKAO.code);
           }),
@@ -73,9 +66,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
           ),
           // TODO : 이메일 로그인 ui 만들기
           _emailLoginButton(onPressed: () async {
-            await ref
-                .watch(modalControllerProvider.notifier)
-                .isPopUp(visibility: true);
             context.pushNamed(EmailLoginScreen.routeName);
           }),
           _emailJoin(onPressed: () {
@@ -177,11 +167,6 @@ Future<T?> loginBottomSheet<T>(
     backgroundColor: Colors.transparent,
     context: context,
     builder: (context) {
-      // return AlertDialog(
-      //   backgroundColor: Colors.transparent,
-      //   elevation: 10.0,
-      //   content: LoginScreen(),
-      // );
       return Container(
           height: MediaQuery.of(context).size.height,
           // padding: EdgeInsets.only(bottom: 50),

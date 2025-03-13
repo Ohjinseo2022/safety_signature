@@ -100,7 +100,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               Container(
                 width: double.infinity,
                 height: double.infinity,
-                color: SECONDARY_COLOR.withOpacity(0.5),
+                color: BACK_GROUND_COLOR.withOpacity(0.5),
                 child: Center(
                   child: Container(
                     width: MediaQuery.of(context).size.width / 1.5,

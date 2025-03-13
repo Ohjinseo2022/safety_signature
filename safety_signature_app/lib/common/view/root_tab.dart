@@ -98,7 +98,9 @@ class _RootTabState extends ConsumerState<RootTab>
             UserStatusCode.PENDING) {
       setState(() {});
 
-      return SplashScreen();
+      return DefaultLayout(
+        child: LoginScreen(),
+      );
     }
     return DefaultLayout(
       title: tabList[index]["title"],
