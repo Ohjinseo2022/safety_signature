@@ -87,7 +87,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
     { label: 'NO', columns: 'index' },
     { label: '업체명', columns: 'companyName' },
     { label: '공종', columns: 'constructionBusiness' },
-    { label: '성명', columns: 'createdDateFormat' },
+    { label: '성명', columns: 'userName' },
     { label: '확인', columns: 'attachDocId' },
   ]
 
@@ -95,7 +95,16 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
     // await getDownloadExcel(unwrappedParams.id)
     if (approveTable.current) {
       const element = approveTable.current
-      const canvas = await html2canvas(element, { scale: 2 }) // 고해상도 캡처
+      element.style.fontSize = '16px' // 강제 적용
+      element.style.textAlign = 'center'
+      const canvas = await html2canvas(element, {
+        scale: 2, // 해상도를 높여서 캡처
+        useCORS: true, // CORS 문제 해결
+        allowTaint: true, // 외부 리소스 허용
+        backgroundColor: null, // 배경 투명
+        logging: false, // 콘솔 로그 비활성화
+        removeContainer: true, // 캡처 후 DOM에서 임시 컨테이너 삭제
+      })
       const imgData = canvas.toDataURL('image/png')
 
       const componentWidth = element.offsetWidth
@@ -103,7 +112,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
 
       const pdf = new jsPDF({
         orientation: 'p', // 기본 A4 세로
-        unit: 'mm',
+        unit: 'mm', //픽셀단위로
         format: 'a4',
       })
 
