@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration scan="true">
     <!-- 로그 파일 저장 경로 -->
-    <property name="LOG_PATH" value="/app/logs"/>
+    <property name="LOG_PATH" value="./logs"/>
 
     <!-- 콘솔 로그 색상 설정 -->
     <conversionRule conversionWord="clr" converterClass="org.springframework.boot.logging.logback.ColorConverter"/>
