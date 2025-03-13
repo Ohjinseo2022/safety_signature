@@ -13,6 +13,8 @@ echo "🛠 실행 환경: $FLAVOR"
 if ! cmp -s .env .env.$FLAVOR; then
   echo "🔄 환경 변수 변경 감지, .env 업데이트 중..."
   cp .env.$FLAVOR .env
+  flutter clean
+  flutter pub get
   flutter pub run build_runner build --delete-conflicting-outputs
 else
   echo "✅ 환경 변수 변경 없음, build_runner 실행 생략"

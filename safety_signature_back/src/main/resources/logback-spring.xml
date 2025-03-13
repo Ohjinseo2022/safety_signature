@@ -50,7 +50,7 @@
 
     <!-- 전체 로그 레벨 설정 -->
     <root level="INFO">
-        <springProfile name="develop,production">
+        <springProfile name="prod">
             <appender-ref ref="ROLLING_FILE"/>
         </springProfile>
         <springProfile name="default">

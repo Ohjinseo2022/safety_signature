@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:safety_signature_app/common/components/common_dialog.dart';
 import 'package:safety_signature_app/common/components/login_button.dart';
 import 'package:safety_signature_app/common/const/color.dart';
+import 'package:safety_signature_app/common/const/data.dart';
 import 'package:safety_signature_app/common/enumeration/social.dart';
 import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
@@ -42,7 +43,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Text(
-            state.toString(),
+            ip,
             style: defaultTextStyle,
           ),
           Text("안전싸인",
