@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:go_router/go_router.dart';
+import 'package:safety_signature_app/common/components/common_dialog.dart';
 import 'package:safety_signature_app/common/components/login_button.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/enumeration/social.dart';
@@ -31,12 +32,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     if (state is UserMinModel) {
       widget.animationController?.animateTo(0);
     }
-
+    if (state is UserModelError) {
+      commonDialog(
+          context: context, content: Text(state.message), onConfirm: () {});
+    }
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          Text(
+            state.toString(),
+            style: defaultTextStyle,
+          ),
           Text("안전싸인",
               style: defaultTextStyle.copyWith(
                   fontWeight: FontWeight.w800,

@@ -82,6 +82,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  Text(
+                    permission.toString(),
+                    style: defaultTextStyle,
+                  ),
+                  Text(
+                    state.toString(),
+                    style: defaultTextStyle,
+                  ),
                   Container(
                     height: 80,
                     child: Text(
