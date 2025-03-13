@@ -5,6 +5,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:safety_signature_app/common/components/common_dialog.dart';
 import 'package:safety_signature_app/common/components/pagination_list_view.dart';
 import 'package:safety_signature_app/common/const/color.dart';
+import 'package:safety_signature_app/common/const/data.dart';
 import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
 import 'package:safety_signature_app/common/model/permission_model.dart';
@@ -83,11 +84,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
-                    permission.toString(),
-                    style: defaultTextStyle,
-                  ),
-                  Text(
-                    state.toString(),
+                    ip,
                     style: defaultTextStyle,
                   ),
                   Container(
