@@ -30,6 +30,7 @@ class JoinScreen extends ConsumerStatefulWidget {
 }
 
 class _JoinScreenState extends ConsumerState<JoinScreen> {
+  String? id;
   String? name;
   String? userId;
   String? mobile;
@@ -53,6 +54,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
   void _setValue() {
     final state = ref.read(userAuthProvider);
     if (state is UserMinModel) {
+      id = state.id;
       name = name ?? state.name;
       userId = userId ?? state.email;
       mobile = mobile ?? state.mobile;
@@ -254,7 +256,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
                           .isPopUp(visibility: true);
                       await ref.read(userAuthProvider.notifier).userJoin(
                             PostJoinBody(
-                              id: state is UserMinModel ? state.id : null,
+                              id: id,
                               name: name!,
                               userId: userId!,
                               mobile: mobile!,

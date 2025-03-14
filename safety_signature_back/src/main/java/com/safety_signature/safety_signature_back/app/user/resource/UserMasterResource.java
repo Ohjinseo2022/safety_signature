@@ -101,6 +101,7 @@ public class UserMasterResource {
          * 3. 이미지 minio 저장 처리
          * 4. 기존 회원 유무를 체크할건지.. 이건 고민 필요할듯
          */
+        log.info("post user join existingUserId: {} ", postJoinBody.getId());
         String userMasterId =  postJoinBody.getId() ==null ? TsidUtil.getId() : postJoinBody.getId();
         /**
          * 회원가입 실패 조건

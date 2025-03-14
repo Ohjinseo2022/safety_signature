@@ -48,13 +48,13 @@ public class MenuManagementMaster  extends AbstractAuditingEntity<String> implem
     @Column(name="parent_id",length = 36)
     private String parentId;
 
-    @Comment("메뉴 권한")
+    @Comment("메뉴 접근 권한")
     @Size(max=1000)
     @Enumerated(EnumType.STRING)
-    @Column(name="menu_auth_code",length = 36)
+    @Column(name="menu_auth_code",length = 1000)
     private UserTypeCode menuAuthCode;
 
-
-
-
+    @Comment("메뉴사용 유무")
+    @Column(name="is_menu_active")
+    private boolean isMenuActive = true;
 }
