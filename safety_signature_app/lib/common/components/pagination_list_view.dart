@@ -103,6 +103,7 @@ class _PaginationListViewState<T extends IModelWithId>
         children: [
           Text(
             state.message,
+            style: defaultTextStyle,
             textAlign: TextAlign.center,
           ),
           const SizedBox(
@@ -118,7 +119,10 @@ class _PaginationListViewState<T extends IModelWithId>
                       forceRefetch: true,
                     );
               },
-              child: Text('다시시도'))
+              child: Text(
+                '다시시도',
+                style: defaultTextStyle,
+              ))
         ],
       );
     }

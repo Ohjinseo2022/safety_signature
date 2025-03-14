@@ -45,7 +45,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     }
     if (state is UserModelError) {
       commonDialog(
-          context: context, content: Text(state.message), onConfirm: () {});
+          context: context,
+          content: Text(
+            state.message,
+            style: defaultTextStyle,
+          ),
+          onConfirm: () {});
     }
     return Center(
       child: Column(
