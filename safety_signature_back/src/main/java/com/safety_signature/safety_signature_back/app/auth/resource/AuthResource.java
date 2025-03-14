@@ -46,12 +46,19 @@ public class AuthResource {
              * 4. 유저정보와 엑세스토큰, 리프레시토큰 전달
              * */
             /**TODO 추가 이슈사항 .... 네이버로그인은 플러터에서 정식지원을 하지않음. 별도의 로그인 프로세스 필요할듯 */
-            if(SocialTypeCode.NAVER.getValue().equals(SocialTypeCode.from(socialLoginReqDTO.getSocialType()))) {
-                return ResponseEntity.ok().body(oAuth2Service.oauthLogin( null, socialLoginReqDTO));
-            }else{
-                String accessToken = authTransactionalService.extractTokenFromRequest(request);
-                return ResponseEntity.ok().body(oAuth2Service.oauthLogin(accessToken, socialLoginReqDTO));
+            try {
+                if(SocialTypeCode.NAVER.getValue().equals(SocialTypeCode.from(socialLoginReqDTO.getSocialType()))) {
+                    return ResponseEntity.ok().body(oAuth2Service.oauthLogin( null, socialLoginReqDTO));
+                }else{
+                    log.info("oauth login google or kakao");
+                    String accessToken = authTransactionalService.extractTokenFromRequest(request);
+                    return ResponseEntity.ok().body(oAuth2Service.oauthLogin(accessToken, socialLoginReqDTO));
+                }
+            }catch (Exception e) {
+                log.info("oauth login Exception : {}", e.getMessage());
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
             }
+
 
     }
     @Operation(summary = "일반 로그인")

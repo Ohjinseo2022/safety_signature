@@ -57,7 +57,7 @@ public class UserMasterResource {
     @Operation(summary = "회원 프로필 요청")
     @GetMapping("/profile")
     public ResponseEntity<?> getUserMe(HttpServletRequest request)throws Exception{
-        log.info("get user profile start : ");
+        log.info("get user profile start  ");
         /**
          * 0. 헤더에 토큰 정보가 있는지 먼저 확인 및 토큰 추출
          * 1. 해더에 담긴 엑세스 토큰이 유효한지 체크한다.
@@ -65,8 +65,6 @@ public class UserMasterResource {
          * 3. 유효한 정보라면 해당 엑세스토큰 정보로 유저정보 리턴
          * */
         try{
-
-
         String userEmail = SecurityUtils.getCurrentUserLogin().orElse(null);
         // 유저정보가 없다면 401 코드를 전송시켜서, 토큰 갱신 API 호출을 유도함.
         if (Constants.ANONYMOUSUSER.equals(userEmail)|| userEmail ==null) {

@@ -44,17 +44,41 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
   bool isSignature = false;
   Uint8List? image;
   @override
+  void initState() {
+    // TODO: implement initState
+    _setValue();
+    super.initState();
+  }
+
+  void _setValue() {
+    final state = ref.read(userAuthProvider);
+    if (state is UserMinModel) {
+      name = name ?? state.name;
+      userId = userId ?? state.email;
+      mobile = mobile ?? state.mobile;
+      userIdValid = null;
+      mobileValid = null;
+    }
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(userAuthProvider);
     final isPopUp = ref.watch(modalControllerProvider);
+
     if (state is UserMinModel) {
-      setState(() {
-        name = name ?? state.name;
-        userId = userId ?? state.email;
-        mobile = mobile ?? state.mobile;
-        userIdValid = null;
-        mobileValid = null;
+      // 랜더링 이후 동작
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        ref.read(userAuthProvider.notifier).initUserModel();
       });
+
+      //   });
     }
     if (isPopUp && (ModalRoute.of(context)?.isCurrent ?? false)) {
       WidgetsBinding.instance.addPostFrameCallback((_) {

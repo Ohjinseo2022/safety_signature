@@ -51,7 +51,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final permission = ref.watch(permissionProvider);
     final state = ref.watch(userAuthProvider);
     final isPopUp = ref.watch(modalControllerProvider);
-    if (isPopUp && (ModalRoute.of(context)?.isCurrent ?? false)) {
+    if (state is UserMinModel &&
+        UserStatusCode.getByCode(state.userStatusCode) ==
+            UserStatusCode.PENDING) {
+      ref.read(modalControllerProvider.notifier).isPopUp(visibility: true);
+    }
+    if (state is UserMinModel &&
+        isPopUp &&
+        (ModalRoute.of(context)?.isCurrent ?? false)) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (state is UserMinModel &&
             UserStatusCode.getByCode(state.userStatusCode) ==
@@ -60,7 +67,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
           commonDialog(
             context: context,
             title: "회원가입 안내",
-            content: Center(child: Text("전자 서명 정보 등록 후 간편가입 완료됩니다.")),
+            content: Center(
+                child: Text(
+              "전자 서명 정보 등록 후 간편가입 완료됩니다.",
+              style: defaultTextStyle,
+            )),
             onConfirm: () async {
               final result = await context.pushNamed(JoinScreen.routeName);
               if (result == null) {

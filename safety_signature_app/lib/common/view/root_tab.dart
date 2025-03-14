@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:safety_signature_app/bulletin_board/view/bulletin_board_list_screen.dart';
+import 'package:safety_signature_app/common/components/common_dialog.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
@@ -60,7 +62,35 @@ class _RootTabState extends ConsumerState<RootTab>
   Widget build(BuildContext context) {
     final state = ref.watch(userAuthProvider);
     final permission = ref.watch(permissionProvider);
-    // print("state : $state");
+    if (state is UserMinModel &&
+        UserStatusCode.getByCode(state.userStatusCode) ==
+            UserStatusCode.PENDING) {
+      ModalRoute.of(context)!.isCurrent
+          ? WidgetsBinding.instance.addPostFrameCallback((_) {
+              commonDialog(
+                context: context,
+                title: "회원가입 안내",
+                content: Center(
+                    child: Text(
+                  "전자 서명 정보 등록 후 간편가입 완료됩니다.",
+                  style: defaultTextStyle,
+                )),
+                onConfirm: () async {
+                  final result = await context.pushNamed(JoinScreen.routeName);
+                  if (result == null) {
+                    await ref.watch(userAuthProvider.notifier).userLogout();
+                  }
+                },
+              );
+            })
+          : null;
+
+      return AnimatedSwitcher(
+          duration: Duration(milliseconds: 500),
+          child: DefaultLayout(
+            child: LoginScreen(),
+          ));
+    }
 
     return AnimatedSwitcher(
         duration: Duration(milliseconds: 500),
@@ -89,15 +119,6 @@ class _RootTabState extends ConsumerState<RootTab>
     }
     if (state is UserModelGuest) {
       // Future.delayed(Duration(milliseconds: 1000));
-      return DefaultLayout(
-        child: LoginScreen(),
-      );
-    }
-    if (state is UserMinModel &&
-        UserStatusCode.getByCode(state.userStatusCode) ==
-            UserStatusCode.PENDING) {
-      setState(() {});
-
       return DefaultLayout(
         child: LoginScreen(),
       );
@@ -133,17 +154,6 @@ class _RootTabState extends ConsumerState<RootTab>
                 : Icons.calendar_month_outlined),
             label: "전자결재",
           ),
-          // BottomNavigationBarItem(
-          //     icon: Icon(index == 1
-          //         ? Icons.content_paste
-          //         : Icons.content_paste_outlined),
-          //     label: "아차차"),
-          // BottomNavigationBarItem(
-          //     icon:
-          //         Icon(index == 2 ? Icons.groups_2 : Icons.groups_2_outlined),
-          //     label: "메세지"),
-          // BottomNavigationBarItem(
-          //     icon: Icon(Icons.accessibility_new_outlined), label: "로그인"),
           BottomNavigationBarItem(
               icon: Icon(
                 index == 1
@@ -154,38 +164,6 @@ class _RootTabState extends ConsumerState<RootTab>
         ],
       ),
       //TODO : 화면 구성이 다양해 지면 추가할 예정임
-      // floatingActionButton:
-      //     // _floatingActionButtons(),
-      //     CustomFloatingActionButton(
-      //   distance: 70,
-      //   children: [
-      //     ActionButton(
-      //       onPressed: () {},
-      //       icon: Icon(
-      //         Icons.add_chart,
-      //       ),
-      //       label: "대시보드",
-      //     ),
-      //     ActionButton(
-      //       onPressed: () {},
-      //       icon: Icon(Icons.handshake),
-      //       label: "일정추가",
-      //     ),
-      //     ActionButton(
-      //       onPressed: () {},
-      //       icon: Icon(Icons.group_add),
-      //       label: "방만들기",
-      //     ),
-      //     ActionButton(
-      //       onPressed: () {},
-      //       icon: Icon(
-      //         Icons.settings,
-      //       ),
-      //       label: "설정",
-      //     ),
-      //   ],
-      // ),
-      // floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
     );
   }
 }

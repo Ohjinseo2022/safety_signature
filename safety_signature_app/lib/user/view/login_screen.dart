@@ -5,9 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:safety_signature_app/common/components/common_dialog.dart';
 import 'package:safety_signature_app/common/components/login_button.dart';
 import 'package:safety_signature_app/common/const/color.dart';
-import 'package:safety_signature_app/common/const/data.dart';
 import 'package:safety_signature_app/common/enumeration/social.dart';
-import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
 import 'package:safety_signature_app/user/provider/user_auth_provider.dart';
 import 'package:safety_signature_app/user/view/email_login_screen.dart';
@@ -28,6 +26,18 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen>
     with SingleTickerProviderStateMixin {
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final state = ref.watch(userAuthProvider);
     if (state is UserMinModel) {
@@ -42,6 +52,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
+          if (state is UserMinModel)
+            Text(
+              state.userStatusCode,
+              style: defaultTextStyle,
+            ),
           Text("안전싸인",
               style: defaultTextStyle.copyWith(
                   fontWeight: FontWeight.w800,
@@ -56,20 +71,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             width: double.infinity,
           ),
           _googleLoginButton(onPressed: () async {
-            await onLoginHandler(
+            UserModelBase? model = await onLoginHandler(
                 context: context, platform: SocialTypeCode.GOOGLE.code);
           }),
           SizedBox(
             height: 15,
           ),
           _kakaoLoginButton(onPressed: () async {
-            await onLoginHandler(
+            UserModelBase? model = await onLoginHandler(
                 context: context, platform: SocialTypeCode.KAKAO.code);
           }),
           SizedBox(
             height: 15,
           ),
-          // TODO : 이메일 로그인 ui 만들기
           _emailLoginButton(onPressed: () async {
             context.pushNamed(EmailLoginScreen.routeName);
           }),
@@ -90,9 +104,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       {required String platform, required BuildContext context}) async {
     UserModelBase? model =
         await ref.read(userAuthProvider.notifier).login(platform: platform);
-    if (model is UserMinModel) {
-      mounted ? context.goNamed(RootTab.routeName) : null;
-    }
     return model;
   }
 

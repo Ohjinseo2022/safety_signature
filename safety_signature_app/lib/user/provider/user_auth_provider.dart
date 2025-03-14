@@ -36,6 +36,11 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
       : super(UserModelLoading()) {
     getProfile();
   }
+
+  Future<void> initUserModel() async {
+    state = UserModelLoading();
+  }
+
 //String? email, String? password
   //LoginResponse  테스트 완료하고 이거로 변경 UserModelBase
   Future<UserModelBase?> login({required String platform}) async {
@@ -63,7 +68,7 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
         state = pState as UserModelBase?;
         return pState;
       } else {
-        state = UserModelError(message: "소셜 로그인 중 에러가 발생 했습니다.");
+        state = UserModelGuest();
         return Future.value(state);
       }
     } catch (e) {
@@ -175,7 +180,6 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
       await _googleSignIn.signIn();
       final GoogleSignInAuthentication googleSignInAuthentication =
           await _googleSignIn.currentUser!.authentication;
-
       final String? accessToken = googleSignInAuthentication.accessToken;
       await storage.write(key: ACCESS_TOKEN_KEY, value: accessToken);
       return true;

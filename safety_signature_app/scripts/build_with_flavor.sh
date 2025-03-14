@@ -30,10 +30,12 @@ fi
 # 빌드 실행
 if [ "$BUILD_TYPE" == "apk" ]; then
   echo "🚀 $FLAVOR 환경에서 APK 빌드 시작..."
+  flutter pub get
   flutter build apk --flavor $FLAVOR --target=lib/main.dart
 
 elif [ "$BUILD_TYPE" == "aab" ]; then
   echo "🚀 $FLAVOR 환경에서 AAB 빌드 시작..."
+  flutter pub get
   flutter build appbundle --flavor $FLAVOR --target=lib/main.dart
 
 elif [ "$BUILD_TYPE" == "ios" ]; then
