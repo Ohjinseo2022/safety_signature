@@ -13,6 +13,7 @@ interface CommonModalProps {
   setIsVisible: (bool: boolean) => void
   width?: string // 모달 가로 크기
   height?: string // 모달 세로 크기
+  onConfirmText?: string
 }
 
 const CommonModal: React.FC<CommonModalProps> = ({
@@ -25,6 +26,7 @@ const CommonModal: React.FC<CommonModalProps> = ({
   callBackFunction,
   width = '250px',
   height = '300px',
+  onConfirmText,
 }) => {
   const onClose = () => {
     setIsVisible(false)
@@ -87,7 +89,7 @@ const CommonModal: React.FC<CommonModalProps> = ({
               취소
             </button>
           )}
-          <button onClick={onConfirm}>확인</button>
+          <button onClick={onConfirm}>{onConfirmText ?? '확인'}</button>
         </ModalFooter>
       </ModalContainer>
     </ModalOverlay>

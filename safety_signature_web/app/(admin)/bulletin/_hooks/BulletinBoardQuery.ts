@@ -119,11 +119,38 @@ const getApproveList = async (props: ApproveSignatureSearchProps) => {
     return error
   }
 }
+const getPageApproveList = async (props: ApproveSignatureSearchProps) => {
+  const { data, status, error, count } = await useFetchApi<{
+    data: { data: ApproveMasterType[] }
+    count: number
+  }>(
+    `/approve/completed-list/${props.bulletinBoardId}`,
+    {
+      method: 'get',
+      params: props,
+    },
+    { isAuth: true }
+  )
+  if (!error && data) {
+    //console.log(data)
+    //console.log('count : ', count)
+    return { ...data, count: count }
+  } else {
+    return error
+  }
+}
 
 export const useApproveListQuery = (props: ApproveSignatureSearchProps) => {
   return useQuery({
     queryKey: ['approveList', props],
     queryFn: async () => getApproveList(props),
+    gcTime: 30 * 60 * 1000,
+  })
+}
+export const usePageApproveListQuery = (props: ApproveSignatureSearchProps) => {
+  return useQuery({
+    queryKey: ['pageApproveList', props],
+    queryFn: async () => getPageApproveList(props),
     gcTime: 30 * 60 * 1000,
   })
 }

@@ -85,10 +85,11 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
       {required LoginNormalReqModel loginNormalReqModel}) async {
     try {
       var pState = null;
-      state = UserModelLoading();
+      state = UserModelGuest();
       final response = await authRepository.normalLogin(
           loginNormalReqModel: loginNormalReqModel);
       if (response is LoginResponse) {
+        state = UserModelLoading();
         await storage.write(key: ACCESS_TOKEN_KEY, value: response.accessToken);
         await storage.write(
             key: REFRESH_TOKEN_KEY, value: response.refreshToken);
@@ -96,6 +97,7 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
         state = pState as UserModelBase?;
         return true;
       } else {
+        state = UserModelGuest();
         return false;
       }
     } catch (e) {

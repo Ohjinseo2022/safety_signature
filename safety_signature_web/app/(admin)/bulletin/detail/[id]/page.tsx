@@ -20,6 +20,7 @@ import {
   UserTypeCode,
 } from '@/app/(common)/user/login/_userRepository/types'
 import { useUserProfile } from '@/app/(common)/user/login/_userState/userStore'
+import ApproveTableModal from '../../_components/ApproveTableModal'
 import {
   ApproveMasterType,
   approveSignature,
@@ -38,6 +39,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
   const router = useRouter()
   const { isModalVisible, onChangeModalVisible, callBackFunction } =
     useAlertStore()
+  const [isApproveModal, _, setIsApproveModal] = useInput<boolean>(false)
   const [bulletinModal, onChnageBulletinModal, setBulletinModal] = useInput<{
     isVisible: boolean
     children: string
@@ -83,15 +85,17 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
     return []
   }, [approveList, approveListIsFetched])
   //console.log('unwrappedParams : ', unwrappedParams)
-  const headers = [
+  const approveheaders = [
     { label: 'NO', columns: 'index' },
     { label: '업체명', columns: 'companyName' },
     { label: '공종', columns: 'constructionBusiness' },
     { label: '성명', columns: 'userName' },
     { label: '확인', columns: 'attachDocId' },
+    { label: '결제완료시간', columns: 'createdDateFormat' },
   ]
 
   const onDownLoadExcel = async () => {
+    setIsApproveModal(true)
     // await getDownloadExcel(unwrappedParams.id)
     if (approveTable.current) {
       const element = approveTable.current
@@ -235,7 +239,6 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
           )}
         </div>
       </CommonCard>
-
       <CommonDataTable
         title={'결재완료 리스트'}
         topBtnLable={
@@ -250,20 +253,18 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
             ? onDownLoadExcel
             : onSignatureHandler
         }
-        children={
-          <EducationCertificate
-            ref={approveTable}
-            siteName={detailData.siteName}
-            educationDate={detailData.createdDateFormat}
-            educationType={detailData.boardTitle}
-            headers={headers}
-            participants={approveDataList}
-          />
-        }
+        // children={
+        //   <EducationCertificate
+        //     siteName={detailData.siteName}
+        //     educationDate={detailData.createdDateFormat}
+        //     educationType={detailData.boardTitle}
+        //     headers={headers}
+        //     participants={approveDataList}
+        //   />
+        // }
         dataItem={[]}
-        headers={headers}
+        headers={approveheaders}
       />
-
       <CommonModal
         isVisible={bulletinModal.isVisible}
         setIsVisible={(e: boolean) =>
@@ -275,6 +276,14 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
       >
         {bulletinModal.children}
       </CommonModal>
+      <ApproveTableModal
+        isVisible={isApproveModal}
+        setIsVisible={(e: boolean) => setIsApproveModal(e)}
+        educationDate={detailData.createdDateFormat}
+        educationType={detailData.boardTitle}
+        participants={approveDataList}
+        siteName={detailData.siteName}
+      ></ApproveTableModal>
     </CommonContainer>
   ) : (
     <></>
