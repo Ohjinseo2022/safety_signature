@@ -15,7 +15,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class MenuManagementDTO  extends AbstractAuditingDTO<String> implements Serializable {
+public class MenuManagementMasterDTO extends AbstractAuditingDTO<String> implements Serializable {
 
     @Size(max=36)
     @Schema(description = "메뉴 관리 테이블 고유 ID",requiredMode= Schema.RequiredMode.REQUIRED)

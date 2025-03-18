@@ -1,5 +1,6 @@
 'use client'
 
+import { dateFormat } from '@/utils/utils'
 import styled from 'styled-components'
 import React from 'react'
 import { ApproveMasterType } from '@/app/(admin)/bulletin/_hooks/BulletinBoardQuery'
@@ -48,7 +49,7 @@ const EducationCertificate: React.FC<EducationCertificateProps> = ({
           </tr>
           <tr>
             <InfoCell className="bold">교육일시</InfoCell>
-            <InfoCell>{educationDate}</InfoCell>
+            <InfoCell>{dateFormat(educationDate, 'YYYY-MM-DD')}</InfoCell>
           </tr>
         </tbody>
       </HeaderTable>
@@ -72,10 +73,12 @@ const EducationCertificate: React.FC<EducationCertificateProps> = ({
               participants.evenData.map((even, idx) => {
                 return even.map((item, index) => {
                   return (
-                    <tr>
+                    <tr key={`${item.id}-${index}`}>
                       {headers.map((header, i) => {
                         if (header.columns === 'index') {
-                          return <Td>{index + 1 + 23 * idx}</Td>
+                          return (
+                            <Td key={header.columns}>{index + 1 + 23 * idx}</Td>
+                          )
                         }
                         if (header.columns === 'attachDocId') {
                           return (
@@ -98,7 +101,11 @@ const EducationCertificate: React.FC<EducationCertificateProps> = ({
                             let odd = participants.oddData[idx][index]
 
                             if (header.columns === 'index') {
-                              return <Td>{index + 1 + 23 + 23 * idx}</Td>
+                              return (
+                                <Td key={`${header.columns}-${Math.random()}`}>
+                                  {index + 1 + 23 + 23 * idx}
+                                </Td>
+                              )
                             }
                             if (header.columns === 'attachDocId') {
                               return (

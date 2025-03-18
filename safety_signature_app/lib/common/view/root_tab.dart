@@ -140,18 +140,16 @@ class _RootTabState extends ConsumerState<RootTab>
         type: BottomNavigationBarType.fixed,
         onTap: (int index) {
           // print(state);
-          if (index == 1 && state is UserModelGuest) {
-            loginBottomSheet(context, animationController);
-            return;
-          }
+          // if (index == 1 && state is UserModelGuest) {
+          //   loginBottomSheet(context, animationController);
+          //   return;
+          // }
           controller.animateTo(index);
         },
         currentIndex: index,
         items: [
           BottomNavigationBarItem(
-            icon: Icon(index == 0
-                ? Icons.calendar_month
-                : Icons.calendar_month_outlined),
+            icon: Icon(index == 0 ? Icons.check_box : Icons.check_box_outlined),
             label: "전자결재",
           ),
           BottomNavigationBarItem(

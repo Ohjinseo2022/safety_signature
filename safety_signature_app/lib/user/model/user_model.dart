@@ -15,6 +15,8 @@ class UserModelLoading extends UserModelBase {}
 
 class UserModelGuest extends UserModelBase {}
 
+class UserModelSigningUp extends UserModelLoading {}
+
 @JsonSerializable()
 class UserMinModel extends UserModelBase {
   final String id;

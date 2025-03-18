@@ -15,6 +15,8 @@ class CustomTextFormField extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters; // 입력 제한 설정
   final FormFieldValidator<String>? validator;
   final Icon? prefixIcon;
+  final Color? fillColor;
+  final Function? enterOrReturnKeyFn;
   CustomTextFormField({
     super.key,
     required this.value,
@@ -28,6 +30,8 @@ class CustomTextFormField extends StatefulWidget {
     this.validator,
     this.border,
     this.prefixIcon,
+    this.fillColor,
+    this.enterOrReturnKeyFn,
     required this.onChanged,
   });
 
@@ -84,6 +88,9 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               _controller.text = value;
             });
           },
+          onFieldSubmitted: (value) async {
+            await widget.enterOrReturnKeyFn;
+          },
           inputFormatters: widget.inputFormatters,
           validator: widget.validator,
           style: defaultTextStyle,
@@ -102,7 +109,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
               color: TEXT_COLOR.withOpacity(0.3),
               fontSize: 14.0,
             ),
-            fillColor: CARD_COLOR, // Colors.transparent, //SECONDARY_COLOR ,
+            fillColor: widget.fillColor ??
+                CARD_COLOR, // Colors.transparent, //SECONDARY_COLOR ,
             filled: true,
             //모든 input 상태의 기본 스타일 세팅
             border: widget.border ?? baseBorder,

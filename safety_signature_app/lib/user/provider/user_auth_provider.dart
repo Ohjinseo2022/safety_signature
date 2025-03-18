@@ -41,6 +41,10 @@ class UserAuthStateNotifier extends StateNotifier<UserModelBase?> {
     state = UserModelLoading();
   }
 
+  Future<void> singingUpModel() async {
+    state = UserModelSigningUp();
+  }
+
 //String? email, String? password
   //LoginResponse  테스트 완료하고 이거로 변경 UserModelBase
   Future<UserModelBase?> login({required String platform}) async {

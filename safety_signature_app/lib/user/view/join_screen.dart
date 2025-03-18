@@ -77,7 +77,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
     if (state is UserMinModel) {
       // 랜더링 이후 동작
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        ref.read(userAuthProvider.notifier).initUserModel();
+        ref.read(userAuthProvider.notifier).singingUpModel();
       });
 
       //   });
@@ -132,7 +132,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
                     onChangedValue: (value) {
                       name = value;
                     },
-                    enabled: state is! UserMinModel,
+                    // enabled: state is! UserMinModel,
                   ),
                   _inputField(
                     inputValue: userId,
@@ -145,7 +145,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
                       userIdValid = DataUtils.emailRegex(value);
                       return userIdValid;
                     },
-                    enabled: state is! UserMinModel,
+                    enabled: state is! UserModelSigningUp,
                   ),
                   _inputField(
                     inputValue: mobile,
@@ -162,8 +162,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
                       mobileValid = DataUtils.phoneRegex(value);
                       return mobileValid;
                     },
-                    enabled: state is! UserMinModel ||
-                        !(state is UserMinModel && state.mobile != null),
+                    enabled: state is! UserModelSigningUp || !(mobile != null),
                   ),
                   _inputField(
                     inputValue: password,
