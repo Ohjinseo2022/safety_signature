@@ -64,20 +64,19 @@ const PageChangeMiddleware = ({
       //   }
       // }
       await handleRouteStart()
-
+      console.log(pathname)
       const lastUrl: string = args[0]
-
       if (!pathStore.useLastPath) {
         pathStore.setLastPath(pathname, args[1] || {})
       }
       if (
         lastUrl &&
-        !lastUrl?.includes('login') &&
-        !lastUrl?.includes('privacy') // 개인정보 처리방침은 제한없이 접근가능
+        !pathname?.includes('login') &&
+        !pathname?.includes('privacy') // 개인정보 처리방침은 제한없이 접근가능
       ) {
         //lastUrl 이 존재해야하고
         //path
-        console.log('접근권한 체크로직 실행 url : ', lastUrl)
+        console.log('접근권한 체크로직 실행 url : ', pathname)
         if (
           !isLogin ||
           userProfile.userTypeCode === UserTypeCode.GENERAL_MEMBER
