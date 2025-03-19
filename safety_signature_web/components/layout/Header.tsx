@@ -24,9 +24,9 @@ export default function Header() {
   const [visibleSubMenu, setVisibleSubMenu] = useState<number | null>(null)
   const { userProfile, initProfile } = useUserProfile()
   const menuItems: { label: string; path: string; subMenu: string[] }[] = [
-    { label: '업체관리', path: '/user', subMenu: [''] },
+    { label: '업체관리', path: '/user', subMenu: [] },
     { label: '전자결재 관리', path: '/bulletin', subMenu: [] },
-    { label: '현장 관리', path: '/site', subMenu: ['ㅇㅇㅇ'] },
+    { label: '현장 관리', path: '/site', subMenu: [] },
     // { label: '네이버 지도 API', path: '/navermaps', subMenu: [] },
   ]
   const [profile, setProfile] = useState<boolean>(false)

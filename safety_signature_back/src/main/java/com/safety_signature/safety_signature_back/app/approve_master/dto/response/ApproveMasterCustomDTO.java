@@ -25,7 +25,7 @@ public class ApproveMasterCustomDTO extends ApproveMasterDTO {
     public static ApproveMasterCustomDTO from(ApproveMasterDTO approveMasterDTO) {
         ApproveMasterCustomDTO approveMasterCustomDTO = new ApproveMasterCustomDTO();
         BeanUtils.copyProperties(approveMasterDTO, approveMasterCustomDTO);
-        approveMasterCustomDTO.setCreatedDateFormat(DateUtil.instantToStringDate(approveMasterCustomDTO.getCreatedDate(), "yyyy-MM-dd"));
+        approveMasterCustomDTO.setCreatedDateFormat(DateUtil.instantToStringDate(approveMasterCustomDTO.getCreatedDate(), "yyyy-MM-dd hh:mm:ss"));
         return approveMasterCustomDTO;
     }
 

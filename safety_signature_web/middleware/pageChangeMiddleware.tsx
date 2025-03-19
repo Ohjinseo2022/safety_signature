@@ -64,7 +64,7 @@ const PageChangeMiddleware = ({
       //   }
       // }
       await handleRouteStart()
-      console.log(pathname)
+      // console.log(pathname)
       const lastUrl: string = args[0]
       if (!pathStore.useLastPath) {
         pathStore.setLastPath(pathname, args[1] || {})
@@ -76,7 +76,7 @@ const PageChangeMiddleware = ({
       ) {
         //lastUrl 이 존재해야하고
         //path
-        console.log('접근권한 체크로직 실행 url : ', pathname)
+        // console.log('접근권한 체크로직 실행 url : ', pathname)
         if (
           !isLogin ||
           userProfile.userTypeCode === UserTypeCode.GENERAL_MEMBER
@@ -84,15 +84,16 @@ const PageChangeMiddleware = ({
           pathStore.setUseLastPath(true)
           removeItem({ key: TokenCode.accessToken })
           removeItem({ key: TokenCode.refreshToken })
-          alertStore.onChangeModalVisible({
-            msg: '접근권한이 없습니다.',
-            isVisible: true,
-            callBackFunction: () => {
-              originalPush('/user/login', args[1])
-              return true
-            },
-            overlayClose: false,
-          })
+          originalPush('/user/login', args[1])
+          // alertStore.onChangeModalVisible({
+          //   msg: '접근권한이 없습니다.',
+          //   isVisible: true,
+          //   callBackFunction: () => {
+          //     originalPush('/user/login', args[1])
+          //     return true
+          //   },
+          //   overlayClose: false,
+          // })
         } else {
           if (pathStore.useLastPath) {
             pathStore.setUseLastPath(false)

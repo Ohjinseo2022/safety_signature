@@ -36,6 +36,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         }
         String token = jwtTokenProvider.resolveToken(request);
         if (token != null && jwtTokenProvider.validateToken(token)) {
+            /**
+             *  TODO : 다른 플랫폼에서 로그인시 기존 페이지 흠..
+             */
             String userId = jwtTokenProvider.getSubject(token,tokenValues.secretKey());
             UserMasterDTO userMasterDTO = userMasterService.getUserMasterById(userId);
             // 기존 인증 정보가 없을 경우만 설정

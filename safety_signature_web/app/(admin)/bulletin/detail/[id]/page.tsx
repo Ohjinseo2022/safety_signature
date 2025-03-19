@@ -27,6 +27,7 @@ import {
   onBulletinUpdateOrNewBulletin,
   useApproveListQuery,
   useBulletinBoardQuery,
+  usePageApproveListQuery,
 } from '../../_hooks/BulletinBoardQuery'
 
 interface BulletinDetailPageProps {
@@ -59,15 +60,32 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
   const [page, onChangePage, setPage] = useInput<number>(1)
   // 결재 완료 리스트
   const {
-    data: approveList,
-    error: approveListError,
-    isFetched: approveListIsFetched,
-    refetch: approveListRefetch,
+    data: approveTableList,
+    error: approveTableListError,
+    isFetched: approveTableListIsFetched,
+    refetch: approveTableListRefetch,
   } = useApproveListQuery({
     bulletinBoardId: unwrappedParams.id,
     page: page - 1,
     size: 23,
   })
+  const {
+    data: pageApproveList,
+    error: pageApproveListError,
+    isFetched: pageApproveListIsFetched,
+    refetch: pageApproveListRefetch,
+  } = usePageApproveListQuery({
+    bulletinBoardId: unwrappedParams.id,
+    page: page - 1,
+    size: 10,
+  })
+  const pageApproveListData = useMemo(() => {
+    if (pageApproveListIsFetched && pageApproveList) {
+      return pageApproveList.data
+    } else {
+      return []
+    }
+  }, [pageApproveList, pageApproveListIsFetched])
   const detailData: BulletinBoardMasterType = useMemo(() => {
     if (isFetched && bulletinBoardDetail) {
       return bulletinBoardDetail.data
@@ -79,14 +97,14 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
     evenData: ApproveMasterType[][]
     oddData: ApproveMasterType[][]
   } = useMemo(() => {
-    if (approveListIsFetched && approveList) {
-      return approveList
+    if (approveTableListIsFetched && approveTableList) {
+      return approveTableList
     }
     return []
-  }, [approveList, approveListIsFetched])
+  }, [approveTableList, approveTableListIsFetched])
   //console.log('unwrappedParams : ', unwrappedParams)
   const approveheaders = [
-    { label: 'NO', columns: 'index' },
+    // { label: 'NO', columns: 'index' },
     { label: '업체명', columns: 'companyName' },
     { label: '공종', columns: 'constructionBusiness' },
     { label: '성명', columns: 'userName' },
@@ -156,7 +174,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
 
     if (result) {
       onChangeModalVisible({ isVisible: true, msg: result.message })
-      result.status === 200 ? approveListRefetch() : undefined
+      result.status === 200 ? approveTableListRefetch() : undefined
     }
   }
   const onStatusChangeHandler = async (type: 'D' | 'A') => {
@@ -262,7 +280,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
         //     participants={approveDataList}
         //   />
         // }
-        dataItem={[]}
+        dataItem={pageApproveListData}
         headers={approveheaders}
       />
       <CommonModal
