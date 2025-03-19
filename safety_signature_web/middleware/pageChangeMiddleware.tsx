@@ -77,6 +77,7 @@ const PageChangeMiddleware = ({
       ) {
         //lastUrl 이 존재해야하고
         //path
+        console.log('접근권한 체크로직 실행 url : ', lastUrl)
         if (
           !isLogin ||
           userProfile.userTypeCode === UserTypeCode.GENERAL_MEMBER
