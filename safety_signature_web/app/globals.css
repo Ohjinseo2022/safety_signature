@@ -176,3 +176,15 @@ td:hover {
 #nprogress .spinner {
   display: none; /* 기본 스피너 비활성화 */
 }
+
+.provision_title,
+p,
+li {
+  color: #000 !important; /* 검정색 */
+}
+
+.provision_title,
+p,
+li {
+  color: #000 !important; /* 검정색 */
+}
