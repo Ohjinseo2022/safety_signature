@@ -70,7 +70,11 @@ const PageChangeMiddleware = ({
       if (!pathStore.useLastPath) {
         pathStore.setLastPath(pathname, args[1] || {})
       }
-      if (lastUrl && !lastUrl?.includes('login')) {
+      if (
+        lastUrl &&
+        !lastUrl?.includes('login') &&
+        !lastUrl?.includes('privacy') // 개인정보 처리방침은 제한없이 접근가능
+      ) {
         //lastUrl 이 존재해야하고
         //path
         if (
