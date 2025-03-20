@@ -35,6 +35,8 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        // 환경 변수 전달
+        buildConfigField "String", "KAKAO_NATIVE_APP_KEY", "\"${KAKAO_NATIVE_APP_KEY}\""
     }
     signingConfigs {
         release {
@@ -59,12 +61,14 @@ android {
             dimension "build-type"
             applicationIdSuffix ".local"
             resValue "string", "app_name", "안전싸인-local"
+            buildConfigField "String", "KAKAO_NATIVE_APP_KEY", "\"${KAKAO_NATIVE_APP_KEY_LOCAL}\""
         }
 
 
         prod {
             dimension "build-type"
             resValue "string", "app_name", "안전싸인"
+            buildConfigField "String", "KAKAO_NATIVE_APP_KEY", "\"${KAKAO_NATIVE_APP_KEY_PROD}\""
         }
     }
 }

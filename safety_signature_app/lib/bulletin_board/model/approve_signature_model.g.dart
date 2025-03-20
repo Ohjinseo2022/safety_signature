@@ -10,12 +10,16 @@ ApproveSignatureRequestModel _$ApproveSignatureRequestModelFromJson(
         Map<String, dynamic> json) =>
     ApproveSignatureRequestModel(
       bulletinBoardId: json['bulletinBoardId'] as String,
+      constructionBusiness: json['constructionBusiness'] as String?,
+      companyName: json['companyName'] as String?,
     );
 
 Map<String, dynamic> _$ApproveSignatureRequestModelToJson(
         ApproveSignatureRequestModel instance) =>
     <String, dynamic>{
       'bulletinBoardId': instance.bulletinBoardId,
+      'constructionBusiness': instance.constructionBusiness,
+      'companyName': instance.companyName,
     };
 
 ApproveSignatureMessageModel _$ApproveSignatureMessageModelFromJson(
