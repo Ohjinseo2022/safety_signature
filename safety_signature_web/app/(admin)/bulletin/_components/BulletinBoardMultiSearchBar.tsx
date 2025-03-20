@@ -19,7 +19,6 @@ interface BulletinBoardMultiSearchBarProps {
   onChangeEndDate: (e: any) => void
   onChangeStartDate: (e: any) => void
   onChangeInput: (e: any) => void
-  onSubmit: (e: any) => void
   checked?: boolean
   onChangeChecked: (e: any) => void
   onChangeCreatedBy: (e: any) => void
@@ -73,7 +72,7 @@ const BulletinBoardMultiSearchBar: React.FC<
           htmlFor={htmlFor}
           placeholder={placeholder}
         />
-        {!checked ? (
+        {/* {!checked ? (
           <CommonInput
             value={createdBy}
             onChange={onChangeCreatedBy}
@@ -82,7 +81,7 @@ const BulletinBoardMultiSearchBar: React.FC<
             htmlFor={htmlFor}
             placeholder={'작성자명을 입력해주세요'}
           />
-        ) : null}
+        ) : null} */}
 
         <CommonInput
           value={searchInput}

@@ -20,11 +20,13 @@ import {
   UserTypeCode,
 } from '@/app/(common)/user/login/_userRepository/types'
 import { useUserProfile } from '@/app/(common)/user/login/_userState/userStore'
+import ApproveDataModifyModal from '../../_components/ApproveDataModifyModal'
 import ApproveTableModal from '../../_components/ApproveTableModal'
 import {
   ApproveMasterType,
   approveSignature,
   onBulletinUpdateOrNewBulletin,
+  onModifyApproveData,
   useApproveListQuery,
   useBulletinBoardQuery,
   usePageApproveListQuery,
@@ -41,6 +43,10 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
   const { isModalVisible, onChangeModalVisible, callBackFunction } =
     useAlertStore()
   const [isApproveModal, _, setIsApproveModal] = useInput<boolean>(false)
+  const [isApproveModifyModal, __, setIsApproveModifyModal] =
+    useInput<boolean>(false)
+  const [approveModfiyData, onChangeApproveModifyData, setApproveModifyData] =
+    useInput<ApproveMasterType>({})
   const [bulletinModal, onChnageBulletinModal, setBulletinModal] = useInput<{
     isVisible: boolean
     children: string
@@ -103,15 +109,24 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
     return []
   }, [approveTableList, approveTableListIsFetched])
   //console.log('unwrappedParams : ', unwrappedParams)
-  const approveheaders = [
-    // { label: 'NO', columns: 'index' },
-    { label: '업체명', columns: 'companyName' },
-    { label: '공종', columns: 'constructionBusiness' },
-    { label: '성명', columns: 'userName' },
-    { label: '확인', columns: 'attachDocId' },
-    { label: '결제완료시간', columns: 'createdDateFormat' },
-  ]
-
+  const approveheaders = useMemo(() => {
+    const headers = [
+      // { label: 'NO', columns: 'index' },
+      { label: '업체명', columns: 'companyName' },
+      { label: '공종', columns: 'constructionBusiness' },
+      { label: '성명', columns: 'userName' },
+      { label: '확인', columns: 'attachDocId' },
+      { label: '결제완료시간', columns: 'createdDateFormat' },
+    ]
+    if (userProfile?.id && detailData?.userMasterId) {
+      return userProfile.id === detailData.userMasterId
+        ? [...headers, { label: '수정/삭제', columns: 'edit' }]
+        : headers
+    } else {
+      return headers
+    }
+  }, [userProfile, detailData])
+  //
   const onDownLoadExcel = async () => {
     setIsApproveModal(true)
     // await getDownloadExcel(unwrappedParams.id)
@@ -204,7 +219,21 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
       },
     })
   }
-
+  /**
+   * 결제완료 리스트 수정 기능
+   */
+  const onModifyButtonClick = (item: ApproveMasterType) => {
+    setApproveModifyData((_) => {
+      return { ...item }
+    })
+    setIsApproveModifyModal(true)
+  }
+  const onModifyApproveDataHandler = async (data: ApproveMasterType) => {
+    const isModify = await onModifyApproveData(data)
+    if (isModify) {
+      Promise.all([approveTableListRefetch(), pageApproveListRefetch()])
+    }
+  }
   return detailData ? (
     <CommonContainer>
       <PostInfo>
@@ -234,6 +263,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
         </FlexTitle>
         <div
           className="content"
+          style={{ color: 'white' }}
           dangerouslySetInnerHTML={{ __html: detailData.boardContents }}
         ></div>
       </PostInfo>
@@ -271,6 +301,7 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
             ? onDownLoadExcel
             : onSignatureHandler
         }
+        onModifyButtonClick={onModifyButtonClick}
         // children={
         //   <EducationCertificate
         //     siteName={detailData.siteName}
@@ -302,6 +333,12 @@ const BulletinDetailPage = ({ params }: BulletinDetailPageProps) => {
         participants={approveDataList}
         siteName={detailData.siteName}
       ></ApproveTableModal>
+      <ApproveDataModifyModal
+        onModifyApproveDataHandler={onModifyApproveDataHandler}
+        isVisible={isApproveModifyModal}
+        setIsVisible={(e: boolean) => setIsApproveModifyModal(e)}
+        item={approveModfiyData}
+      ></ApproveDataModifyModal>
     </CommonContainer>
   ) : (
     <></>
@@ -333,7 +370,7 @@ const PostInfo = styled.div`
     margin: 0;
     font-size: 16px;
     color: #b0b0b0;
-    background-color: #2a2a2a; /* 배경 추가 */
+    background-color: #e0e0e0; /* 배경 추가 */
     padding: 20px; /* 내부 여백 */
     border-radius: 8px;
     min-height: 200px; /* 최소 높이 설정 */

@@ -2,6 +2,7 @@
 
 import styled from 'styled-components'
 import { useEffect, useState } from 'react'
+import CommonButton from './CommonButton'
 
 interface CommonDataTableProps {
   title: string
@@ -10,6 +11,7 @@ interface CommonDataTableProps {
   headers: { label: string; columns: string }[]
   dataItem: any[]
   children?: React.ReactNode
+  onModifyButtonClick?: (data: any) => void
 }
 
 const CommonDataTable: React.FC<CommonDataTableProps> = ({
@@ -19,6 +21,7 @@ const CommonDataTable: React.FC<CommonDataTableProps> = ({
   headers,
   dataItem,
   children,
+  onModifyButtonClick,
 }) => {
   return (
     <DataTableContainer>
@@ -54,7 +57,23 @@ const CommonDataTable: React.FC<CommonDataTableProps> = ({
                           </td>
                         )
                       }
-
+                      if (header.columns === 'edit') {
+                        return (
+                          <td
+                            className="edit"
+                            key={`${header.columns}-${item.id}`}
+                          >
+                            <CommonButton
+                              onClick={() => onModifyButtonClick?.(item)}
+                            >
+                              수정
+                            </CommonButton>
+                            {/* <CommonButton $backgroundColor="#FF0000">
+                              삭제
+                            </CommonButton> */}
+                          </td>
+                        )
+                      }
                       return (
                         <td key={`${header.columns}-${item.id}`}>
                           {item[header.columns]}

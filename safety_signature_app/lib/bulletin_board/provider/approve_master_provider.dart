@@ -22,7 +22,11 @@ class ApproveMasterStateNotifier
     required this.approveMasterRepository,
   }) : super(ApproveSignatureModelBase());
 
-  Future<void> approveSignature({required String bulletinBoardId}) async {
+  Future<void> approveSignature({
+    required String bulletinBoardId,
+    String? constructionBusiness,
+    String? companyName,
+  }) async {
     final isLoading = state is ApproveSignatureLoading;
     if (isLoading) {
       // print("로딩상태니 ?");
@@ -34,7 +38,10 @@ class ApproveMasterStateNotifier
       final approveResponse =
           await approveMasterRepository.postCompletedSignature(
               approveSignatureRequestModel: ApproveSignatureRequestModel(
-                  bulletinBoardId: bulletinBoardId));
+        bulletinBoardId: bulletinBoardId,
+        constructionBusiness: constructionBusiness,
+        companyName: companyName,
+      ));
       state = approveResponse;
     } catch (e) {
       state = ApproveSignatureMessageModel(message: '결재 실패 잠시 후 다시 시도해 주세요.');

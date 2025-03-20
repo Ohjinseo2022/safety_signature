@@ -16,11 +16,11 @@ import java.util.List;
 public class ApproveMasterCustomDTO extends ApproveMasterDTO {
     @Schema(description = "최소 생성 일시 문자열 포멧")
     private String createdDateFormat;
-    @Schema(description = "업체 명")
-    private String companyName;
-
-    @Schema(description = "공사 종목 명")
-    private String constructionBusiness;
+//    @Schema(description = "업체 명")
+//    private String companyName;
+//
+//    @Schema(description = "공사 종목 명")
+//    private String constructionBusiness;
 
     public static ApproveMasterCustomDTO from(ApproveMasterDTO approveMasterDTO) {
         ApproveMasterCustomDTO approveMasterCustomDTO = new ApproveMasterCustomDTO();

@@ -24,10 +24,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
+import org.apache.poi.ss.formula.functions.T;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -46,6 +48,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 
 @Tag(name = "전자결제 API")
 @RestController
@@ -129,7 +132,7 @@ public class ApproveMasterResource {
             ApproveMasterMessageDTO masterMessageDTO = ApproveMasterMessageDTO.builder().message("이미 전자 결제를 완료했습니다.").httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()).build();
             return ResponseEntity.status(masterMessageDTO.getHttpStatus()).body(masterMessageDTO);
         }
-        ApproveMasterDTO result = approveMasterService.addApproveMaster(approveCompletedSignatureRequestDTO.getBulletinBoardId(),userMasterDTO);
+        ApproveMasterDTO result = approveMasterService.addApproveMaster(approveCompletedSignatureRequestDTO,userMasterDTO);
 
         if(ObjectUtils.isEmpty(result)){
             ApproveMasterMessageDTO masterMessageDTO = ApproveMasterMessageDTO.builder().message("전자 결제 승인 처리에 실패 했습니다.").httpStatus(HttpStatus.INTERNAL_SERVER_ERROR.value()).build();
@@ -138,6 +141,19 @@ public class ApproveMasterResource {
         ApproveMasterMessageDTO masterMessageDTO = ApproveMasterMessageDTO.builder().message("전자 결제 승인 완료").httpStatus(HttpStatus.OK.value()).build();
         return ResponseEntity.status(masterMessageDTO.getHttpStatus()).body(masterMessageDTO);
     }
+
+    @Operation(summary = "전자 결제 단건 수정")
+    @PostMapping("/modify-approve-data")
+    public ResponseEntity<?> modifyApproveData(@RequestBody ApproveMasterCustomDTO approveMasterCustomDTO){
+        ApproveMasterDTO approveMasterDTO = new ApproveMasterDTO();
+        BeanUtils.copyProperties(approveMasterCustomDTO, approveMasterDTO);
+        Optional<ApproveMasterDTO> result = approveMasterService.partialUpdate(approveMasterDTO);
+        if(result.isPresent()){
+            return ResponseEntity.ok().body(result.get());
+        }
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+    }
+
     @Operation(summary = "전자 결제 내역 내보내기")
     @GetMapping("/export-excel/{bulletinBoardId}")
     public ResponseEntity<byte[]> exportToExcel(@PathVariable String bulletinBoardId) throws IOException {

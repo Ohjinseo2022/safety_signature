@@ -9,7 +9,12 @@ class ApproveSignatureLoading extends ApproveSignatureModelBase {}
 @JsonSerializable()
 class ApproveSignatureRequestModel {
   final String bulletinBoardId;
-  ApproveSignatureRequestModel({required this.bulletinBoardId});
+  final String? constructionBusiness;
+  final String? companyName;
+  ApproveSignatureRequestModel(
+      {required this.bulletinBoardId,
+      this.constructionBusiness,
+      this.companyName});
 
   factory ApproveSignatureRequestModel.fromJson(Map<String, dynamic> json) =>
       _$ApproveSignatureRequestModelFromJson(json);

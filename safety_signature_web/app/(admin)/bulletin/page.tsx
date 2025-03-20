@@ -8,9 +8,8 @@ import {
   pagerSet,
 } from '@/utils/utils'
 import styled from 'styled-components'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { useRouter } from 'next/navigation'
-import useFetchApi from '@/hooks/useFetchApi'
 import { useInput } from '@/hooks/useInput'
 import CommonBoard, { PostsType } from '@/components/common/CommonBoard'
 import CommonPagination from '@/components/common/CommonPagination'
@@ -36,6 +35,7 @@ const BulletinPage = ({}: BulletinPageProps) => {
     data: bulletinBoardList = { data: [], count: 0 },
     refetch,
     status,
+    isFetched,
   } = useBulletinBoardListQuery({
     boardTitle: searchInput,
     createdBy: createdBy,
@@ -83,11 +83,6 @@ const BulletinPage = ({}: BulletinPageProps) => {
     { label: '결재완료', columns: 'signature' },
     { label: '상태', columns: 'boardStatusCode' },
   ]
-  const handleSearch = async (e: any) => {
-    // //console.log(e)
-    // await refetch()
-    // alert('검색 실행')
-  }
 
   return (
     <BulleitnBoardContainar>
@@ -100,7 +95,6 @@ const BulletinPage = ({}: BulletinPageProps) => {
         posts={boardList}
         children={
           <BulletinBoardMultiSearchBar
-            onSubmit={handleSearch}
             startDate={startDate}
             endDate={endDate}
             searchInput={searchInput}

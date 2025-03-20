@@ -30,7 +30,7 @@ const getBulletinBoardList = async (props: BulletinBoardSearchProps) => {
 export const useBulletinBoardListQuery = (props: BulletinBoardSearchProps) => {
   return useQuery({
     queryKey: ['bulletinBoardList', props], // 쿼리키에 들어있는 변수의 값들이 바뀔때마다 리패칭 기능 동작함
-    // enabled: false
+    // enabled: false,
     queryFn: async () => getBulletinBoardList(props),
     gcTime: 30 * 60 * 1000, // 30분
     // initialData,
@@ -206,6 +206,17 @@ export const onBulletinUpdateOrNewBulletin = async (props: {
       queryKey: [props.bulletinBoardId],
       exact: false,
     })
+    return true
+  }
+  return false
+}
+
+export const onModifyApproveData = async (props: ApproveMasterType) => {
+  const { status } = await useFetchApi('/approve/modify-approve-data', {
+    method: 'post',
+    data: props,
+  })
+  if (status === 200) {
     return true
   }
   return false

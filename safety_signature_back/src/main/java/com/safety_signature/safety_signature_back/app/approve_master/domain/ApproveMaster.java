@@ -1,6 +1,7 @@
 package com.safety_signature.safety_signature_back.app.approve_master.domain;
 
 import com.safety_signature.safety_signature_back.app.common.domain.AbstractAuditingEntity;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -65,5 +66,16 @@ public class ApproveMaster extends AbstractAuditingEntity<String> implements Ser
     @Size(max = 100)
     @Column(name = "approveStatus",length = 100)
     private String approveStatus;
+
+    @Comment("업체명")
+    @Size(max = 1000)
+    @Column(name = "company_name")
+    private String companyName;
+
+
+    @Comment("공사 종목명")
+    @Size(max = 1000)
+    @Column(name = "construction_business")
+    private String constructionBusiness;
 
 }

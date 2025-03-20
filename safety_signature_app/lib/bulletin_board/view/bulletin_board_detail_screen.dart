@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:go_router/go_router.dart';
@@ -8,6 +9,8 @@ import 'package:safety_signature_app/bulletin_board/model/bulletin_board_model.d
 import 'package:safety_signature_app/bulletin_board/provider/approve_master_provider.dart';
 import 'package:safety_signature_app/bulletin_board/provider/bulletin_board_provider.dart';
 import 'package:safety_signature_app/common/components/card_container.dart';
+import 'package:safety_signature_app/common/components/common_dialog.dart';
+import 'package:safety_signature_app/common/components/custom_text_form_field.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/layout/default_layout.dart';
 import 'package:safety_signature_app/common/provider/attach_doc_master_provider.dart';
@@ -80,47 +83,73 @@ class _BulletinBoardDetailScreenState
   void _handleSignature(String bulletinBoardId) async {
     // approveResult is ApproveSignatureMessageModel
     // 결재 처리 로직 추가
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(
-          '결재 진행 중...',
-          style: defaultTextStyle,
+    // await commonDialog(context: context, content: , onConfirm: onConfirm)
+    String companyName = "";
+    String constructionBusiness = "";
+    await commonDialog(
+        context: context,
+        confirmText: "결재하기",
+        onCancel: () {},
+        content: Column(
+          children: [
+            _inputField(
+                title: "업체명",
+                placeholder: "업체명을 입력하세요.",
+                inputValue: companyName,
+                onChangedValue: (v) => companyName = v),
+            _inputField(
+                title: "공종",
+                placeholder: "공종을 입력하세요.",
+                inputValue: constructionBusiness,
+                onChangedValue: (v) => constructionBusiness = v)
+          ],
         ),
-        duration: Duration(seconds: 2),
-      ),
-    );
-    await ref
-        .read(approveMasterProvider.notifier)
-        .approveSignature(bulletinBoardId: bulletinBoardId)
-        .then((_) {
-      final state = ref.watch(approveMasterProvider);
-      if (state is ApproveSignatureMessageModel) {
-        state.httpStatus == 200
-            ? ref
-                .read(bulletinBoardProvider.notifier)
-                .getDetail(id: widget.bulletinBoardId)
-            : null;
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              state.message,
-              style: defaultTextStyle,
+        onConfirm: () async {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(
+                '결재 진행 중...',
+                style: defaultTextStyle,
+              ),
+              duration: Duration(seconds: 2),
             ),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    }).catchError((_) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            '결재 실패 잠시 후 다시 시도해 주세요.',
-            style: defaultTextStyle,
-          ),
-          duration: Duration(seconds: 2),
-        ),
-      );
-    });
+          );
+          await ref
+              .read(approveMasterProvider.notifier)
+              .approveSignature(
+                  bulletinBoardId: bulletinBoardId,
+                  companyName: companyName,
+                  constructionBusiness: constructionBusiness)
+              .then((_) {
+            final state = ref.watch(approveMasterProvider);
+            if (state is ApproveSignatureMessageModel) {
+              state.httpStatus == 200
+                  ? ref
+                      .read(bulletinBoardProvider.notifier)
+                      .getDetail(id: widget.bulletinBoardId)
+                  : null;
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(
+                    state.message,
+                    style: defaultTextStyle,
+                  ),
+                  duration: Duration(seconds: 2),
+                ),
+              );
+            }
+          }).catchError((_) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(
+                  '결재 실패 잠시 후 다시 시도해 주세요.',
+                  style: defaultTextStyle,
+                ),
+                duration: Duration(seconds: 2),
+              ),
+            );
+          });
+        });
   }
 
   // ✅ 파일 다운로드 처리
@@ -240,6 +269,50 @@ Widget _buildDetailContent(
             ),
             child: Text('${detail.completionYn ? '완료' : "결재하기"}',
                 style: defaultTextStyle.copyWith(fontSize: 18)),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+_inputField(
+    {String? inputValue,
+    String? validation,
+    String? title,
+    String? placeholder,
+    Function? onChangedValue,
+    List<TextInputFormatter>? inputFormatters,
+    bool obscureText = false,
+    bool? enabled,
+    final FormFieldValidator<String>? validator}) {
+  return Padding(
+    padding: const EdgeInsets.only(left: 20, right: 20, top: 5, bottom: 0),
+    child: Column(
+      children: [
+        if (title != null)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+                alignment: Alignment.bottomLeft,
+                child: Text(
+                  title,
+                  style: defaultTextStyle.copyWith(fontSize: 18),
+                )),
+          ),
+        SizedBox(
+          height: 80,
+          child: CustomTextFormField(
+            onChanged: (value) {
+              if (onChangedValue != null) onChangedValue(value);
+            },
+            value: inputValue,
+            enabled: enabled ?? true,
+            obscureText: obscureText,
+            errorText: validation,
+            hintText: placeholder ?? "입력해 주세요.",
+            inputFormatters: inputFormatters,
+            validator: validator,
           ),
         ),
       ],

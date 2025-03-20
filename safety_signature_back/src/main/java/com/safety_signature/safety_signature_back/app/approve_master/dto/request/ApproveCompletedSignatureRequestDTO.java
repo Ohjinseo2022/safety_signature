@@ -7,4 +7,8 @@ import lombok.Data;
 public class ApproveCompletedSignatureRequestDTO {
     @NotNull
     String bulletinBoardId;
+
+    String companyName;
+
+    String constructionBusiness;
 }

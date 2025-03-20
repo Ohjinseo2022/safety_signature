@@ -37,9 +37,18 @@ public class ApproveMasterDTO extends AbstractAuditingDTO<String> implements Ser
     @Schema(description = "첨부문서 ID" ,requiredMode= Schema.RequiredMode.REQUIRED)
     private String attachDocId;
 
-    @Size(max =11)
+    @Size(max =100)
     @Schema(description = "결제 상태 코드" )
     private String approveStatus;
+
+
+    @Size(max = 1000)
+    @Schema(description = "업체명" )
+    private String companyName;
+
+    @Size(max = 1000)
+    @Schema(description = "공사 종목명" )
+    private String constructionBusiness;
 
     @Schema(description = "최소 생성 일시")
     private Instant createdDate;

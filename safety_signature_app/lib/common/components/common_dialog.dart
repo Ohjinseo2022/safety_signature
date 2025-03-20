@@ -6,6 +6,7 @@ Future<void> commonDialog(
     String? title,
     required Widget content,
     required VoidCallback onConfirm,
+    String? confirmText,
     VoidCallback? onCancel,
     bool barrierDismissible = false}) async {
   return showDialog<void>(
@@ -26,7 +27,7 @@ Future<void> commonDialog(
           ElevatedButton(
             style: ElevatedButton.styleFrom(backgroundColor: PRIMARY_COLOR),
             child: Text(
-              '확인',
+              confirmText ?? '확인',
               style: defaultTextStyle,
             ),
             onPressed: () {

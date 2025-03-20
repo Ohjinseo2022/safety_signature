@@ -8,10 +8,12 @@ const FooterContainer = styled.footer`
   padding: 20px;
   background-color: #121212; /* 다크 테마 배경색 */
   border-top: 1px solid #333333; /* 푸터 상단 경계선 */
-  color: #e0e0e0; /* 텍스트 색상 */
+  color: #e0e0e0 !important; /* 텍스트 색상 */
   text-align: center;
   font-size: 14px;
-
+  p {
+    color: #e0e0e0 !important; /* 텍스트 색상 */
+  }
   a {
     color: #60a5fa; /* 링크 색상 */
     text-decoration: none;

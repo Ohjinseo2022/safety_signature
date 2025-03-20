@@ -387,7 +387,7 @@ const PrivacyPolicy = () => {
               개인정보 보호 책임자
               <ul className="list-disc pl-5">
                 <li>
-                  성명:{' '}
+                  성명:
                   <span
                     style={{ fontWeight: 'bold', textDecoration: 'underline' }}
                   >
@@ -395,15 +395,15 @@ const PrivacyPolicy = () => {
                   </span>
                 </li>
                 <li>
-                  직책:{' '}
+                  직책:
                   <span
                     style={{ fontWeight: 'bold', textDecoration: 'underline' }}
                   >
-                    CTO
+                    정보보호책임자
                   </span>
                 </li>
                 <li>
-                  전화번호:{' '}
+                  전화번호:
                   <span
                     style={{ fontWeight: 'bold', textDecoration: 'underline' }}
                   >
@@ -411,7 +411,7 @@ const PrivacyPolicy = () => {
                   </span>
                 </li>
                 <li>
-                  이메일:{' '}
+                  이메일:
                   <span
                     style={{ fontWeight: 'bold', textDecoration: 'underline' }}
                   >

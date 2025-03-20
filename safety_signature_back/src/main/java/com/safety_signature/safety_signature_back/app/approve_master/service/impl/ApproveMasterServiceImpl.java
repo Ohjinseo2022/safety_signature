@@ -2,6 +2,7 @@ package com.safety_signature.safety_signature_back.app.approve_master.service.im
 
 import com.safety_signature.safety_signature_back.app.approve_master.domain.ApproveMaster;
 import com.safety_signature.safety_signature_back.app.approve_master.dto.ApproveMasterDTO;
+import com.safety_signature.safety_signature_back.app.approve_master.dto.request.ApproveCompletedSignatureRequestDTO;
 import com.safety_signature.safety_signature_back.app.approve_master.dto.response.ApproveMasterCustomDTO;
 import com.safety_signature.safety_signature_back.app.approve_master.dto.response.ApproveMasterListCustomDTO;
 import com.safety_signature.safety_signature_back.app.approve_master.mapper.ApproveMasterMapper;
@@ -62,12 +63,14 @@ public class ApproveMasterServiceImpl implements ApproveMasterService {
     }
 
     @Override
-    public ApproveMasterDTO addApproveMaster(String bulletinBoardId, UserMasterDTO userMasterDTO) {
+    public ApproveMasterDTO addApproveMaster(ApproveCompletedSignatureRequestDTO approveCompletedSignatureRequestDTO, UserMasterDTO userMasterDTO) {
         ApproveMasterDTO approveMasterDTO = ApproveMasterDTO.builder()
                 .userMasterId(userMasterDTO.getId())
                 .userName(userMasterDTO.getName())
                 .attachDocId(userMasterDTO.getSignatureDocId())
-                .bulletinBoardId(bulletinBoardId)
+                .bulletinBoardId(approveCompletedSignatureRequestDTO.getBulletinBoardId())
+                .constructionBusiness(approveCompletedSignatureRequestDTO.getConstructionBusiness())
+                .companyName(approveCompletedSignatureRequestDTO.getCompanyName())
                 .approveStatus("approve")
                 .build();
         return this.save(approveMasterDTO);
@@ -83,19 +86,20 @@ public class ApproveMasterServiceImpl implements ApproveMasterService {
         List<ApproveMasterCustomDTO> list = new ArrayList<>();
         for(ApproveMaster entity : approveMasters) {
             ApproveMasterDTO dto = approveMasterMapper.toDto(entity);
-            CompanyMemberDTO companyMemberDTO =companyMemberService.getCompanyMemberByUserMasterId(dto.getUserMasterId());
+//            CompanyMemberDTO companyMemberDTO =companyMemberService.getCompanyMemberByUserMasterId(dto.getUserMasterId());
 
             ApproveMasterCustomDTO customDTO = ApproveMasterCustomDTO.from(dto);
             customDTO.setApproveStatus("approve");
-            customDTO.setConstructionBusiness("직접 입력");
-            customDTO.setCompanyName("직접입력");
-            if(companyMemberDTO != null) {
-                customDTO.setConstructionBusiness(companyMemberDTO.getConstructionBusiness());
-                CompanyMasterDTO companyMasterDTO = companyMasterService.getCompanyMaster(companyMemberDTO.getCompanyMasterId());
-                if(companyMasterDTO != null) {
-                    customDTO.setCompanyName(companyMasterDTO.getCompanyName());
-                }
-            }
+            // TODO: 현재는 기업 관련 비즈니스 로직 정의가 완벽하지 않음 실 사용자가 임의로 입력한 데이터가 저장되는 형태 추후 회사정보 추가하여 사용자가 입력하지 않아도 자동으로 입력 들어가게 수정예정.
+//            customDTO.setConstructionBusiness("직접 입력");
+//            customDTO.setCompanyName("직접입력");
+//            if(companyMemberDTO != null) {
+//                customDTO.setConstructionBusiness(companyMemberDTO.getConstructionBusiness());
+//                CompanyMasterDTO companyMasterDTO = companyMasterService.getCompanyMaster(companyMemberDTO.getCompanyMasterId());
+//                if(companyMasterDTO != null) {
+//                    customDTO.setCompanyName(companyMasterDTO.getCompanyName());
+//                }
+//            }
 
             list.add(customDTO);
         }
