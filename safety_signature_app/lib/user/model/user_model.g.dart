@@ -8,7 +8,7 @@ part of 'user_model.dart';
 
 UserMinModel _$UserMinModelFromJson(Map<String, dynamic> json) => UserMinModel(
       id: json['id'] as String,
-      name: json['name'] as String?,
+      userName: json['userName'] as String?,
       profileImageUri: json['profileImageUri'] as String?,
       email: json['email'] as String,
       signatureDocId: json['signatureDocId'] as String?,
@@ -20,7 +20,7 @@ UserMinModel _$UserMinModelFromJson(Map<String, dynamic> json) => UserMinModel(
 Map<String, dynamic> _$UserMinModelToJson(UserMinModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
+      'userName': instance.userName,
       'profileImageUri': instance.profileImageUri,
       'email': instance.email,
       'mobile': instance.mobile,
@@ -39,7 +39,7 @@ const _$UserTypeCodeEnumMap = {
 UserSummaryModel _$UserSummaryModelFromJson(Map<String, dynamic> json) =>
     UserSummaryModel(
       id: json['id'] as String,
-      name: json['name'] as String?,
+      userName: json['userName'] as String?,
       email: json['email'] as String,
       userStatusCode: json['userStatusCode'] as String,
       profileImageUri: json['profileImageUri'] as String?,
@@ -51,7 +51,7 @@ UserSummaryModel _$UserSummaryModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$UserSummaryModelToJson(UserSummaryModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
+      'userName': instance.userName,
       'profileImageUri': instance.profileImageUri,
       'email': instance.email,
       'mobile': instance.mobile,
@@ -63,7 +63,7 @@ Map<String, dynamic> _$UserSummaryModelToJson(UserSummaryModel instance) =>
 UserDetailModel _$UserDetailModelFromJson(Map<String, dynamic> json) =>
     UserDetailModel(
       id: json['id'] as String,
-      name: json['name'] as String?,
+      userName: json['userName'] as String?,
       email: json['email'] as String,
       userStatusCode: json['userStatusCode'] as String,
       userTypeCode: UserTypeCode.getByCode(json['userTypeCode'] as String),
@@ -78,7 +78,7 @@ UserDetailModel _$UserDetailModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$UserDetailModelToJson(UserDetailModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
+      'userName': instance.userName,
       'profileImageUri': instance.profileImageUri,
       'email': instance.email,
       'mobile': instance.mobile,
@@ -93,7 +93,7 @@ Map<String, dynamic> _$UserDetailModelToJson(UserDetailModel instance) =>
 UserHiddenModel _$UserHiddenModelFromJson(Map<String, dynamic> json) =>
     UserHiddenModel(
       id: json['id'] as String,
-      name: json['name'] as String?,
+      userName: json['userName'] as String?,
       email: json['email'] as String,
       userStatusCode: json['userStatusCode'] as String,
       userTypeCode: UserTypeCode.getByCode(json['userTypeCode'] as String),
@@ -109,7 +109,7 @@ UserHiddenModel _$UserHiddenModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$UserHiddenModelToJson(UserHiddenModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'name': instance.name,
+      'userName': instance.userName,
       'profileImageUri': instance.profileImageUri,
       'email': instance.email,
       'mobile': instance.mobile,

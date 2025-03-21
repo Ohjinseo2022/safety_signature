@@ -133,7 +133,7 @@ public class UserMasterResource {
                     .userPassword(PasswordUtils.encodePassword(postJoinBody.getPassword()))
                     .id(userMasterId)
                     .email(postJoinBody.getUserId())
-                    .name(postJoinBody.getName())
+                    .userName(postJoinBody.getName())
                     .mobile(postJoinBody.getMobile())
                     .signatureDocId(attachDocMasterDTO.getId())
                     .userTypeCode(UserTypeCode.GENERAL_MEMBER)

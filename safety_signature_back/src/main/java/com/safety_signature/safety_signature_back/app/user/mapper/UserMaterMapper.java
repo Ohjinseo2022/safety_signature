@@ -10,10 +10,8 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring",unmappedSourcePolicy = ReportingPolicy.IGNORE)
 public interface UserMaterMapper extends EntityMapper<UserMasterDTO, UserMaster> {
     @Override
-    @Mapping(target = "name",source="userName")
     UserMasterDTO toDto(UserMaster entity);
 
     @Override
-    @Mapping(target = "userName",source="name")
     UserMaster toEntity(UserMasterDTO dto);
 }

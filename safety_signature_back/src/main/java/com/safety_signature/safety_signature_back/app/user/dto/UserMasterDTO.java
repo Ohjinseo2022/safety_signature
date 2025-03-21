@@ -28,7 +28,7 @@ public class UserMasterDTO  extends AbstractAuditingDTO<String> implements Seria
     @JsonView(View.Min.class)
     @Size(max = 36)
     @Schema(description = "회원 이름" )//,requiredMode= Schema.RequiredMode.REQUIRED 카카오 개발자 승인이후 수정예정임!
-    private String name;
+    private String userName;
 
     @JsonView(View.Min.class)
     @Size(max = 2000)

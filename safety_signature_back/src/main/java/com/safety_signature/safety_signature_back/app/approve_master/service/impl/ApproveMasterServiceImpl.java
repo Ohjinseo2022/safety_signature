@@ -66,7 +66,7 @@ public class ApproveMasterServiceImpl implements ApproveMasterService {
     public ApproveMasterDTO addApproveMaster(ApproveCompletedSignatureRequestDTO approveCompletedSignatureRequestDTO, UserMasterDTO userMasterDTO) {
         ApproveMasterDTO approveMasterDTO = ApproveMasterDTO.builder()
                 .userMasterId(userMasterDTO.getId())
-                .userName(userMasterDTO.getName())
+                .userName(userMasterDTO.getUserName())
                 .attachDocId(userMasterDTO.getSignatureDocId())
                 .bulletinBoardId(approveCompletedSignatureRequestDTO.getBulletinBoardId())
                 .constructionBusiness(approveCompletedSignatureRequestDTO.getConstructionBusiness())

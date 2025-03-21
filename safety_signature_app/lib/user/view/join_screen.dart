@@ -55,7 +55,7 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
     final state = ref.read(userAuthProvider);
     if (state is UserMinModel) {
       id = state.id;
-      name = name ?? state.name;
+      name = name ?? state.userName;
       userId = userId ?? state.email;
       mobile = mobile ?? state.mobile;
       userIdValid = null;

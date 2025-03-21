@@ -11,11 +11,11 @@ import org.mapstruct.ReportingPolicy;
 public interface TokenManagementMapper extends EntityMapper<TokenManagementMaterDTO, TokenManagementMaster> {
     @Override
     @Mapping(target = "userMasterDTO" ,source = "userMaster")
-    @Mapping(target = "userMasterDTO.name", source = "userMaster.userName")
+//    @Mapping(target = "userMasterDTO.name", source = "userMaster.userName")
     TokenManagementMaterDTO toDto(TokenManagementMaster tokenManagementMaster);
 
     @Override
     @Mapping(target = "userMaster" ,source = "userMasterDTO")
-    @Mapping(target = "userMaster.userName", source = "userMasterDTO.name")
+//    @Mapping(target = "userMaster.userName", source = "userMasterDTO.name")
     TokenManagementMaster toEntity(TokenManagementMaterDTO tokenManagementMaterDTO);
 }

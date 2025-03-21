@@ -11,11 +11,11 @@ import org.mapstruct.ReportingPolicy;
 public interface BulletinBoardMasterMapper extends EntityMapper<BulletinBoardMasterDTO, BulletinBoardMaster> {
     @Override
     @Mapping(target = "userMasterDTO",source = "userMaster")
-    @Mapping(target = "userMasterDTO.name",source = "userMaster.userName")
+//    @Mapping(target = "userMasterDTO.name",source = "userMaster.userName")
     BulletinBoardMasterDTO toDto(BulletinBoardMaster entity);
 
     @Override
     @Mapping(target="userMaster",source = "userMasterDTO")
-    @Mapping(target="userMaster.userName",source = "userMasterDTO.name")
+//    @Mapping(target="userMaster.userName",source = "userMasterDTO.name")
     BulletinBoardMaster toEntity(BulletinBoardMasterDTO dto);
 }
