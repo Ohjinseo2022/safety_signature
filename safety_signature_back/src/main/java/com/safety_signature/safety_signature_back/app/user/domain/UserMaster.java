@@ -36,7 +36,7 @@ public class UserMaster extends AbstractAuditingEntity<String> implements Serial
     private String id;
 
     @Comment("회원 이름")
-    @NotNull
+//    @NotNull
     @Size(max = 100)
     @Column(name = "user_name",length = 100,nullable = false)
     private String userName;
