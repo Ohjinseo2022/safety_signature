@@ -22,7 +22,7 @@ class BulletinBoardCard extends StatelessWidget {
     return BulletinBoardCard(
       title: model.boardTitle,
       id: model.id,
-      createdBy: model.userMasterDTO.name,
+      createdBy: model.userMasterDTO.name ?? '',
       createdDateFormat: model.createdDateFormat,
       completionYn: model.completionYn,
     );

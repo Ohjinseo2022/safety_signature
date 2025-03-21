@@ -7,6 +7,7 @@ import 'package:safety_signature_app/common/components/custom_text_form_field.da
 import 'package:safety_signature_app/common/components/login_button.dart';
 import 'package:safety_signature_app/common/const/color.dart';
 import 'package:safety_signature_app/common/enumeration/social.dart';
+import 'package:safety_signature_app/common/enumeration/user_status_code.dart';
 import 'package:safety_signature_app/common/view/root_tab.dart';
 import 'package:safety_signature_app/user/model/login_req_model.dart';
 import 'package:safety_signature_app/user/model/user_model.dart';
@@ -169,6 +170,26 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
             _kakaoLoginButton(onPressed: () async {
               UserModelBase? model = await onLoginHandler(
                   context: context, platform: SocialTypeCode.KAKAO.code);
+              if (model is UserMinModel &&
+                  UserStatusCode.getByCode(model.userStatusCode) ==
+                      UserStatusCode.PENDING) {
+                // await commonDialog(
+                //   context: context,
+                //   title: "회원가입 안내",
+                //   content: Center(
+                //       child: Text(
+                //     "전자 서명 정보 등록 후 간편가입 완료됩니다.",
+                //     style: defaultTextStyle,
+                //   )),
+                //   onConfirm: () async {
+                //     final result =
+                //         await context.pushNamed(JoinScreen.routeName);
+                //     if (result == null) {
+                //       await ref.watch(userAuthProvider.notifier).userLogout();
+                //     }
+                //   },
+                // );
+              }
             }),
             // _emailJoin(onPressed: () {
             //   context.pushNamed(JoinScreen.routeName);

@@ -8,7 +8,7 @@ part of 'user_model.dart';
 
 UserMinModel _$UserMinModelFromJson(Map<String, dynamic> json) => UserMinModel(
       id: json['id'] as String,
-      name: json['name'] as String,
+      name: json['name'] as String?,
       profileImageUri: json['profileImageUri'] as String?,
       email: json['email'] as String,
       signatureDocId: json['signatureDocId'] as String?,
@@ -39,7 +39,7 @@ const _$UserTypeCodeEnumMap = {
 UserSummaryModel _$UserSummaryModelFromJson(Map<String, dynamic> json) =>
     UserSummaryModel(
       id: json['id'] as String,
-      name: json['name'] as String,
+      name: json['name'] as String?,
       email: json['email'] as String,
       userStatusCode: json['userStatusCode'] as String,
       profileImageUri: json['profileImageUri'] as String?,
@@ -63,7 +63,7 @@ Map<String, dynamic> _$UserSummaryModelToJson(UserSummaryModel instance) =>
 UserDetailModel _$UserDetailModelFromJson(Map<String, dynamic> json) =>
     UserDetailModel(
       id: json['id'] as String,
-      name: json['name'] as String,
+      name: json['name'] as String?,
       email: json['email'] as String,
       userStatusCode: json['userStatusCode'] as String,
       userTypeCode: UserTypeCode.getByCode(json['userTypeCode'] as String),
@@ -93,7 +93,7 @@ Map<String, dynamic> _$UserDetailModelToJson(UserDetailModel instance) =>
 UserHiddenModel _$UserHiddenModelFromJson(Map<String, dynamic> json) =>
     UserHiddenModel(
       id: json['id'] as String,
-      name: json['name'] as String,
+      name: json['name'] as String?,
       email: json['email'] as String,
       userStatusCode: json['userStatusCode'] as String,
       userTypeCode: UserTypeCode.getByCode(json['userTypeCode'] as String),

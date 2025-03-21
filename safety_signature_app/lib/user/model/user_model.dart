@@ -20,7 +20,7 @@ class UserModelSigningUp extends UserModelLoading {}
 @JsonSerializable()
 class UserMinModel extends UserModelBase {
   final String id;
-  final String name;
+  final String? name;
   // @JsonKey(
   //   fromJson: DataUtils.pathToUrl,
   // )
@@ -34,7 +34,7 @@ class UserMinModel extends UserModelBase {
   final UserTypeCode userTypeCode;
   UserMinModel(
       {required this.id,
-      required this.name,
+      this.name,
       this.profileImageUri,
       required this.email,
       this.signatureDocId,
@@ -49,7 +49,7 @@ class UserMinModel extends UserModelBase {
 class UserSummaryModel extends UserMinModel {
   UserSummaryModel(
       {required super.id,
-      required super.name,
+      super.name,
       required super.email,
       required super.userStatusCode,
       super.profileImageUri,
@@ -68,7 +68,7 @@ class UserDetailModel extends UserSummaryModel {
 
   UserDetailModel({
     required super.id,
-    required super.name,
+    super.name,
     required super.email,
     required super.userStatusCode,
     required super.userTypeCode,
@@ -88,7 +88,7 @@ class UserHiddenModel extends UserDetailModel {
   final String password;
   UserHiddenModel({
     required super.id,
-    required super.name,
+    super.name,
     required super.email,
     required super.userStatusCode,
     required super.userTypeCode,

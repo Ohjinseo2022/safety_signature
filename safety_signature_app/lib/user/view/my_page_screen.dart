@@ -76,7 +76,7 @@ class _MyPageScreenState extends ConsumerState<MyPageScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  model.name,
+                  model.name ?? '',
                   style: TextStyle(
                     color: SECONDARY_COLOR,
                     fontSize: 20,
