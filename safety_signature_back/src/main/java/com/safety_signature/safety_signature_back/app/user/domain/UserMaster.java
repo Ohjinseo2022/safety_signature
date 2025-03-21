@@ -38,14 +38,14 @@ public class UserMaster extends AbstractAuditingEntity<String> implements Serial
     @Comment("회원 이름")
 //    @NotNull
     @Size(max = 100)
-    @Column(name = "user_name",length = 100,nullable = false)
+    @Column(name = "user_name",length = 100)//,nullable = false
     private String userName;
 
     /**
      * 핸드폰 번호 추후 암호화하여 수집예정
      */
     @Comment("핸드폰 번호")
-    @NotNull
+//    @NotNull
     @Size(max = 2000)
     @Column(name = "mobile",length = 2000)
     private String mobile;
