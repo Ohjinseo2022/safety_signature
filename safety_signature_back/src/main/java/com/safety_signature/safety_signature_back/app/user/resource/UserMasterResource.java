@@ -128,7 +128,7 @@ public class UserMasterResource {
                     .build();
             return ResponseEntity.status(messageDTO.getStatus()).body(messageDTO);
         }else{
-            log.info("post user join success");
+            log.info("post user join fetching");
             UserMasterDTO userMasterDTO = new UserMasterDTO().builder()
                     .userPassword(PasswordUtils.encodePassword(postJoinBody.getPassword()))
                     .id(userMasterId)
@@ -139,7 +139,9 @@ public class UserMasterResource {
                     .userTypeCode(UserTypeCode.GENERAL_MEMBER)
                     .userStatusCode(UserStatusCode.ACTIVE)
                     .build();
+            log.info("post user join userMasterDTO : {}",userMasterDTO);
             UserMasterDTO result =  userMasterService.partialUpdate(userMasterDTO);
+            log.info("post user join success");
             TokenManagementMaterDTO tokenManagementMaterDTO= tokenManagementMasterService.createOrUpdateTokenManagementMaster(result);
             return ResponseEntity.ok().body(LoginResDTO.builder().accessToken(tokenManagementMaterDTO.getAccessToken()).refreshToken(tokenManagementMaterDTO.getRefreshToken()).build());
         }

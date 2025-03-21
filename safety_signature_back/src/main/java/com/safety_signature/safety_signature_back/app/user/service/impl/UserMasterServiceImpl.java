@@ -71,10 +71,13 @@ public class UserMasterServiceImpl implements UserMasterService {
     }
     public UserMasterDTO partialUpdate(UserMasterDTO userMasterDTO) {
         Optional<UserMaster> existingUserMaster =userMasterRepository.findById(userMasterDTO.getId());
+        log.info("partialUpdate UserMaster : {}", userMasterDTO);
         if (existingUserMaster.isPresent()) {
             return existingUserMaster.map((existingUser) -> {
 //                userMasterDTO.setId(existingUser.getId());
+                log.info("partialUpdate existingUser : {}", existingUser);
                 userMaterMapper.partialUpdate(existingUser, userMasterDTO);
+                log.info("partialUpdate success existingUser : {}", existingUser);
                 return existingUser;
             }).map(userMasterRepository::save).map(userMaterMapper::toDto).get();
         }else{
