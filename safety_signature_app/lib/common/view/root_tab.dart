@@ -84,14 +84,13 @@ class _RootTabState extends ConsumerState<RootTab>
               );
             })
           : null;
-      print("여기냐 ?");
       return AnimatedSwitcher(
           duration: Duration(milliseconds: 500),
           child: DefaultLayout(
             child: LoginScreen(),
           ));
     }
-
+    print("여기왜안와?");
     return AnimatedSwitcher(
         duration: Duration(milliseconds: 500),
         child:
@@ -101,6 +100,7 @@ class _RootTabState extends ConsumerState<RootTab>
   }
 
   Widget _rootTab({required UserModelBase? state}) {
+    print(state);
     List<dynamic> tabList = [
       {"title": "전자결재 게시판", "child": BulletinBoardListScreen()},
       // {"title": "테스트중", "child": MyPageScreen()},
@@ -123,6 +123,7 @@ class _RootTabState extends ConsumerState<RootTab>
         child: LoginScreen(),
       );
     }
+    print("로그인하면 여기보여야해");
     return DefaultLayout(
       title: tabList[index]["title"],
       child: TabBarView(

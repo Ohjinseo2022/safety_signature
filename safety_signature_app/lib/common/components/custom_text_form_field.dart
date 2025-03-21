@@ -84,8 +84,8 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
           autofocus: widget.autofocus,
           onChanged: (value) {
             setState(() {
-              if (widget.onChanged != null) widget.onChanged!(value);
-              _controller.text = value;
+              if (widget.onChanged != null) widget.onChanged!(_controller.text);
+              // _controller.text = value;
             });
           },
           onFieldSubmitted: (value) async {

@@ -93,6 +93,9 @@ dependencies:
   path_provider: ^2.1.5
   # 플렛폼 관련
   device_info_plus: ^11.3.0
+  # # 앱 버전 가져오기
+  package_info_plus: ^8.3.0
+  url_launcher: ^6.3.1 # 앱 업데이트를 위해 Play Store로 이동
 
 
 dev_dependencies:

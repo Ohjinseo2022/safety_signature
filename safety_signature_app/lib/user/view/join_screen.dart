@@ -74,7 +74,9 @@ class _JoinScreenState extends ConsumerState<JoinScreen> {
     final state = ref.watch(userAuthProvider);
     final isPopUp = ref.watch(modalControllerProvider);
 
-    if (state is UserMinModel) {
+    if (state is UserMinModel &&
+        UserStatusCode.getByCode(state.userStatusCode) ==
+            UserStatusCode.PENDING) {
       // 랜더링 이후 동작
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ref.read(userAuthProvider.notifier).singingUpModel();

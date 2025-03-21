@@ -94,7 +94,7 @@ public class UserMasterResource {
     @Operation(summary = "회원가입 요청")
     @PostMapping("/join")
     public ResponseEntity<?> postUserJoin(@RequestBody PostJoinBody postJoinBody)throws Exception{
-        log.info("post user join start");
+        log.info("post user join start postJoinBody : {}",postJoinBody);
         /**
          * 1. id 정보가 있다면 기존 계정 상태 바꿔줘야함 .
          * 2. 비밀번호는 스프링 시큐리티에서 제공하는 암호화 처리
