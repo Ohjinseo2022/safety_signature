@@ -25,6 +25,9 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8
     }
+    buildFeatures {
+        buildConfig = true // 🔥 buildConfig 활성화
+    }
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
@@ -35,8 +38,12 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+
+        ndk {
+            debugSymbolLevel 'full' // 심볼 파일 생성 활성화
+        }
         // 환경 변수 전달
-        buildConfigField "String", "KAKAO_NATIVE_APP_KEY", "\"${KAKAO_NATIVE_APP_KEY}\""
+//        buildConfigField "String", "KAKAO_NATIVE_APP_KEY", "\"${KAKAO_NATIVE_APP_KEY}\""
     }
     signingConfigs {
         release {
@@ -52,6 +59,14 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.release
+            minifyEnabled true // 프로가드 활성화
+            shrinkResources true // 사용하지 않는 리소스 제거
+            ndk {
+                debugSymbolLevel = 'full' // 🔥 네이티브 디버그 심볼 포함 (full)
+            }
+            packagingOptions {
+                doNotStrip "**/*.so" // 🔥 네이티브 심볼 제거 방지
+            }
         }
     }
     flavorDimensions "build-type"
@@ -62,6 +77,7 @@ android {
             applicationIdSuffix ".local"
             resValue "string", "app_name", "안전싸인-local"
             buildConfigField "String", "KAKAO_NATIVE_APP_KEY", "\"${KAKAO_NATIVE_APP_KEY_LOCAL}\""
+            manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = "${KAKAO_NATIVE_APP_KEY_LOCAL}"
         }
 
 
@@ -69,6 +85,7 @@ android {
             dimension "build-type"
             resValue "string", "app_name", "안전싸인"
             buildConfigField "String", "KAKAO_NATIVE_APP_KEY", "\"${KAKAO_NATIVE_APP_KEY_PROD}\""
+            manifestPlaceholders["KAKAO_NATIVE_APP_KEY"] = "${KAKAO_NATIVE_APP_KEY_PROD}"
         }
     }
 }

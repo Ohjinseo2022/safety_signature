@@ -1,3 +1,17 @@
 api:
   domain: ENC(71Qnjwod8wVRR4wlzScocqVW749ezebyOGR3WUDXWly69ZrNJgJ0fw==)
   baseUrl: "/services/backend"
+
+
+spring:
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: ENC(q5ehHi5eeB3xbi8+m/2ju9ArD4ho+ixIKfXKK8il2m5Axc+b+T4zvjbIiC/yDA+LMTjTwfdZ7odPxOyuIS5+ZAos1zlOjsr2)
+    username: ENC(J1ub9wjNqELFNx9wQTuW9NI0WQ1orwMB)
+    password: ENC(RsASFvqSB5ZBFJUZmg9CLOufiyacW1lz) # ?? ???? ??? ??
+
+    jpa:
+      database-platform: org.hibernate.dialect.PostgreSQLDialect
+      database: postgresql
+      hibernate:
+        ddl-auto: update  # DB 초기화 전략 (none, create, create-drop, update, validate) 정상 운영진행시 none or validate 변경예정

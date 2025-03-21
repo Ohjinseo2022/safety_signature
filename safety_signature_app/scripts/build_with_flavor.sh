@@ -36,7 +36,7 @@ if [ "$BUILD_TYPE" == "apk" ]; then
 elif [ "$BUILD_TYPE" == "aab" ]; then
   echo "🚀 $FLAVOR 환경에서 AAB 빌드 시작..."
   flutter pub get
-  flutter build appbundle --flavor $FLAVOR --target=lib/main.dart
+  flutter build appbundle --release --flavor $FLAVOR --target=lib/main.dart --no-shrink
 
 elif [ "$BUILD_TYPE" == "ios" ]; then
   echo "🚀 $FLAVOR 환경에서 iOS 빌드 시작..."
